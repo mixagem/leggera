@@ -59,6 +59,8 @@ function mixWrapper() {
         currentTheme: 'horizon',
         // variável de controlo do autosave (a ser utilizado quando temos um tópico com 100.000+ chars)
         limitExceded: 0,
+        // variável com o tema atual para o leggera
+        currentLeggeraTheme: darktheme
     }
 
     // ################ funções várias da aplicação 
@@ -213,6 +215,12 @@ function mixWrapper() {
         logout: function () {
             localStorage.removeItem('bolachinha');
             location.reload();
+        },
+
+        changeLeggeraTheme: function () {
+            if (leggeraVariables.currentLeggeraTheme === 0) { leggeraVariables.currentLeggeraTheme = 1; }
+            else { leggeraVariables.currentLeggeraTheme = 0; }
+            console.log(leggeraVariables.currentLeggeraTheme);
         }
     }
 
@@ -371,14 +379,23 @@ function mixWrapper() {
         },
 
         myManualsFilterResults: function () {
-            const keyword = document.querySelector('#save-manual-input').value.toLowerCase();
+            const keyword = document.querySelector('#save-manual-input').value.toLowerCase().split(" ");
             const numManuais = document.querySelector('#modal-container tbody').childElementCount;
+            let control = 0;
             for (i = 1; i <= numManuais; i++) {
-                if (document.querySelector('#modal-container tbody').children[i - 1].children[0].innerText.toLowerCase().includes(keyword)) {
+                for (x = 0; x < keyword.length; x++) {
+                    if (document.querySelector('#modal-container tbody').children[i - 1].children[0].innerText.toLowerCase().includes(keyword[x])) {
+                        console.log('found');
+                    } else {
+                        control = 1;
+                    }
+                }
+                if (control === 0) {
                     document.querySelector('#modal-container tbody').children[i - 1].classList.remove('no-display');
                 } else {
                     document.querySelector('#modal-container tbody').children[i - 1].classList.add('no-display');
                 }
+                control = 0;
             }
         },
 
@@ -614,20 +631,23 @@ function mixWrapper() {
 
     // ################ método para chamadas API c/ Hilite.me
     const leggeraHiliteAPI = {
-        // API POST
+
         post: function () {
             // Babyproof
             if (document.querySelector('#hilite-textarea').value.length <= 0) { alert('A textarea para o código hilite.me está vazia.'); return }
             const code = document.querySelector('#hilite-textarea').value.toString();
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    (leggeraHiliteAPI).hiliteFormater(this.responseText);
-                }
-            };
-            xhttp.open("POST", "http://hilite.me/api", true); //
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send(`code=${code}&style=monokai&lexer=${leggeraVariables.codeType}&divstyles=border:solid #eb8475;border-width:.1em .1em .1em .8em;padding:.2em .6em;`);
+            $.ajax({
+                type: "POST",
+                url: "http://hilite.me/api",
+                dataType: "text",
+                data: {
+                    code: code,
+                    style: 'monokai',
+                    lexer: leggeraVariables.codeType,
+                    divstyles: 'border:solid #eb8475;border-width:.1em .1em .1em .8em;padding:.2em .6em;'
+                },
+                success: function (response) { leggeraHiliteAPI.hiliteFormater(response); }
+            })
         },
 
         // Formatar a resposta obtida
@@ -644,6 +664,7 @@ function mixWrapper() {
             leggeraExtraFunctions.escreveNaTextarea(fixedHilite);
         }
     }
+
 
     // ################ app start
     window.onload = (function () {
@@ -772,11 +793,12 @@ function mixWrapper() {
             // Corrige o etarget quando não carregamos direitinho no icon
             if (icon.classList.contains('phcgo-icon')) { icon = icon.firstChild };
             // altera a cor do icon, de acordo com a côr selecionada
-            icon.style.color = leggeraVariables.currentColor
-            leIcon = icon.outerHTML
+            icon.style.color = leggeraVariables.currentColor;
+            leIcon = icon.outerHTML;
             leggeraExtraFunctions.escreveNaTextarea(leIcon);
             // volta a alterar a cor do icon para a côr de origem
-            icon.style.color = '#fff'
+            if (leggeraVariables.currentLeggeraTheme == 1) { icon.style.color = '#fff' }
+            else { icon.style.color = '#000' };
         }
     }
 
@@ -1867,6 +1889,7 @@ function mixWrapper() {
     document.querySelector('#listas-tabelas-btn').addEventListener('click', leggeraListsAndTables.displayControls);
     document.querySelector('#titulos-ligacoes-btn').addEventListener('click', appControlsTitulosELigacoes);
     document.querySelector('#manuals-btn').addEventListener('click', leggeraMyManualsDBConnect.getManuals);
+    document.querySelector('#theme-btn').addEventListener('click', leggeraExtraFunctions.changeLeggeraTheme);
     leggeraVariables.textarea.addEventListener('keyup', leggeraUpdatePreviews.slim);
     leggeraVariables.textarea.addEventListener('click', leggeraUpdatePreviews.full);
 }

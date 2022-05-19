@@ -7,6 +7,8 @@ echo "<section class='header sticky-top'>
             <div class='col-md-5 headControls text-left'>
                 <button type='button' class='btn btn-info' id='ancora-btn'><i class='lni lni-anchor'></i>
                 </button>
+                <button type='button' class='btn btn-light' id='theme-btn'><i class='lni lni-pallet'></i>
+                </button>
                 <button type='button' class='btn btn-light' id='colap-btn'><i class='lni lni-layers'></i>
                     Colapsáveis</button>
                 <button type='button' class='btn btn-light' id='manuals-btn'><i class='lni lni-library'></i>

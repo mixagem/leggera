@@ -1,15 +1,15 @@
 /*###########    Globais     ###########*/
 
 :root {
-    --primary-title-color: rgb(81, 63, 255);
-    --secondary-title-color: gold;
-    --background-color: #fff;
-    --text-color-light: #fff;
+    --primary-title-color: gold;
+    --secondary-title-color: rgb(81, 63, 255);
+    --background-color: #000;
     --text-color-dark: #000;
+    --text-color-light: #fff;
     --alert-color: red;
     --success-color: green;
-    --border-picker: outset 3px rgba(0, 0, 0, 0.5);
-    --border-picker-active: outset 3px var(--primary-title-color);
+    --border-picker: inset 3px rgba(255, 255, 255, 0.5);
+    --border-picker-active: inset 3px var(--primary-title-color);
 }
 
 html {
@@ -120,14 +120,14 @@ body {
 }
 
 #loading-gif {
-    background-image: url('../img/mi-w.gif');
+    background-image: url('../img/mi.gif');
     position: relative;
     bottom: -100%;
     z-index: 2;
 }
 
 #loading-gif-red {
-    background-image: url('../img/mi-red-w.gif');
+    background-image: url('../img/mi-red.gif');
     z-index: 1;
 }
 
@@ -150,7 +150,7 @@ body {
 
 /* labels */
 #login-wrapper>span {
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     font-size: 40px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -163,7 +163,7 @@ body {
 
 /* show password toggle */
 #show-password {
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     position: absolute;
     margin-left: -34px;
     font-size: 22px;
@@ -178,7 +178,7 @@ body {
 .show-password-active {
     cursor: pointer;
     background: var(--secondary-title-color) !important;
-    color: var(--text-color-dark) !important;
+    color: var(--text-color-light) !important;
 }
 
 /*login btn*/
@@ -192,7 +192,7 @@ body {
 #cookie {
     width: 100%;
     text-align: center;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     padding-top: 5px;
     display: flex;
     justify-content: center;
@@ -229,7 +229,7 @@ body {
 .header {
     min-height: 330px;
     background: var(--background-color);
-    background-image: url('../img/app-bg-w.png');
+    background-image: url('../img/app-bg.png');
     background-size: 2%;
 }
 
@@ -245,8 +245,8 @@ body {
     border-radius: 10px;
     padding: 5px 10px;
     background-color: transparent;
-    color: var(--text-color-dark);
-    background-image: url('../img/mi-w.png');
+    color: var(--text-color-light);
+    background-image: url('../img/mi.png');
     background-size: 10%;
     background-repeat: no-repeat;
     background-position: bottom right;
@@ -266,18 +266,13 @@ body {
 /*###########   Textboxes    ###########*/
 
 .textbox-wrapper {
-    padding-top: 22px;
+    padding-top: 25px;
 }
 
-.textbox-wrapper > div > div {
-    border: 2px solid #ccc;
-    margin-top: -4px;
-}
 /* ajustamento de margem para todas as textboxes */
 .header .novoalerta {
     margin-top: 0px;
 }
-
 
 /* serve para dar clip nos tópicos relacionados */
 .header .alerta-relaciona {
@@ -310,7 +305,7 @@ body {
 
 .phcgo-icon {
     font-size: 35px;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     text-align: center;
     padding-bottom: 20px;
     cursor: pointer;
@@ -369,7 +364,7 @@ body {
 
 .selected-color>i {
     opacity: 1;
-    color: var(--secondary-title-color);
+    color: var(--primary-title-color);
     font-size: 18px;
 }
 
@@ -461,7 +456,7 @@ body {
 
 .selected-theme>i {
     opacity: 1;
-    color: var(--secondary-title-color);
+    color: var(--primary-title-color);
     font-size: 18px;
 }
 
@@ -497,7 +492,7 @@ body {
 
 
 #preview-list-row {
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     min-height: 80px;
     padding: 10px 0px;
 }
@@ -509,7 +504,7 @@ body {
 #header-listas,
 #header-tabelas {
     text-align: center;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     padding-bottom: 20px;
     font-size: 20px;
 }
@@ -517,7 +512,7 @@ body {
 #tipo-lista-span {
     display: block;
     text-align: left;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     padding-left: 2px;
     font-size: 14.5px;
 }
@@ -525,7 +520,7 @@ body {
 #num-itens-span {
     display: block;
     text-align: right;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     padding-right: 2px
 }
 
@@ -543,7 +538,7 @@ body {
 #num-colunas-span,
 #cabecalho-span {
     display: block;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
 }
 
 #num-linhas-input {
@@ -555,7 +550,7 @@ body {
 }
 
 #want-links-span {
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     display: inline-block;
     padding: 10px 10px 10px 0px;
 }
@@ -575,14 +570,14 @@ body {
 
 .novo-separador>span {
     font-size: 20px;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     padding: 10px 0px;
     display: block;
 }
 
 #cria-tabela-checkbox-wrapper {
     padding-top: 30px;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
 }
 
 #cria-tabela-checkbox-wrapper span {
@@ -595,13 +590,13 @@ body {
 }
 
 #preview-list-row {
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     text-align: center;
 }
 
 .nova-imagem {
     padding-top: 10px;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
 }
 
 #upload-form {
@@ -628,7 +623,7 @@ body {
 }
 
 #preview-heading-row {
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     padding: 10px 0px;
     min-height: 60px;
 }
@@ -644,7 +639,7 @@ body {
 }
 
 .gerador-links-wrapper {
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
 }
 
 .gerador-links-wrapper>div>input {
@@ -658,7 +653,7 @@ body {
 }
 
 #gerador-titulos {
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     font-size: 20px;
     text-align: center;
 }
@@ -677,7 +672,7 @@ body {
 
 #hilite-subwrapper {
     font-size: 20px;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     padding-bottom: 20px;
 }
 
@@ -688,5 +683,5 @@ body {
 
 #hilite-checkboxes-row {
     padding: 15px 0px;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
 }

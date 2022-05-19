@@ -16,7 +16,7 @@ $newpw = openssl_encrypt($data, $method, $key, $options, $iv);
 $con = mysqli_connect('localhost', 'root', '', 'superliggera');
 
 // query
-$query = "SELECT username, password, name, active, loginattempts, totallogins FROM users WHERE (username = '$un' AND password = '$newpw')";
+$query = "SELECT username, password, name, active, loginattempts, totallogins, darktheme FROM users WHERE (username = '$un' AND password = '$newpw')";
 $result = mysqli_query($con, $query);
 
 // se da query resultar 1 match (ou seja, credenciais corretas)
@@ -28,6 +28,7 @@ if (mysqli_num_rows($result) == 1) {
         $active = $row['active'];
         $numtenta = $row['loginattempts'];
         $numlogins = $row['totallogins'];
+        $darktheme = $row['darktheme'];
     }
 
     if ($active == 0) {
@@ -37,7 +38,7 @@ if (mysqli_num_rows($result) == 1) {
         // incrementa o total login
         $query = "UPDATE users SET totallogins = $numlogins+1, loginattempts=0 WHERE (username = '$un' AND password = '$newpw')";
         $result = mysqli_query($con, $query);
-        echo $name;
+        echo json_encode(array($name,$darktheme));
     }
 } else {
     $query = "SELECT loginattempts from users WHERE username = '$un'";

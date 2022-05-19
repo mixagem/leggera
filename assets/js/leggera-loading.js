@@ -3,6 +3,7 @@
 /* mambosinfinitos, 2022            */
 /************************************/
 
+let darktheme;
 let loggedinUser;
 let currentUsername = document.querySelector('#username');
 
@@ -123,17 +124,17 @@ function leggeraLogin() {
     $.ajax({    //create an ajax request to display.php
         type: "POST",
         url: "assets/php/auth.php",
-        dataType: "text",
+        dataType: "JSON",
         data: {
             username: currentUsername.value,
             password: document.querySelector('#password').value
 
         },
         success: function (response) {
-            if (response.startsWith('Err')) {
+            if (response.includes('Erro:')) {
                 leggeraLoginFail();
             } else {
-                loggedinUser = currentUsername.value;;
+                loggedinUser = currentUsername.value;
                 leggeraLoginSucess(response);
             }
         }
@@ -173,7 +174,7 @@ function leggeraLoginFail() {
 
 function leggeraLoginSucess(rsp) {
 
-
+    darktheme = rsp[1];
 
     if (wantCookie === 1) {
         const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);
@@ -233,7 +234,7 @@ function leggeraLoginSucess(rsp) {
 
     setTimeout(function () {
         const welcomeTitle = document.createElement('div');
-        welcomeTitle.innerText = `Welcome back ${rsp}`;
+        welcomeTitle.innerText = `Welcome back ${rsp[0]}`;
         welcomeTitle.id = 'loading-title';
         welcomeTitle.classList = 'animate__animated animate__fadeIn animate__delay';
         welcomeTitle.innerText = String(welcomeTitle.innerText).toLocaleUpperCase();

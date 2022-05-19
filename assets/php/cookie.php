@@ -7,7 +7,7 @@ if ($cookie !== '') {
 $con = mysqli_connect('localhost', 'root', '', 'superliggera');
 
 // query
-$query = "SELECT name, username, totallogins FROM users WHERE cookie = '$cookie'";
+$query = "SELECT name, username, totallogins, darktheme FROM users WHERE cookie = '$cookie'";
 $result = mysqli_query($con, $query);
 
 // se da query resultar 1 match (ou seja, credenciais corretas)

@@ -234,7 +234,7 @@ function mixWrapper() {
             leggeraVariables.activeTextarea = e.target;
             let inputText = leggeraVariables.textarea.value;
             if (inputText.length <= 100000) {
-                document.querySelector('#preview-btn').classList.add('no-opacity')
+                document.querySelector('#preview-btn').classList.add('no-display')
                 leggeraVariables.limitExceded = 0;
                 let cursorPos = leggeraExtraFunctions.getCursorPos(e);
                 let inputTextString1;
@@ -278,8 +278,8 @@ function mixWrapper() {
                 // }
             } else {
                 if (leggeraVariables.limitExceded === 0) {
-                    document.querySelector('#preview-btn').classList.remove('no-opacity');
-                    alert(`Foi excedido o limite máximo de caractéres aceites pelo Autosave.\nPara pre-visualizar e guardar em cache as alterações efetuadas, carrega em "Preview", localizado ao lado direito do botão "Colapsáveis"`)
+                    document.querySelector('#preview-btn').classList.remove('no-display');
+                    alert(`Foi excedido o limite máximo de caractéres aceites pelo Autosave.\nPara pre-visualizar e guardar em cache as alterações efetuadas, carrega em "Preview", localizado ao lado esquerdo do botão "QuickSave".`)
                 }
                 leggeraVariables.limitExceded = 1;
 
@@ -313,7 +313,7 @@ function mixWrapper() {
             leggeraVariables.activeTextarea = e.target;
             let inputText = leggeraVariables.textarea.value;
             if (inputText.length <= 100000) {
-                document.querySelector('#preview-btn').classList.add('no-opacity');
+                document.querySelector('#preview-btn').classList.add('no-display');
                 leggeraVariables.limitExceded = 0;
                 let cursorPos = leggeraExtraFunctions.getCursorPos(e);
                 // divide o tópico em duas partes (até ao cursor, e após o curos)
@@ -330,8 +330,8 @@ function mixWrapper() {
                 leggeraExtraFunctions.autosave2JSON();
             } else {
                 if (leggeraVariables.limitExceded === 0) {
-                    document.querySelector('#preview-btn').classList.remove('no-opacity');
-                    alert('Foi excedido o limite máximo de caractéres aceites pelo Autosave.\nPara pre-visualizar e guardar em cache as alterações efetuadas, carrega em "Preview", localizado ao lado direito do botão "Colapsáveis"')
+                    document.querySelector('#preview-btn').classList.remove('no-display');
+                    alert('Foi excedido o limite máximo de caractéres aceites pelo Autosave.\nPara pre-visualizar e guardar em cache as alterações efetuadas, carrega em "Preview", localizado ao lado esquerdo do botão "QuickSave".')
                 }
                 leggeraVariables.limitExceded = 1;
 
@@ -380,25 +380,29 @@ function mixWrapper() {
                 if (!sectionsArray[i].classList.contains('no-display')) { sectionsArray[i].classList.add('no-display') }
             }
             const modal = document.querySelector('body').appendChild(leggeraExtraFunctions.elementGenerator('div', 'manuals-modal', '', ''));
-            const saveManualModal = modal.appendChild(leggeraExtraFunctions.elementGenerator('div', 'savemanual-container', '', 'aqui vêmos mambos para uardar'));
-            saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('h1', '', '', 'nome'));
-            saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('input', 'save-manual-input', '', ''));
-            saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-success', 'Guardar Manual'));
-            saveManualModal.lastChild.addEventListener('click', leggeraMyManualsDBConnect.saveManual)
-            saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-danger', 'Voltar ao editor'));
-            saveManualModal.lastChild.addEventListener('click', leggeraMyManualsDBConnect.backHome)
+            const saveManualModal = modal.appendChild(leggeraExtraFunctions.elementGenerator('div', 'savemanual-container', 'row', ''));
+
+            const leftWrapper = saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-8 text-left', ''));
+            leftWrapper.appendChild(leggeraExtraFunctions.elementGenerator('h1', '', '', 'Nome do manual'));
+            leftWrapper.appendChild(leggeraExtraFunctions.elementGenerator('input', 'save-manual-input', '', ''));
+            const midWrapper = saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-2 text-left', ''));
+            midWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-success', "<i class='lni lni-save'></i>&nbsp;&nbsp;Guardar Manual"));
+            midWrapper.lastChild.addEventListener('click', leggeraMyManualsDBConnect.saveManual)
+            const rightWrapper = saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('div', 'close-myManuals-wrapper', 'col-md-2 text-right', ''));
+            rightWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-light', '<i class="lni lni-reply"></i>&nbsp;&nbsp;Voltar ao editor'));
+            rightWrapper.lastChild.addEventListener('click', leggeraMyManualsDBConnect.backHome)
 
 
-
-            const modalTable = modal.appendChild(leggeraExtraFunctions.elementGenerator('table', 'modal-container', '', ''));
+            const manualsWrapper = modal.appendChild(leggeraExtraFunctions.elementGenerator('div','my-manuals-wrapper','',''));
+            const modalTable = manualsWrapper.appendChild(leggeraExtraFunctions.elementGenerator('table', 'modal-container', '', ''));
             const modalHeader = modalTable.appendChild(leggeraExtraFunctions.elementGenerator('thead', '', '', ''));
             modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', '', 'Título do Manual'))
-            modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', '', 'Última atualização'))
+            modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', 'text-right', 'Última atualização'))
             modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', '', ''))
             const modalBody = modalTable.appendChild(leggeraExtraFunctions.elementGenerator('tbody', '', '', ''));
             for (i = 0; i < rsp.length; i++) {
                 let modalRow = modalBody.appendChild(leggeraExtraFunctions.elementGenerator('tr', `manual-${i + 1}`, `animate__animated animate__fadeInUp`, ''))
-                if (i % 2 === 0) { modalRow.classList.add('manual-par') } else { modalRow.classList.add('manual-impar') }
+                if (i % 2 === 0) { modalRow.classList.add('manual-impar') } else { modalRow.classList.add('manual-par') }
                 modalRow.setAttribute('style', `--animate-delay: ${(i + 1) * 0.2}s`)
                 modalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', rsp[i].title))
                 modalRow.lastChild.addEventListener('click', function (e) {
@@ -409,12 +413,6 @@ function mixWrapper() {
                 modalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', `<i class="lni lni-eraser"></i>`))
                 modalRow.lastChild.addEventListener('click', leggeraMyManualsDBConnect.deleteManual);
             }
-            let saveModalRow = modalBody.appendChild(leggeraExtraFunctions.elementGenerator('tr', `manual-new`, `animate__animated animate__fadeInUp`, ''))
-            if (rsp.length % 2 === 0) { saveModalRow.classList.add('manual-par') } else { saveModalRow.classList.add('manual-impar') }
-            saveModalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', 'add new manual here'))
-            saveModalRow.lastChild.setAttribute('colspan', 3);
-            saveModalRow.lastChild.addEventListener('click', leggeraMyManualsDBConnect.createManual);
-
         },
 
         // Vai buscar o código HTML do código selecionado
@@ -1556,9 +1554,10 @@ function mixWrapper() {
         } else {
             let geradorColapWrapper = colaphcPreview.appendChild(leggeraExtraFunctions.elementGenerator('div', 'gerador-colaps-wrapper', 'row'));
 
-            let col = geradorColapWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-12 gerador-colaps-1', 'Não foi encontrado nenhum colapsável.'));
-
-            geradornewCollapBtn = geradorColapWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', '', "btn btn-info", '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
+            let col = geradorColapWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'gerador-colaps-1', ''));
+            col.appendChild(leggeraExtraFunctions.elementGenerator('span', 'no-colaps-span', '', 'Não foi encontrado nenhum colapsável.'));
+            geradorColapWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'flex-br', ''));
+            let geradornewCollapBtn = geradorColapWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', '', "btn btn-info", '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
             geradornewCollapBtn.addEventListener('click', novoColapsavel)
 
             col.appendChild(leggeraExtraFunctions.elementGenerator('div'));

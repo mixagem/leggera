@@ -8,10 +8,16 @@ let currentUsername = document.querySelector('#username');
 
 // ############ LANDING START ############
 
-window.onload = setTimeout(leggeraLoading);
-document.querySelector('#login-btn').addEventListener('click', leggeraLogin);
+(function randomBG() {
 
-function leggeraLoading() {
+    const rng = Math.floor(Math.random() * 1) + 1;
+    console.log(rng);
+    console.log(document.querySelector('#loading-wrapper'));
+
+    document.querySelector('#loading-wrapper').style.backgroundImage = `url(assets/img/loading-bg-` + rng + `.png)`;
+})();
+
+(function leggeraLoading() {
     const loginWrapperFade = setTimeout(function () {
 
         const landingLogos = document.querySelectorAll('#loading-wrapper .animate__animated')
@@ -35,11 +41,11 @@ function leggeraLoading() {
         }, 5)
 
     }, 1400)
-}
+})();
 
 // ############ COOKIE LOGIN ############
 
-
+document.querySelector('#login-btn').addEventListener('click', leggeraLogin);
 // Vai buscar a cookie à cache (caso exista)
 function cookieLogin() {
 

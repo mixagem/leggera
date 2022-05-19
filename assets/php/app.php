@@ -4,16 +4,17 @@ echo "<section class='header sticky-top'>
     <div class='row'>
 
         <div class='col-md-5'>
-            <div class='col-md-12 headControls text-left'>
+            <div class='col-md-5 headControls text-left'>
                 <button type='button' class='btn btn-info' id='ancora-btn'><i class='lni lni-anchor'></i>
                 </button>
                 <button type='button' class='btn btn-light' id='colap-btn'><i class='lni lni-layers'></i>
                     Colapsáveis</button>
-                    <span id='headControlsSpacer'></span>
-                <button type='button' class='btn btn-warning no-opacity' id='preview-btn'><i class='lni lni-magnifier'></i>
-                    Preview</button>
-                <button type='button' class='btn btn-warning' id='manuals-btn'><i class='lni lni-library'></i>
+                <button type='button' class='btn btn-light' id='manuals-btn'><i class='lni lni-library'></i>
                     Manuais</button>
+                </div>
+                <div class='col-md-7 headControls text-right'>
+                <button type='button' class='btn btn-warning no-display' id='preview-btn'><i class='lni lni-magnifier'></i>
+                Preview</button>
                 <button type='button' class='btn btn-warning' id='quicksave-btn'><i class='lni lni-upload'></i>
                     QuickSave</button>
                 <button type='button' class='btn btn-warning' id='quickload-btn'><i class='lni lni-download'></i>

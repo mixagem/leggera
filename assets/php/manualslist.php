@@ -6,7 +6,7 @@ $un = trim($_POST['username']);
 $con = mysqli_connect('localhost', 'root', '', 'superliggera');
 
 // query
-$query = "SELECT title, code, timestamp FROM manuals WHERE author = '$un'";
+$query = "SELECT title, code, timestamp FROM manuals WHERE author = '$un' ORDER BY timestamp DESC";
 $result = mysqli_query($con, $query);
 
 $jsonarray = [];

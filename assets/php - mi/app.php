@@ -3,8 +3,8 @@ echo "<section class='header sticky-top'>
 <div class='container-fluid'>
     <div class='row'>
 
-        <div class='col-md-5'>
-            <div class='col-md-6 headControls text-left'>
+        <div class='col-sm-5'>
+            <div class='col-sm-5 headControls text-left'>
                 <button type='button' class='btn btn-info' id='ancora-btn'><i class='lni lni-anchor'></i>
                 </button>
                 <button type='button' class='btn btn-light' id='colap-btn'><i class='lni lni-layers'></i>
@@ -12,7 +12,7 @@ echo "<section class='header sticky-top'>
                 <button type='button' class='btn btn-light' id='manuals-btn'><i class='lni lni-library'></i>
                     Manuais</button>
                 </div>
-                <div class='col-md-6 headControls text-right'>
+                <div class='col-sm-7 headControls text-right'>
                 <button type='button' class='btn btn-warning no-display' id='preview-btn'><i class='lni lni-magnifier'></i>
                 Prever</button>
                 <button type='button' class='btn btn-warning' id='quicksave-btn'><i class='lni lni-upload'></i>
@@ -25,7 +25,7 @@ echo "<section class='header sticky-top'>
                 </button>
             </div>
             <textarea id='textarea'></textarea>
-            <div class='col-md-12 headControls2'>
+            <div class='col-sm-12 headControls2'>
                 <button type='button' class='btn btn-light main-menu' id='textbox-btn'><i
                         class='lni lni-text-format'></i>
                     Caixas de Texto</button>
@@ -43,7 +43,7 @@ echo "<section class='header sticky-top'>
             </div>
         </div>
 
-        <div class='col-md-7'>
+        <div class='col-sm-7'>
             <div id='app-controls-wrapper'></div>
         </div>
 
@@ -55,16 +55,16 @@ echo "<section class='header sticky-top'>
 <div class='container-fluid'>
     <div class='row'>
 
-        <div id='colapsables-wrapper' class='col-md-12 no-display'></div>
+        <div id='colapsables-wrapper' class='col-sm-12 no-display'></div>
 
-        <div class='col-md-12 hc-preview'>
+        <div class='col-sm-12 hc-preview'>
 
             <section class='header-hc'>
                 <div class='container-fluid'>
                     <div class='row'>
-                        <div class='col-md-5 header-logo'><img src='assets/img/logo_kbmon.png'></div>
-                        <div class='col-md-3'></div>
-                        <div class='col-md-4 head-slogan'><span>fast software</span> for fast companies</div>
+                        <div class='col-sm-5 header-logo'><img src='assets/img/logo_kbmon.png'></div>
+                        <div class='col-sm-3'></div>
+                        <div class='col-sm-4 head-slogan'><span>fast software</span> for fast companies</div>
                     </div>
                 </div>
             </section>
@@ -72,9 +72,9 @@ echo "<section class='header sticky-top'>
             <section class='text-body-hc'>
                 <div class='container'>
                     <div class='row'>
-                        <div class='col-md-1'></div>
-                        <div id='helpcenter-preview' class='col-md-10'></div>
-                        <div class='col-md-1'></div>
+                        <div class='col-sm-1'></div>
+                        <div id='helpcenter-preview' class='col-sm-10'></div>
+                        <div class='col-sm-1'></div>
                     </div>
                 </div>
             </section>
@@ -82,9 +82,9 @@ echo "<section class='header sticky-top'>
             <section class='footer-hc'>
                 <div class='container-fluid'>
                     <div class='row'>
-                        <div class='col-md-5'><img src='assets/img/HC_Developers_logo_footer.svg'></div>
-                        <div class='col-md'></div>
-                        <div class='col-md-5'></div>
+                        <div class='col-sm-5'><img src='assets/img/HC_Developers_logo_footer.svg'></div>
+                        <div class='col-sm'></div>
+                        <div class='col-sm-5'></div>
                     </div>
                 </div>
             </section>

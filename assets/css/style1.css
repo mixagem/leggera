@@ -600,7 +600,7 @@ body {
     color: var(--text-color-dark);
 }
 
-.gerador-links-wrapper .col-md-7 {
+.gerador-links-wrapper .col-sm-7 {
     display: flex;
 }
 
@@ -614,7 +614,7 @@ body {
     color: var(--text-color-dark);
 }
 
-.gerador-links-wrapper .col-md-12 {
+.gerador-links-wrapper .col-sm-12 {
     font-size: 20px;
 }
 
@@ -633,7 +633,7 @@ body {
     font-size: 12px;
 }
 
-#hilite-checkboxes-row {
+#hilite-radio-row {
     padding: 10px 0px;
     color: var(--text-color-light);
 }

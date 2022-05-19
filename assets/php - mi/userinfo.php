@@ -46,10 +46,10 @@ switch ($action) {
         $jsonarray = [];
         $jsonarray[] = "<br><div class='container-fluid'>
         <div style='padding-top:20px;' class='row'>
-            <div style='display: flex;justify-content: center;' class='col-md-4'>
+            <div style='display: flex;justify-content: center;' class='col-sm-4'>
                 <img id='user-pic' style='max-height: 200px;border-radius: 50%;' src='" . $img . "'>
             </div>
-            <div id='user-info-wrapper' class='col-md-8'>
+            <div id='user-info-wrapper' class='col-sm-8'>
                 <div id='user-info'>
                     <div style='width:100%;font-size:35px;font-weight: bold;'>" . $nome . "</div>
                     <div style='width:100%;font-size:15px;font-weight: bold;'>" . $alias . "</div>
@@ -94,10 +94,10 @@ switch ($action) {
         };
         echo "<br><div class='container-fluid'>
         <div style='padding-top:20px;' class='row'>
-            <div style='display: flex;justify-content: center;' class='col-md-4'>
+            <div style='display: flex;justify-content: center;' class='col-sm-4'>
                 <img id='user-pic' style='max-height: 200px;border-radius: 50%;' src='" . $img . "'>
             </div>
-            <div id='user-info-wrapper' class='col-md-8'>
+            <div id='user-info-wrapper' class='col-sm-8'>
                 <div id='user-info'>
                     <div style='width:100%;font-size:35px;font-weight: bold;'>" . $nome . "</div>
                     <div style='width:100%;font-size:20px'><span class='material-icons' style='vertical-align:sub;font-size:22px'>contact_mail</span>&nbsp;&nbsp;&nbsp;" . $email . "</div>

@@ -45,12 +45,12 @@
     margin-left: 2%;
 }
 
-#colapsables-wrapper>div>div>.col-md-7 {
+#colapsables-wrapper>div>div>.col-sm-7 {
     padding-right: 0px;
 }
 
 /* todos os h2 preview */
-#colapsables-wrapper>div>div>.col-md-7>div:first-child {
+#colapsables-wrapper>div>div>.col-sm-7>div:first-child {
     background-color: #333;
     margin-bottom: 10px;
     font-size: 20px;
@@ -75,7 +75,7 @@
 }
 
 /* todos os body preview  */
-#colapsables-wrapper>div>div>.col-md-7>div:last-child {
+#colapsables-wrapper>div>div>.col-sm-7>div:last-child {
     background-color: #fff;
     padding: 20px 20px;
     border-left: 2px solid #333;

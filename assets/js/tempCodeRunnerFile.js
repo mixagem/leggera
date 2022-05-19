@@ -1,1 +1,0 @@
-(1===2) ? (console.log('s')) : (console.log('n'))

@@ -126,8 +126,8 @@ function mixWrapper() {
         },
         // alterações de contraste
         lightThemePreview: function (convertedPreview) {
-            // só faz as alterações ao tema 0 (lightTheme[0] = Editor claro, preview escuro || lightTheme[1] = Editor escuro, preview claro)
-            if (Number(lightTheme) === 0) {
+            // só faz as alterações ao tema 0 (lightTheme[0] = Editor claro, preview escuro || lightTheme[1] = Editor escuro, preview claro) e quando fora da vista de colapsáveis
+            if (Number(lightTheme) === 0 && (!leggeraVariables.botaoVistaColap.classList.contains('btn-info'))) {
                 // black & white switcheroo
                 convertedPreview = convertedPreview.replaceAll('rgb(224, 224, 224);" class="material-icons">', 'rgb(40, 40, 40);" class="material-icons">');
                 convertedPreview = convertedPreview.replaceAll('rgb(0, 0, 0);" class="material-icons">', 'rgb(224, 224, 224);" class="material-icons">');
@@ -151,7 +151,7 @@ function mixWrapper() {
         funkyBookmarks: function (convertedPreview) {
             convertedPreview = convertedPreview.replaceAll('<div id="marcador-', '<div class="funky-bookmarks" id="marcador-');
             convertedPreview = convertedPreview.replaceAll(' style="display: none;"></div>', '>### marcador ###</div>');
-            
+
             return convertedPreview
         }
     }
@@ -517,6 +517,7 @@ function mixWrapper() {
     // ################ funções para atualizar o preview com o cursor laranja/azul
     const leggeraUpdatePreviews = {
         execute: function (e) {
+
             // babyproof caso existam alterações pendentes na vista colapsáveis
             if (leggeraVariables.botaoVistaColap.classList.contains('btn-info')) {
                 leggeraVariables.colapList = document.querySelectorAll('.row .seccao-phcgo');
@@ -668,50 +669,66 @@ function mixWrapper() {
         },
         // Vai buscar o código HTML do manual selecionado
         getManualCode: function (e, rsp) {
-            const manualID = e.target.parentElement.id;
-            // mostra a app
-            document.querySelector('.app-grid').classList.remove('no-display');
-            document.querySelector('#manuals-modal').remove();                                                                                                              // 01234567    
-            leggeraVariables.textarea.value = rsp[Number(manualID.slice(7, manualID.length)) - 1].code;// este 7 serve para selecionar o inicio da string que vem do manualID (manual-1)
-            // Atualiza o preview
-            leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
-            leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
-            leggeraCollapsables.appControlsColap();
-            // Guarda as alterações em cache
-            leggeraMethods.autosave2JSON();
+            const promptValue = window.prompt('Tens a certeza que queres carregar este tópico? O tópico presente no editor será discartado e não poderá ser recuperado.\n\nCarrega OK para continuar, ou Cancelar para abortar a operação. ');
+            if (promptValue !== null) {
+                const manualID = e.target.parentElement.id;
+                // mostra a app
+                document.querySelector('.app-grid').classList.remove('no-display');
+                document.querySelector('#manuals-modal').remove();                                                                                                              // 01234567    
+                leggeraVariables.textarea.value = rsp[Number(manualID.slice(7, manualID.length)) - 1].code;// este 7 serve para selecionar o inicio da string que vem do manualID (manual-1)
+                // Atualiza o preview
+                leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+                leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
+                leggeraCollapsables.appControlsColap();
+                // Guarda as alterações em cache
+                leggeraMethods.autosave2JSON();
+            }
         },
         // cria/atualiza o manual
         saveManual: function (e) {
+            // caso novo manual, vai buscar o nome do input da searchbox
             let manualName = document.querySelector('#save-manual-input').value;
-            // correção para misclicks
-            if (e.target.tagName === "TD") { manualName = e.target.parentElement.firstChild.innerText };
-            if (e.target.tagName === "I") { manualName = e.target.parentElement.parentElement.firstChild.innerText };
-            $.ajax({
-                type: "POST",
-                url: "assets/php/manualsupdate.php",
-                dataType: "text",
-                data: {
-                    username: loggedinUser,
-                    manual: manualName,
-                    timestamp: Date.now(),
-                    action: 'save',
-                    code: document.querySelector('#textarea').value
-                },
-                success: function (rsp) {
-                    if (rsp.startsWith('Err')) { console.log('fudeu') }
-                    else if (rsp.includes('atual')) {
-                        alert('tópico atualizado com sucesso');
-                        // mostra a app
-                        document.querySelector('.app-grid').classList.remove('no-display');
-                        document.querySelector('#manuals-modal').remove();
-                    } else {
-                        alert('tópico criado com sucesso');
-                        // mostra a app
-                        document.querySelector('.app-grid').classList.remove('no-display');
-                        document.querySelector('#manuals-modal').remove();
+
+            // caso a função seja invocada através do botão save, o nome é o que está exibido na linha (bom misclick correction)
+            if (e.target.tagName === "TD" || e.target.tagName === "I") {
+                if (e.target.tagName === "TD") { manualName = e.target.parentElement.firstChild.innerText };
+                if (e.target.tagName === "I") { manualName = e.target.parentElement.parentElement.firstChild.innerText };
+                let promptValue = window.prompt(`Tens a certeza que queres atualizar o tópico "${manualName}"?\n\nCarrega OK para continuar, ou Cancelar para abortar a operação. `);
+            } else { let promptValue = ""; }
+
+            if (leggeraManuais.promptValue !== null) {
+                // babyproof para guardar em BD em problemas
+                let manualText = document.querySelector('#textarea').value;
+                manualText = manualText.replaceAll("'", '&apos;')
+                manualText = manualText.replaceAll("“", '"')
+                manualText = manualText.replaceAll("”", '"')
+                $.ajax({
+                    type: "POST",
+                    url: "assets/php/manualsupdate.php",
+                    dataType: "text",
+                    data: {
+                        username: loggedinUser,
+                        manual: manualName,
+                        timestamp: Date.now(),
+                        action: 'save',
+                        code: manualText
+                    },
+                    success: function (rsp) {
+                        if (rsp.startsWith('Err')) { console.log('fudeu') }
+                        else if (rsp.includes('atual')) {
+                            alert('tópico atualizado com sucesso');
+                            // mostra a app
+                            document.querySelector('.app-grid').classList.remove('no-display');
+                            document.querySelector('#manuals-modal').remove();
+                        } else {
+                            alert('tópico criado com sucesso');
+                            // mostra a app
+                            document.querySelector('.app-grid').classList.remove('no-display');
+                            document.querySelector('#manuals-modal').remove();
+                        }
                     }
-                }
-            })
+                })
+            }
         },
         // volta para o editor
         backHome: function () {
@@ -1320,6 +1337,7 @@ function mixWrapper() {
         writeHR: function () {
             let novoSeparador = leggeraMethods.mambo('hr');
             novoSeparador.style.borderTop = '3px solid #eee';
+            novoSeparador.style.marginTop = '0px';
             novoSeparador = novoSeparador.outerHTML
             leggeraMethods.escreveNaTextarea(novoSeparador);
         },
@@ -1440,19 +1458,18 @@ function mixWrapper() {
         },
         createBookmark: function () {
             const nomeMarcador = document.querySelector('#marcador-nome-input').value;
-            const marcador = leggeraMethods.mambo('div', `marcador-${nomeMarcador}`)
-            marcador.style.display = 'none';
-            leggeraMethods.escreveNaTextarea('\n'+marcador.outerHTML+'\n');
+            const marcador = leggeraMethods.mambo('p', `marcador-${nomeMarcador}`, '', `Parágrafo com o marcador ${nomeMarcador}`)
+            leggeraMethods.escreveNaTextarea('\n' + marcador.outerHTML + '\n');
             leggeraTitlesAndLinks.refreshBookmarkList();
         },
         refreshBookmarkList: function () {
             const bookmarkListWrapper = document.querySelector('#marcadores-dropdown').parentElement;
             bookmarkListWrapper.innerHTML = '';
             const bookmarkList = bookmarkListWrapper.appendChild(leggeraMethods.mambo('select', 'marcadores-dropdown'));
-            const allBookmarks = document.querySelectorAll('div[id^=marcador-]');
+            const allBookmarks = document.querySelectorAll('p[id^=marcador-]');
             if (allBookmarks.length > 0) {
                 //marcador-                                                               
-                for (marcador of allBookmarks) {      //012345678   
+                for (marcador of allBookmarks) {         //012345678   
                     bookmarkList.appendChild(leggeraMethods.mambo('option', '', '', marcador.id.slice(9)))
                     bookmarkList.lastChild.value = marcador.id
                 }

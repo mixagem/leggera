@@ -2,16 +2,16 @@
 /* helpcenter+ supperliggera        */
 /* mambosinfinitos, 2022            */
 /************************************/
-let darktheme = 1;
+let lightTheme = 1;
 
-const getThemeFromCache = localStorage.getItem('darktheme');
+const getThemeFromCache = localStorage.getItem('lightTheme');
 if (getThemeFromCache !== null) {
-    darktheme = JSON.parse(getThemeFromCache);
+    lightTheme = JSON.parse(getThemeFromCache);
 }
 
-document.querySelector('#theme-css').setAttribute('href', `assets/css/style${darktheme}.css`);
-document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${darktheme}.css`);
-document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${darktheme}.css`);
+document.querySelector('#theme-css').setAttribute('href', `assets/css/style${lightTheme}.css`);
+document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${lightTheme}.css`);
+document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${lightTheme}.css`);
 
 let loggedinUser;
 let currentUsername = document.querySelector('#username');
@@ -94,7 +94,7 @@ function cookieLogin() {
                 if (response.includes('Erro')) {
                     localStorage.removeItem('bolachinha');
                 } else {
-                    darktheme = response[1];
+                    lightTheme = response[1];
                     loggedinUser = response[2];
                     leggeraLoginSucess(response);
                 }
@@ -113,13 +113,13 @@ function cookieCheckbox() {
     if (wantCookie === 0) {
         wantCookie = 1;
         wantCookieCheckbox.innerText = 'check_box';
-        console.log(darktheme)
-        if (Number(darktheme) === 0) { wantCookieCheckbox.style.color = 'rgb(81, 63, 255)' }
+        console.log(lightTheme)
+        if (Number(lightTheme) === 0) { wantCookieCheckbox.style.color = 'rgb(81, 63, 255)' }
         else { wantCookieCheckbox.style.color = 'gold' }
     } else {
         wantCookie = 0
         wantCookieCheckbox.innerText = 'check_box_outline_blank';
-        if (Number(darktheme) === 0) { wantCookieCheckbox.style.color = 'black' }
+        if (Number(lightTheme) === 0) { wantCookieCheckbox.style.color = 'black' }
         else { wantCookieCheckbox.style.color = 'white' }
     }
 }
@@ -139,9 +139,9 @@ function leggeraLogin() {
                 leggeraLoginFail();
             } else {
                 loggedinUser = currentUsername.value;
-                darktheme = response[1];
-                let saveTheme2Cache = JSON.stringify(darktheme);
-                localStorage.setItem('darktheme', saveTheme2Cache);
+                lightTheme = response[1];
+                let saveTheme2Cache = JSON.stringify(lightTheme);
+                localStorage.setItem('lightTheme', saveTheme2Cache);
                 leggeraLoginSucess(response);
             }
         },
@@ -184,11 +184,11 @@ function leggeraLoginFail() {
 
 function leggeraLoginSucess(rsp) {
 
-    darktheme = rsp[1];
+    lightTheme = rsp[1];
 
-    document.querySelector('#theme-css').setAttribute('href', `assets/css/style${darktheme}.css`);
-    document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${darktheme}.css`);
-    document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${darktheme}.css`);
+    document.querySelector('#theme-css').setAttribute('href', `assets/css/style${lightTheme}.css`);
+    document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${lightTheme}.css`);
+    document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${lightTheme}.css`);
 
     if (wantCookie === 1) {
         const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);

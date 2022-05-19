@@ -243,32 +243,29 @@ body {
 
 /*###########   Textboxes    ###########*/
 
-.textbox-wrapper {
-    padding-top: 25px;
-}
 
+#textbox-wrapper {
+    padding-top: 22px;
+}
+/* textbox - adicionar border para contraste no tema light */ 
+#textbox-wrapper > div > div {
+    border: 2px solid #ccc;
+    margin-top: -4px;
+}
 /* ajustamento de margem para todas as textboxes */
 .header .novoalerta {
     margin-top: 0px;
 }
-
-/* serve para dar clip nos tópicos relacionados */
-.header .alerta-relaciona {
-    max-height: 114.5px;
-    overflow: clip;
-}
-
 /* div da textbox */
 .helpcenter-textbox {
     cursor: pointer;
     opacity: 0.8;
     text-align: left !important;
 }
-
+/* hover efects */
 .helpcenter-textbox:hover {
     opacity: 1
 }
-
 .helpcenter-textbox:hover .novoalerta {
     box-shadow: 2px 2px var(--background-color), 4px 5px var(--primary-title-color) !important;
     transition-duration: 250ms;
@@ -277,10 +274,10 @@ body {
 
 /*###########     Icons      ###########*/
 
+
 .icon-row-wrapper {
     padding-right: 5px;
 }
-
 .phcgo-icon {
     font-size: 35px;
     color: var(--text-color-light);
@@ -289,30 +286,25 @@ body {
     cursor: pointer;
     text-shadow: 1px 1px var(--background-color);
 }
-
 .phcgo-icon:hover>span {
     color: var(--primary-title-color) !important;
     font-size: 35px;
     text-shadow: 1px 1px var(--background-color);
     transition-duration: 150ms;
 }
-
 .icon-sub-row-1 {
     padding-right: 0 !important;
     padding-left: 30px !important;
     padding-bottom: 0px !important;
 }
-
 .icon-sub-row-2 {
     padding-left: 0 !important;
     padding-right: 30px !important;
 }
-
 #color-picker {
     padding-top: 15px;
     text-align: center;
 }
-
 .color-pick {
     width: 35px;
     height: 35px;
@@ -324,7 +316,6 @@ body {
     opacity: .4;
     border: var(--border-picker);
 }
-
 /* checkmark */
 .color-pick>i {
     display: flex;
@@ -334,53 +325,31 @@ body {
     margin-top: 20%;
     opacity: 0;
 }
-
 /* checkmark opacity */
 .selected-color {
     opacity: 1;
 }
-
 .selected-color>i {
     opacity: 1;
     color: var(--primary-title-color);
     font-size: 18px;
 }
-
 #icon-color-2.selected-color>i,
 #icon-color-5.selected-color>i {
     color: var(--text-color-dark);
 }
-
 .color-pick:hover {
     cursor: pointer;
     opacity: 1;
     transition-duration: 200ms;
     border: var(--border-picker-active);
 }
-
-#icon-color-1 {
-    background-color: #000000;
-}
-
-#icon-color-2 {
-    background-color: #e0e0e0;
-}
-
-#icon-color-3 {
-    background-color: #1a237e;
-}
-
-#icon-color-4 {
-    background-color: #b70505;
-}
-
-#icon-color-5 {
-    background-color: #ff8f00;
-}
-
-#icon-color-6 {
-    background-color: #004d40;
-}
+#icon-color-1 {background-color: #000000;}
+#icon-color-2 {background-color: #e0e0e0;}
+#icon-color-3 {background-color: #1a237e;}
+#icon-color-4 {background-color: #b70505;}
+#icon-color-5 {background-color: #ff8f00;}
+#icon-color-6 {background-color: #004d40;}
 
 
 /*###########    Buttons     ###########*/

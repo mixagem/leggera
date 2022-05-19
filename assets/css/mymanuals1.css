@@ -1,8 +1,13 @@
 #manuals-modal {
-    height: 100vh;
+    min-height: 100vh;
     background-color: #111;
     background-image: url('../img/manuals-bg.png');
+    background-attachment: fixed;
 }
+
+#my-manuals-wrapper {
+    padding-bottom: 5vh; 
+} 
 
 #modal-container {
     background: var(--primary-title-color);

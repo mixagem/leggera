@@ -171,11 +171,11 @@ function mixWrapper() {
                 success: function (rsp) {
                     leggeraVariables.userInfo = rsp[0];
                     userWantAlerts = rsp[1];
-                },
-                error: function (rsp) {
-                    leggeraVariables.userInfo = rsp[0];
-                    userWantAlerts = rsp[1];
-                }
+                }// ,
+                // error: function (rsp) {
+                //     leggeraVariables.userInfo = rsp[0];
+                //     userWantAlerts = rsp[1];
+                // }
             })
         },
         // método principal para injetar o código HTML do elemento selecionado, na última posição do cursor
@@ -234,7 +234,7 @@ function mixWrapper() {
         },
         // método para injetar um <br> ao carregar Enter
         newBr: function (e) {
-            if (e.target.tagName === 'TEXTAREA' && e.key === 'Enter') {
+            if (e.target.tagName === 'TEXTAREA' && e.key === 'Enter' && e.target.id !== 'hilite-textarea') {
                 leggeraMethods.escreveNaTextarea('<br>');
             }
         },
@@ -261,7 +261,6 @@ function mixWrapper() {
         updateCodeType: function (e) {
 
             leggeraVariables.codeType = e.target.id
-            console.log(leggeraVariables.codeType)
         },
         // método para atualizar o tipo de tabela selecionado
         updateTableType: function (e) {
@@ -713,8 +712,13 @@ function mixWrapper() {
         },
         backHome: function () {
             const sectionsArray = document.querySelectorAll('section');
+            if (leggeraVariables.activeTextarea.value === ''){
+            leggeraVariables.hcPreview.innerHTML = '';
+            leggeraMethods.displayUserStats();
+        }
             for (i = 0; i < sectionsArray.length; i++) { sectionsArray[i].classList.remove('no-display') }
             document.querySelector('#manuals-modal').remove();
+            
         },
         deleteManual: function (e) {
             let eTarget = e.target;
@@ -827,17 +831,18 @@ function mixWrapper() {
         }
         catch { }
         // atualiza o hcPreview, conforme tenha encontrado ou não cache 
-        if (leggeraVariables.textarea.value === '') {
-            setTimeout(function () {
+        const userinfoDelay = setTimeout(function () {
+            if (leggeraVariables.textarea.value === '') {
                 leggeraMethods.displayUserStats();
-            }, 200);
-        } else {
-            leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('span', '', '', 'Encontrei um tópico em cache. A carregar...'));
-            setTimeout(function () {
-                leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
-                leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
-            }, 1000);
-        }
+            } else {
+                leggeraVariables.hcPreview.innerHTML = '';
+                leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('span', '', '', 'Encontrei um tópico em cache. A carregar...'));
+                setTimeout(function () {
+                    leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+                    leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
+                }, 1000);
+            }
+        }, 1000)
     })();
 
     // ################ textboxes

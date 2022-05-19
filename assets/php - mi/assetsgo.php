@@ -1,7 +1,18 @@
 <?php
 
 $action = trim($_POST['action']);
-$con = mysqli_connect('localhost', 'mambosin_leggeraroot', 'I!HBbpY$4J&l', 'mambosin_superleggera');
+$con = mysqli_connect('localhost', 'mambosin_leggeraroot', '?Rq3~Am}@%mb', 'mambosin_superleggera');
+
+function utf8ize($d) {
+    if (is_array($d)) {
+        foreach ($d as $k => $v) {
+            $d[$k] = utf8ize($v);
+        }
+    } else if (is_string ($d)) {
+        return utf8_encode($d);
+    }
+    return $d;
+}
 
 switch ($action) {
     case 'icons':
@@ -15,7 +26,7 @@ switch ($action) {
                 // manda para array o icon, já formatado
                 $jsonarray[] = "<span style='vertical-align:" . $row['valign'] . ";' class='material-icons'>" . $row['iconcode'] . "</span>";
             };
-            echo json_encode($jsonarray);
+            echo json_encode(utf8ize($jsonarray));
         } else {
             echo "Erro: Ocurreu um erro ao carregar os icons do PHC GO.";
         }
@@ -31,7 +42,7 @@ switch ($action) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $jsonarray[] = "<div class='novoalerta " . $row['textboxclass'] . "'><div class='novoalerta-titulo'>" . $row['titulo'] . "</div><br><div class='novoalerta-contido'>" . $row['texto'] . "</div></div>";
             };
-            echo json_encode($jsonarray);
+            echo json_encode(utf8ize($jsonarray));
         } else {
             echo "Erro: Ocurreu um erro ao carregar as textboxes do PHC GO.";
         }
@@ -88,7 +99,7 @@ switch ($action) {
         }
         // array com todos os buttons do PHC GO
         $jsonarray = [$horizonarray, $forestarray, $darkarray, $lightarray];
-        echo json_encode($jsonarray);
+        echo json_encode(utf8ize($jsonarray));
         break;
 }
 mysqli_close($con);

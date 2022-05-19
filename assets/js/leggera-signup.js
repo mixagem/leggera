@@ -64,7 +64,7 @@ function leggeraSignup() {
                 }
             }
         });
-    }, 1000);
+    }, 2000);
 }
 function leggeraLoginFail(rsp) {
     document.querySelector('#loading-gif').classList = 'animate__animated animate__fadeOut margin-animation-complete';

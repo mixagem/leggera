@@ -94,7 +94,6 @@ function cookieCheckbox() {
     if (wantCookie === 0) {
         wantCookie = 1;
         wantCookieCheckbox.innerText = 'check_box';
-        console.log(lightTheme)
         if (Number(lightTheme) === 0) { wantCookieCheckbox.style.color = 'rgb(81, 63, 255)' }
         else { wantCookieCheckbox.style.color = 'gold' }
     } else {
@@ -164,7 +163,7 @@ function leggeraLoginSucess(rsp) {
     document.querySelector('#theme-css').setAttribute('href', `assets/css/style${lightTheme}.css`);
     document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${lightTheme}.css`);
     document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${lightTheme}.css`);
-
+    if (Number(lightTheme)===0 && Number(wantCookie)===1) {wantCookieCheckbox.style.color = 'rgb(81, 63, 255)'}
     const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);
     const novaBolachinha = JSON.stringify(fornoBolachinha);
 

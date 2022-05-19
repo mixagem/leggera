@@ -1,9 +1,41 @@
 /************************************/
 /* helpcenter+ supperliggera        */
 /* mambosinfinitos, 2022            */
-/************************************/
-function mixWrapper() {
+/* featurelist:
+    - helpcenter "offline" preview
+    - injetor caixas texto
+    - injetor de icons com seletor de cor
+    - injetor de buttons com seletor de tema
+    - injetor de <hr>
+    - injetor de títulos
+    - injetor de imagens
+    - construtor de listas numeradas, não numeradas, e com links
+    - construtor de tabelas, com selector de estilos e injeção dos <style> necessários 
+        (inclui comentários informativos)
+    - constutor de links, com babyproof para ligações inválidas (# ou http only)
+    - editor live na vista principal 
+        (atualização ao vivo do preview com a posição do cursor + com o que foi acabado de escrever + introdução de <br> ao carregar Enter)
+        (limite de 100.000 caracteres, para evitar a baixa performance em tópicos muito longos)
+    - construtor/editor live de colapsáveis 
+        (inclui reformatação automática dos colapsáveis de tópicos antigos, para adicionar ligação ao título do colapsável ao gravar as alterações efetuadas)
+    - ligação api hilite.me c/ formatação automática para helpcenter (inclui compatibilidade indentação json, vb.net e typescript, desde que introduzidos com a indentação correta)
+    - importação & conversão de tabelas 
+        (remove os estilos que tem, e aplica o que estiver definido)
+    - autosave / autoload - grava o tópico em cache quando clickamos ou escrevemos na textarea principal. 
+        ao carregar a página, vai buscar o tópico que ficou em cache (caso exista).
+    - quicksave / quickload 
+        (segundo slot da cache, disponível através das ações respetivas)
+    - cleancode™ - formatação de todos os códigos injetados, de modo a adicionar quebras de linha onde justificável, de modo a tornar o código mais legível fora da aplicação 
+    - titlescroller - flashback aos tempos do myspace e hi5. groovy af. 
 
+    to do:
+        - corrigir o bug "&" no code generator" -> Quando o código tem &ampersand, fica partido
+        - css review
+        - js review
+
+/************************************/
+
+function mixWrapper() {
 
     // ############ SELETORES  ############
 
@@ -11,9 +43,413 @@ function mixWrapper() {
     const appControls = document.querySelector('#app-controls-wrapper');
     const hcPreview = document.querySelector('#helpcenter-preview');
 
+
+    // ############ VARIÁVEIS ############
+
+    // Estilos a serem utilizados para formatação das tabelas
+    const normalTableStyle = '<style>.phcgo-old-table>tbody>tr>td{text-align:left;background-color:#fff;padding:20px 10px;border:solid 1px #000}.phcgo-old-table>tbody>tr:nth-child(1)>td{background-color:rgb(255, 225, 189)!important;border:solid 1px #000!important;font-size:16px!important;font-weight:700}</style>'
+    const modernTableStyle = '<style>.phcgo-new-table>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:rgb(255, 225, 189);color:#000;padding:4px 20px;font-size:20px}</style>'
+    const modernTableStyleBlue = '<style>.phcgo-new-table-blue>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table-blue>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:#3fa8f6;color:#fff;padding:4px 20px;font-size:20px}</style>'
+
+    /** 
+     * arrays a ser utilizados para guardar os slices
+     * das textareas, aquando da introdução de elementos
+     * ([0] = texto até ao cursor | [1] = texto a partir do cursos)
+    */
+    let stringCursor = [];
+    let stringCursorColap = [];
+
+    /**
+     * Array onde vão ser guardados os colapsáveis existentes (.row .seccao-phcgo)
+     * A ser utilizado para a construção da vista de colapsáveis
+     */
+    let colapList = [];
+
+    // variável com o valor da última textarea selecionada
+    let activeTextarea = '';
+
+    // variável com o valor da última checkbox (tipo de tabela) selecionada
+    let codeType = 'vbnet'
+    let tableType = 'normal-table'
+    let currentColor = '#000000'
+    let currentTheme = 'horizon'
+    const colorTable = ['#000000', '#e0e0e0', '#1a237e', '#b70505', '#ff8f00', '#004d40']
+    const themeTable = ['horizon', 'forest', 'dark', 'light']
+
+    // controlo do autosave
+    let limitExceded = 0;
+
+    // ############ FUNÇÕES PRINCIAIS ############
+
+    // document.createElement, mais turbinada para a escritura de grids
+    function elementGenerator(ele, id = '', classlist = '', inner = '') {
+        const elementGenerated = document.createElement(`${ele}`);
+        if (id !== '') { elementGenerated.id = `${id}` }
+        if (classlist !== '') { elementGenerated.classList = `${classlist}` }
+        if (inner !== '') { elementGenerated.innerHTML = `${inner}` }
+        return elementGenerated
+    }
+
+    // Adiciona o elemento selecionado na posição do cursor
+    function escreveNaTextarea(etarget) {
+
+        // babyproofs
+        if (activeTextarea === '') { alert('Coloca o cursor numa área de texto antes de adicionar conteúdos.'); return }
+
+        // caso seja a textarea principal
+        if (activeTextarea.id === 'textarea') {
+            if (etarget === '<br>') {
+                novoSourceCode = `${stringCursor[0]}` + `${etarget}` + "\n" + `${stringCursor[1]}`;
+            } else {
+                // O array stringCursor é composto por duas string, antes e depois do cursor
+                // O novoSourceCode faz o concat das string, com o elemento a ser escrito na posição do cursor.
+                novoSourceCode = `${stringCursor[0]}` + "\n" + `${etarget}` + `${stringCursor[1]}`;
+            }
+            // Atualiza a textarea
+            textarea.value = novoSourceCode;
+
+            // Atualiza o preview
+            hcPreview.innerHTML = fixArtigosRelacionadosLogo(novoSourceCode);
+
+            appControlsColap();
+
+            // Guarda as alterações em cache
+            autosave2JSON();
+
+            // caso seja as textareas da vista de collaps
+        } else {
+            novoSourceCode = `${stringCursorColap[0]}` + "\n" + `${(etarget).toString()}` + `${stringCursorColap[1]}`;
+            activeTextarea.value = novoSourceCode;
+            let inputPreview = activeTextarea.parentElement.nextElementSibling.children[1];
+            inputPreview.innerHTML = novoSourceCode;
+        }
+    }
+
+
+    // ############ FUNÇÕES AUXILIARES  ############
+
+    // Função para guardar na cache do browser o Source Code do tópico (e respetivas alterações)
+    function autosave2JSON() {
+        let textarea2JSON = JSON.stringify(textarea.value);
+        localStorage.setItem('textarea', textarea2JSON);
+    }
+
+    /**
+    * Função para alterar o código do preview para apontar para a imagem local.
+    * O código da textarea não é alterado, para manter compatibilidade com o HelpCenter (por refazer ao contrário, substiuindo o icon velho pelo novo)
+    */
+    function fixArtigosRelacionadosLogo(novoSourceCode) {
+        let sourceCodeParaPreview = novoSourceCode.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"');
+        return sourceCodeParaPreview
+    }
+
+    // função para obter a posição do cursor (utilizado para a textarea)
+    function getCursorPos(e) {
+        let eTarget = e.target;
+        let cursorPos = eTarget.selectionStart;
+        return cursorPos
+    }
+
+    // função para ancorar o cabeçalho do editor
+    function stickyTop() {
+        const header = document.querySelector('.header');
+        const ancoraBtn = document.querySelector('#ancora-btn');
+
+        if (header.classList.contains('sticky-top')) {
+            header.classList.remove('sticky-top');
+            ancoraBtn.classList.replace('btn-info', 'btn-light');
+        } else {
+            header.classList.add('sticky-top');
+            ancoraBtn.classList.replace('btn-light', 'btn-info');
+        }
+    }
+
+    // Mostra injeta um <br> ao carregar Enter
+    function newBr(e) {
+        if (e.target.tagName === 'TEXTAREA' && e.key === 'Enter') {
+            escreveNaTextarea('<br>');
+        }
+    }
+
+    // função para atualizar o preview com o cursor laranja
+    function updatePreviews(e) {
+        activeTextarea = e.target;
+        let inputText = textarea.value;
+        console.log(inputText.length)
+        if (inputText.length <= 100000) {
+            document.querySelector('#preview-btn').classList.add('no-display')
+            limitExceded = 0;
+
+            let cursorPos = getCursorPos(e);
+            let inputTextString1;
+            let inputTextString2;
+
+            // babyproof para quando colocamos o cursor numa tag, ele se mostrado for da tag (para não partir o prewview)
+            novoCursorPos = cursorPos;
+            if (inputText[cursorPos] === '>') {
+                inputTextString1 = inputText.slice(0, cursorPos + 2)
+                inputTextString2 = inputText.slice(cursorPos + 2, inputText.length)
+            } else {
+                (function rotinaCursor() {
+                    switch (inputText[novoCursorPos]) {
+                        case '<':
+                            inputTextString1 = inputText.slice(0, novoCursorPos)
+                            inputTextString2 = inputText.slice(novoCursorPos, inputText.length)
+                            break
+                        case '>':
+                            inputTextString1 = inputText.slice(0, cursorPos)
+                            inputTextString2 = inputText.slice(cursorPos, inputText.length)
+                            break
+                        case undefined:
+                            inputTextString1 = inputText.slice(0, cursorPos)
+                            inputTextString2 = inputText.slice(cursorPos, inputText.length)
+                            break
+                        default:
+                            novoCursorPos--
+                            rotinaCursor()
+                    }
+
+                    // introduz o cursor laranja
+                    let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
+
+                    // guarda a posição do cursor 
+                    stringCursor[0] = inputTextString1;
+                    stringCursor[1] = inputTextString2;
+
+                    // atualiza o preview
+                    hcPreview.innerHTML = inputTextWithCursor;
+                    hcPreview.innerHTML = fixArtigosRelacionadosLogo(hcPreview.innerHTML);
+
+                    appControlsColap();
+                    autosave2JSON();
+                })();
+            }
+        } else {
+            if (limitExceded === 0) {
+                document.querySelector('#preview-btn').classList.remove('no-display')
+                alert(`Foi excedido o limite máximo de caractéres aceites pelo Autosave.\n Para pre-visualizar e guardar em cache as alterações efetuadas, carrega em "Pré-visualizar", localizado por cima da textarea principal da aplicação.`)
+            }
+            limitExceded = 1;
+            return
+        }
+    }
+
+    function updatePreviewsSlim(e) {
+        activeTextarea = e.target;
+        let inputText = textarea.value;
+        if (inputText.length <= 100000) {
+            document.querySelector('#preview-btn').classList.add('no-display')
+            limitExceded = 0;
+            let cursorPos = getCursorPos(e);
+
+            // divide o tópico em duas partes (até ao cursor, e após o curos)
+            let inputTextString1 = inputText.slice(0, cursorPos);
+            let inputTextString2 = inputText.slice(cursorPos);
+
+            // introduz o cursor laranja
+            let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
+
+            // guarda a posição do cursor 
+            stringCursor[0] = inputTextString1;
+            stringCursor[1] = inputTextString2;
+
+            // atualiza o preview
+            hcPreview.innerHTML = inputTextWithCursor;
+            hcPreview.innerHTML = fixArtigosRelacionadosLogo(hcPreview.innerHTML);
+
+            appControlsColap();
+            autosave2JSON();
+        } else {
+            if (limitExceded === 0) {
+                document.querySelector('#preview-btn').classList.remove('no-display')
+                alert('Foi excedido o limite máximo de caractéres aceites pelo Autosave. Carrega em atualizar para guardar as tuas alterações e atualizar a pré-visualização.')
+            }
+            limitExceded = 1;
+            return
+        }
+    }
+
+    document.querySelector('#preview-btn').addEventListener('click', saveFromPreviewBtn)
+
+    function saveFromPreviewBtn() {
+
+        activeTextarea = textarea;
+        let inputText = textarea.value;
+        hcPreview.innerHTML = inputText
+        appControlsColap();
+        autosave2JSON();
+    }
+
+
+
+    // Page title auto-scroller
+    const titleScrol = setInterval(scrollTitle, 500);
+    function scrollTitle() {
+        let tituloPagina = document.title.toString();
+        const updatedTituloPagina1 = tituloPagina.slice(0, 1)
+        const updatedTituloPagina2 = tituloPagina.slice(1, tituloPagina.length)
+        document.title = updatedTituloPagina2 + updatedTituloPagina1
+    }
+
+    // Função para atualizar o tipo de código selecionado
+    function updatecodeType(e) {
+        document.querySelector('#ts').checked = false
+        document.querySelector('#vbnet').checked = false
+        document.querySelector('#json').checked = false
+        e.target.checked = true
+        codeType = e.target.id
+    }
+
+    // Função para atualizar o tipo de tabela selecionado
+    function updateTableType(e) {
+        document.querySelector('#normal-table').checked = false
+        document.querySelector('#modern-table').checked = false
+        document.querySelector('#modern-table-blue').checked = false
+        e.target.checked = true
+        tableType = e.target.id
+    }
+
+    // Função para guardar o tópico num segundo slot da chache
+    function quickSave() {
+        const textarea2JSON = JSON.stringify(textarea.value);
+        localStorage.setItem('quickSave', textarea2JSON);
+        textarea.value = '';
+        hcPreview.innerHTML = '';
+        appControlsColap();
+        stringCursor = ['','']
+    }
+
+    // Função para carregar o tópico do segundo slot da chache
+    function quickLoad() {
+        const getTextareaFromJSON = localStorage.getItem('quickSave');
+        textarea.value = JSON.parse(getTextareaFromJSON);
+        autosave2JSON();
+        hcPreview.innerHTML = textarea.value;
+        appControlsColap();
+    }
+
+    function appControlsChange() {
+        // Limpar o div dos appControls
+        appControls.innerHTML = '';
+
+        // Iniciar contador paginador (a ser utilizado no futuro, caso os elementos não caibam todos numa só página de appControls)
+        return pag = 1;
+    }
+
+    // Atualizar o botão dos menus conforme o menu onde estamos 
+    (function whereAmI() {
+        const menus = document.querySelectorAll('.main-menu');
+        for (menu of menus) {
+            menu.addEventListener('click', updateWhereIAm)
+        }
+    })();
+
+    function updateWhereIAm(e) {
+        let eTarget = e.target;
+        const menus = document.querySelectorAll('.main-menu');
+        for (menu of menus) {
+            menu.classList = 'btn btn-light main-menu'
+        }
+        if (eTarget.tagName === "I") { eTarget = eTarget.parentElement }
+        eTarget.classList = 'btn btn-info main-menu'
+    }
+
+    // Atualiza a cor selecionada para os icons
+    function changeCurrentColor(e) {
+        let eTarget = e.target
+        if (eTarget.tagName === 'I') {
+            eTarget = eTarget.parentElement
+        }
+        currentColor = eTarget.value;
+        const colorBottons = document.querySelectorAll('.color-pick')
+        for (color of colorBottons) {
+            color.classList.remove('selected-color')
+        }
+        eTarget.classList.add('selected-color')
+    }
+
+    // Atualiza o tema selecionado para os icons
+    function changeCurrentTheme(e) {
+        let eTarget = e.target
+        if (eTarget.tagName === 'I') {
+            eTarget = eTarget.parentElement
+        }
+        currentTheme = eTarget.value;
+        switch (eTarget.id) {
+            case 'theme-1': appControlsButtons(e, 1);
+                break
+            case 'theme-2': appControlsButtons(e, 2);
+                break
+            case 'theme-3': appControlsButtons(e, 3);
+                break
+            case 'theme-4': appControlsButtons(e, 4);
+        }
+    }
+
+    // Debug Tools
+
+    // Mostra target na consola
+    // document.addEventListener("click", function (e) {
+    //     console.log(e.target);
+    // // console.log('cursorpos: '+e.target.selectionStart)
+    // });
+
+
+    // ############ HILITE.ME API ############
+
+    // API POST
+    function hiliteAPI() {
+
+        // Babyproof
+        if (document.querySelector('#hilite-textarea').value.length <= 0) { alert('A textarea para o código hilite.me está vazia.'); return }
+
+        const code = document.querySelector('#hilite-textarea').value.toString();
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                hiliteFormater(this.responseText);
+            }
+        };
+        xhttp.open("POST", "http://hilite.me/api", true); //
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(`code=${code}&style=monokai&lexer=${codeType}&divstyles=border:solid #eb8475;border-width:.1em .1em .1em .8em;padding:.2em .6em;`);
+    }
+
+    // Formatar a resposta obtida
+    function hiliteFormater(novosource) {
+        let fixedHilite = String(novosource).replaceAll("\n", '<br>' + "\n");
+        // para vbnet
+        fixedHilite = fixedHilite.replaceAll('    ','<div style="display:inline-block;width:20px;"></div>')
+        // para json
+        fixedHilite = fixedHilite.replaceAll('	','<div style="display:inline-block;width:20px;"></div>')
+        // para typescript
+        fixedHilite = fixedHilite.replaceAll('  ','<div style="display:inline-block;width:20px;"></div>')
+        
+        fixedHilite = fixedHilite.replace('<pre style="', '<pre style="background:transparent;border:0px;');
+        escreveNaTextarea(fixedHilite);
+    }
+
+
+    // ############ EVENT LISTENERS ############
+
+    document.addEventListener("keyup", newBr);
+    document.querySelector('#listas-tabelas-btn').addEventListener('click', appControlsListsAndTables);
+    document.querySelector('#ancora-btn').addEventListener('click', stickyTop);
+    document.querySelector('#titulos-ligacoes-btn').addEventListener('click', appControlsTitulosELigacoes);
+    document.querySelector('#botoes-btn').addEventListener('click', appControlsButtons);
+    document.querySelector('#logos-btn').addEventListener('click', appControlsIcons);
+    document.querySelector('#textbox-btn').addEventListener('click', appControlsTextbox);
+    document.querySelector('#quicksave-btn').addEventListener('click', quickSave);
+    document.querySelector('#quickload-btn').addEventListener('click', quickLoad);
+    document.querySelector('#image-btn').addEventListener('click', writeImage);
+    textarea.addEventListener('keyup', updatePreviewsSlim);
+    textarea.addEventListener('click', updatePreviews);
+
+
     // ############ APP START ############
 
     window.onload = superliggeraStart();
+
     function superliggeraStart() {
 
         // Vai buscar os dados aos JSON
@@ -37,6 +473,7 @@ function mixWrapper() {
             }
         }, rng);
 
+        // Vai buscar o último tópico de manual à cache (caso exista)
         (function fromJSON2Textarea() {
             try {
                 const getTextareaFromJSON = localStorage.getItem('textarea');
@@ -48,19 +485,15 @@ function mixWrapper() {
         // Função que atualiza o hcPreview, conforme tenha encontrado ou não cache 
         (function haveCache() {
             if (textarea.value === '') {
-                let haveCache = hcPreview.appendChild(elementGenerator('span'));
-                haveCache.innerText = 'Não encontrei nenhum tópico em cache. Carrega na caixa de texto para começar!'
+                const haveCache = hcPreview.appendChild(elementGenerator('span', '', '', 'Não encontrei nenhum tópico em cache. Carrega na caixa de texto para começar!'));
             } else {
-                let haveCache = hcPreview.appendChild(elementGenerator('span'));
-                haveCache.innerText = 'Encontrei um tópico em cache. A carregar...'
-                let timer = setTimeout(refreshhcPreview, 3600);
+                const haveCache = hcPreview.appendChild(elementGenerator('span', '', '', 'Encontrei um tópico em cache. A carregar...'));
+                const timer = setTimeout(refreshhcPreview, 3600);
                 function refreshhcPreview() {
                     hcPreview.innerHTML = textarea.value;
                 }
             }
         })();
-
-        return landingTimer
     }
 
 
@@ -168,117 +601,6 @@ function mixWrapper() {
                 numeroIcons = data.length;
             }
         })();
-
-    }
-
-
-    // ############ VARIÁVEIS ############
-
-    // Estilos a serem utilizados para formatação das tabelas
-    const normalTableStyle = '<style>.phcgo-old-table>tbody>tr>td{text-align:left;background-color:#fff;padding:20px 10px;border:solid 1px #000}.phcgo-old-table>tbody>tr:nth-child(1)>td{background-color:rgb(255, 225, 189)!important;border:solid 1px #000!important;font-size:16px!important;font-weight:700}</style>'
-    const modernTableStyle = '<style>.phcgo-new-table>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:rgb(255, 225, 189);color:#000;padding:4px 20px;font-size:20px}</style>'
-    const modernTableStyleBlue = '<style>.phcgo-new-table-blue>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table-blue>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:#3fa8f6;color:#fff;padding:4px 20px;font-size:20px}</style>'
-
-    /** 
-     * arrays a ser utilizados para guardar os slices
-     * das textareas, aquando da introdução de elementos
-     * ([0] = texto até ao cursor | [1] = texto a partir do cursos)
-    */
-    let stringCursor = [];
-    let stringCursorColap = [];
-
-    /**
-     * Array onde vão ser guardados os colapsáveis existentes (.row .seccao-phcgo)
-     * A ser utilizado para a construção da vista de colapsáveis
-     */
-    let colapList = [];
-
-    // variável com o valor da última textarea selecionada
-    let activeTextarea = '';
-
-    // variável com o valor da última checkbox (tipo de tabela) selecionada
-    let codeType = 'vbnet'
-    let tableType = 'normal-table'
-    let currentColor = '#000000'
-    let currentTheme = 'horizon'
-    const colorTable = ['#000000', '#e0e0e0', '#1a237e', '#b70505', '#ff8f00', '#004d40']
-    const themeTable = ['horizon', 'forest', 'dark', 'light']
-
-
-
-
-    // ############ FUNÇÕES CONSTRUTORAS ############
-
-    function elementGenerator(ele, id = '', classlist = '', inner = '') {
-        const elementGenerated = document.createElement(`${ele}`);
-        if (id !== '') { elementGenerated.id = `${id}` }
-        if (classlist !== '') { elementGenerated.classList = `${classlist}` }
-        if (inner !== '') { elementGenerated.innerHTML = `${inner}` }
-        return elementGenerated
-    }
-
-    function escreveNaTextarea(etarget) {
-
-        // babyproofs
-        if (activeTextarea === '') { alert('Coloca o cursor numa área de texto antes de adicionar conteúdos.'); return }
-
-        // caso seja a textarea principal
-        if (activeTextarea.id === 'textarea') {
-            // O array stringCursor é composto por duas string, antes e depois do cursor
-            // O novoSourceCode faz o concat das string, com o elemento a ser escrito na posição do cursor.
-            novoSourceCode = `${stringCursor[0]}` + "\n" + `${etarget.outerHTML}` + `${stringCursor[1]}`;
-
-            // Atualiza a textarea
-            textarea.value = novoSourceCode;
-
-            // Atualiza o preview
-            hcPreview.innerHTML = fixArtigosRelacionadosLogo(novoSourceCode);
-
-            appControlsColap();
-
-            // Guarda as alterações em cache
-            autosave2JSON();
-
-            // caso seja as textareas da vista de collaps
-        } else {
-            novoSourceCode = `${stringCursorColap[0]}` + "\n" + `${(etarget.outerHTML).toString()}` + `${stringCursorColap[1]}`;
-            activeTextarea.value = novoSourceCode;
-            let inputPreview = activeTextarea.parentElement.nextElementSibling.children[1];
-            inputPreview.innerHTML = novoSourceCode;
-        }
-    }
-
-    // serve para adicionar quebras de linha à textarea, aquando da introdução de elementos que utilizam esta função 
-    // em vez de ser etarget.outerhtml, é etarget (porque a esta funçaõ já chega um plaintext, com o código com os replaces feitos)
-    function escreveNaTextareaGeradores(etarget) {
-
-        // babyproofs
-        if (activeTextarea === '') { alert('Coloca o cursor numa área de texto antes de adicionar conteúdos.'); return }
-
-        // caso seja a textarea principal
-        if (activeTextarea.id === 'textarea') {
-            // O array stringCursor é composto por duas string, antes e depois do cursor
-            // O novoSourceCode faz o concat das string, com o elemento a ser escrito na posição do cursor.
-            novoSourceCode = `${stringCursor[0]}` + "\n" + `${etarget}` + `${stringCursor[1]}`;
-
-            // Atualiza a textarea
-            textarea.value = novoSourceCode;
-
-            // Atualiza o preview
-            hcPreview.innerHTML = fixArtigosRelacionadosLogo(novoSourceCode);
-
-            appControlsColap();
-
-            // Guarda as alterações em cache
-            autosave2JSON();
-
-            // caso seja as textareas da vista de collaps
-        } else {
-            novoSourceCode = `${stringCursorColap[0]}` + "\n" + `${(etarget).toString()}` + `${stringCursorColap[1]}`;
-            activeTextarea.value = novoSourceCode;
-            let inputPreview = activeTextarea.parentElement.nextElementSibling.children[1];
-            inputPreview.innerHTML = novoSourceCode;
-        }
     }
 
 
@@ -321,7 +643,7 @@ function mixWrapper() {
         textbox = textbox.toString().replace('<ul>', '<ul>' + "\n")
         textbox = textbox.toString().replace('</li>', '</li>' + "\n")
 
-        escreveNaTextareaGeradores(textbox);
+        escreveNaTextarea(textbox);
     }
 
 
@@ -377,12 +699,11 @@ function mixWrapper() {
 
         for (i = 1; i <= colorTable.length; i++) {
             if (i === 1) {
-                colorPickerRow.appendChild(elementGenerator('div', `icon-color-${i}`, 'color-pick selected-color'))
+                colorPickerRow.appendChild(elementGenerator('div', `icon-color-${i}`, 'color-pick selected-color', '<i class="lni lni-checkmark unselected-i"></i>'))
             } else {
-                colorPickerRow.appendChild(elementGenerator('div', `icon-color-${i}`, 'color-pick'))
+                colorPickerRow.appendChild(elementGenerator('div', `icon-color-${i}`, 'color-pick', '<i class="lni lni-checkmark unselected-i"></i>'))
             }
             colorPickerRow.lastChild.value = colorTable[i - 1];
-            colorPickerRow.lastChild.innerHTML = '<i class="lni lni-checkmark unselected-i"></i>';
             colorPickerRow.lastChild.addEventListener('click', changeCurrentColor)
         }
     }
@@ -395,235 +716,12 @@ function mixWrapper() {
 
         // altera a cor do icon, de acordo com a côr selecionada
         icon.style.color = currentColor
-        escreveNaTextarea(icon);
+        leIcon = icon.outerHTML
+        escreveNaTextarea(leIcon);
 
         // volta a alterar a cor do icon para a côr de origem
         icon.style.color = '#fff'
     }
-
-    // ############ FUNÇÕES AUXILIARES  ############
-
-    // Função para guardar na cache do browser o Source Code do tópico (e respetivas alterações)
-    function autosave2JSON() {
-        let textarea2JSON = JSON.stringify(textarea.value);
-        localStorage.setItem('textarea', textarea2JSON);
-    }
-
-    /**
-    * Função para alterar o código do preview para apontar para a imagem local.
-    * O código da textarea não é alterado, para manter compatibilidade com o HelpCenter (por refazer ao contrário, substiuindo o icon velho pelo novo)
-    */
-    function fixArtigosRelacionadosLogo(novoSourceCode) {
-        let sourceCodeParaPreview = novoSourceCode.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"');
-        return sourceCodeParaPreview
-    }
-
-    // função para obter a posição do cursor (utilizado para a textarea)
-    function getCursorPos(e) {
-        let eTarget = e.target;
-        let cursorPos = eTarget.selectionStart;
-        return cursorPos
-    }
-
-    // função para ancorar o cabeçalho do editor
-    function stickyTop() {
-        const header = document.querySelector('.header');
-        const ancoraBtn = document.querySelector('#ancora-btn');
-
-        if (header.classList.contains('sticky-top')) {
-            header.classList.remove('sticky-top');
-            ancoraBtn.classList.replace('btn-info', 'btn-light');
-        } else {
-            header.classList.add('sticky-top');
-            ancoraBtn.classList.replace('btn-light', 'btn-info');
-        }
-    }
-
-    // Mostra injeta um <br> ao carregar Enter
-    function newBr(e) {
-        if (e.target.tagName === 'TEXTAREA' && e.key === 'Enter') {
-            escreveNaTextareaGeradores('<br>');
-        }
-    }
-
-    // função para atualizar o preview com o cursor laranja
-    function updatePreviews(e) {
-        activeTextarea = e.target;
-        let inputText = textarea.value;
-        let cursorPos = getCursorPos(e);
-
-        // divide o tópico em duas partes (até ao cursor, e após o curos)
-        let inputTextString1 = inputText.slice(0, cursorPos);
-        let inputTextString2 = inputText.slice(cursorPos);
-
-
-        // introduz o cursor laranja
-        let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
-
-        // guarda a posição do cursor 
-        stringCursor[0] = inputTextString1;
-        stringCursor[1] = inputTextString2;
-
-        // atualiza o preview
-        hcPreview.innerHTML = inputTextWithCursor;
-        hcPreview.innerHTML = fixArtigosRelacionadosLogo(hcPreview.innerHTML);
-
-        appControlsColap();
-        autosave2JSON();
-    }
-
-    // Page title auto-scroller
-    const titleScrol = setInterval(scrollTitle, 500);
-    function scrollTitle() {
-        let tituloPagina = document.title.toString();
-        const updatedTituloPagina1 = tituloPagina.slice(0, 1)
-        const updatedTituloPagina2 = tituloPagina.slice(1, tituloPagina.length)
-        document.title = updatedTituloPagina2 + updatedTituloPagina1
-    }
-
-    // Função para atualizar o tipo de código selecionado
-    function updatecodeType(e) {
-        document.querySelector('#ts').checked = false
-        document.querySelector('#vbnet').checked = false
-        document.querySelector('#json').checked = false
-        e.target.checked = true
-        codeType = e.target.id
-    }
-
-    // Função para atualizar o tipo de tabela selecionado
-    function updateTableType(e) {
-        document.querySelector('#normal-table').checked = false
-        document.querySelector('#modern-table').checked = false
-        document.querySelector('#modern-table-blue').checked = false
-        e.target.checked = true
-        tableType = e.target.id
-    }
-
-    // Função para guardar o tópico num segundo slot da chache
-    function quickSave() {
-        const textarea2JSON = JSON.stringify(textarea.value);
-        localStorage.setItem('quickSave', textarea2JSON);
-        textarea.value = '';
-        hcPreview.innerHTML = '';
-        appControlsColap();
-    }
-
-    // Função para carregar o tópico do segundo slot da chache
-    function quickLoad() {
-        const getTextareaFromJSON = localStorage.getItem('quickSave');
-        textarea.value = JSON.parse(getTextareaFromJSON);
-        autosave2JSON();
-        hcPreview.innerHTML = textarea.value;
-        appControlsColap();
-    }
-
-    function appControlsChange() {
-        // Limpar o div dos appControls
-        appControls.innerHTML = '';
-
-        // Iniciar contador paginador (a ser utilizado no futuro, caso os elementos não caibam todos numa só página de appControls)
-        return pag = 1;
-    }
-
-    (function whereAmI() {
-        const menus = document.querySelectorAll('.main-menu');
-        for (menu of menus) {
-            menu.addEventListener('click', updateWhereIAm)
-        }
-    })();
-    function updateWhereIAm(e) {
-        let eTarget = e.target;
-        const menus = document.querySelectorAll('.main-menu');
-        for (menu of menus) {
-            menu.classList = 'btn btn-light main-menu'
-        }
-        if (eTarget.tagName === "I") { eTarget = eTarget.parentElement }
-        eTarget.classList = 'btn btn-info main-menu'
-    }
-
-    function changeCurrentColor(e) {
-        let eTarget = e.target
-        if (eTarget.tagName === 'I') {
-            eTarget = eTarget.parentElement
-        }
-        currentColor = eTarget.value;
-        const colorBottons = document.querySelectorAll('.color-pick')
-        for (color of colorBottons) {
-            color.classList.remove('selected-color')
-        }
-        eTarget.classList.add('selected-color')
-    }
-
-    function changeCurrentTheme(e) {
-        let eTarget = e.target
-        if (eTarget.tagName === 'I') {
-            eTarget = eTarget.parentElement
-        }
-        currentTheme = eTarget.value;
-        switch (eTarget.id) {
-            case 'theme-1': appControlsButtons(e, 1);
-                break
-            case 'theme-2': appControlsButtons(e, 2);
-                break
-            case 'theme-3': appControlsButtons(e, 3);
-                break
-            case 'theme-4': appControlsButtons(e, 4);
-        }
-    }
-
-    // Debug Tools
-
-    // Mostra target na consola
-    // document.addEventListener("click", function (e) {
-    //     console.log(e.target);
-    // // console.log('cursorpos: '+e.target.selectionStart)
-    // });
-
-
-    // ############ HILITE.ME API ############
-
-    // API POST
-    function hiliteAPI() {
-
-        // Babyproof
-        if (document.querySelector('#hilite-textarea').value.length <= 0) { alert('A textarea para o código hilite.me está vazia.'); return }
-
-        const code = document.querySelector('#hilite-textarea').value.toString();
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                hiliteFormater(this.responseText);
-            }
-        };
-        xhttp.open("POST", "http://hilite.me/api", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send(`code=${code}&style=monokai&lexer=${codeType}`);
-
-
-    }
-
-    // Formatar a resposta obtida
-    function hiliteFormater(novosource) {
-        let fixedHilite = String(novosource).replaceAll("\n", '<br>' + "\n");
-        fixedHilite = fixedHilite.toString().replace('<pre style="', '<pre style="background:transparent;border:0px;');
-        escreveNaTextareaGeradores(fixedHilite);
-    }
-
-
-    // ############ EVENT LISTENERS ############
-
-    document.addEventListener("keyup", newBr);
-    document.querySelector('#listas-tabelas-btn').addEventListener('click', appControlsListsAndTables);
-    document.querySelector('#ancora-btn').addEventListener('click', stickyTop);
-    document.querySelector('#titulos-ligacoes-btn').addEventListener('click', appControlsTitulosELigacoes);
-    document.querySelector('#botoes-btn').addEventListener('click', appControlsButtons);
-    document.querySelector('#logos-btn').addEventListener('click', appControlsIcons);
-    document.querySelector('#textbox-btn').addEventListener('click', appControlsTextbox);
-    document.querySelector('#quicksave-btn').addEventListener('click', quickSave);
-    document.querySelector('#quickload-btn').addEventListener('click', quickLoad);
-    document.querySelector('#image-btn').addEventListener('click', writeImage);
-    textarea.addEventListener('keyup', updatePreviews);
-    textarea.addEventListener('click', updatePreviews);
 
 
     // ############ APPCONTROLS BUTTONS ############
@@ -695,9 +793,7 @@ function mixWrapper() {
             themePickerRow.lastChild.addEventListener('click', changeCurrentTheme)
             themePickerRow.lastChild.value = themeTable[i - 1];
         }
-
     }
-
 
     // Função para adicionar um botão ao código do tópico
     function writeButton(e) {
@@ -707,7 +803,7 @@ function mixWrapper() {
 
         // Vai buscar o número do botão e vai buscar ao array dos botões o código original 
         button = buttonsFromJSON[String(button.parentElement.id).replace('botao-', '') - 1];
-        escreveNaTextareaGeradores(button);
+        escreveNaTextarea(button);
     }
 
 
@@ -789,11 +885,6 @@ function mixWrapper() {
         criarListaButton.addEventListener('click', writeList)
 
 
-        // // Row 4
-        // row = appControlsLists.appendChild(elementGenerator('div', '', 'row'));
-        // col = row.appendChild(elementGenerator('div', 'cria-lista-btn-div', 'col-md-12'));
-
-
         // ########## TABELAS ##########
 
         tableType = 'normal-table'
@@ -822,15 +913,12 @@ function mixWrapper() {
         const numColunasInput = col.appendChild(elementGenerator('input', 'num-colunas-input'));
         numColunasInput.setAttribute('type', 'number')
 
-
-
         col = row.appendChild(elementGenerator('div', '', 'col-md-1'));   // Filler col
         col = row.appendChild(elementGenerator('div', '', 'col-md-3'));
 
         // Button 'Converter tabela'
         let converterTabela = col.appendChild(elementGenerator('button', '', 'btn btn-warning', '<i class="lni lni-code"></i>&nbsp;&nbsp;Importar tabela'));
         converterTabela.addEventListener('click', convertTable);
-
 
         col = row.appendChild(elementGenerator('div', '', 'col-md-1')); //  Filler Col
         row = novaTabelaWrapper.appendChild(elementGenerator('div', '', 'row'));
@@ -845,7 +933,6 @@ function mixWrapper() {
 
         // Span 'Normal'
         const checkboxLabel1 = col.appendChild(elementGenerator('span', '', '', '&nbsp;&nbsp;Normal'));
-
 
         // Input 'Moderna'
         const checkbox2 = col.appendChild(elementGenerator('input', 'modern-table'));
@@ -862,7 +949,6 @@ function mixWrapper() {
 
         // Span 'Moderna Azul'
         const checkboxLabel3 = col.appendChild(elementGenerator('span', '', '', '&nbsp;&nbsp;Moderna Azul'));
-
 
         col = row.appendChild(elementGenerator('div', 'cria-tabela-btn-div', 'col-md-3'));
 
@@ -889,46 +975,36 @@ function mixWrapper() {
         const valorTipoLista = document.querySelector('#tipo-lista-dropdown').value;
         let previewWrapper = document.querySelector('#preview-list-row');
 
-
         switch (valorTipoLista) {
             // Opção 1
             case 'ul':
                 previewWrapper.innerHTML = '';
-                novaListaPreview = previewWrapper.appendChild(elementGenerator('ul'));
-                novaListaPreview.id = 'preview-list';
+                novaListaPreview = previewWrapper.appendChild(elementGenerator('ul', 'preview-list'));
                 novaListaPreview.style.listStylePosition = "inside";
                 for (i = 1; i <= 3; i++) {
-                    novoItemPreview = novaListaPreview.appendChild(elementGenerator('li'));
-                    novoItemPreview.classList = 'preview-item';
-                    novoItemPreview.innerHTML = `<b>Item ${i}:</b> Lorem Ipsum`
+                    novoItemPreview = novaListaPreview.appendChild(elementGenerator('li', '', 'preview-item', `<b>Item ${i}:</b> Lorem Ipsum`));
                 }
                 break
 
             // Opção 2
             case 'ol-1':
                 previewWrapper.innerHTML = '';
-                novaListaPreview = previewWrapper.appendChild(elementGenerator('ol'));
-                novaListaPreview.id = 'preview-list';
+                novaListaPreview = previewWrapper.appendChild(elementGenerator('ol', 'preview-list'));
                 novaListaPreview.setAttribute('type', '1')
                 novaListaPreview.style.listStylePosition = "inside";
                 for (i = 1; i <= 3; i++) {
-                    novoItemPreview = novaListaPreview.appendChild(elementGenerator('li'));
-                    novoItemPreview.classList = 'preview-item';
-                    novoItemPreview.innerHTML = `<b>Item ${i}:</b> Lorem Ipsum`
+                    novoItemPreview = novaListaPreview.appendChild(elementGenerator('li', '', 'preview-item', `<b>Item ${i}:</b> Lorem Ipsum`));
                 }
                 break
 
             // Opção 3
             case 'ol-a':
                 previewWrapper.innerHTML = '';
-                novaListaPreview = previewWrapper.appendChild(elementGenerator('ol'));
-                novaListaPreview.id = 'preview-list';
+                novaListaPreview = previewWrapper.appendChild(elementGenerator('ol', 'preview-list'));
                 novaListaPreview.setAttribute('type', 'a');
                 novaListaPreview.style.listStylePosition = "inside";
                 for (i = 1; i <= 3; i++) {
-                    novoItemPreview = novaListaPreview.appendChild(elementGenerator('li'));
-                    novoItemPreview.classList = 'preview-item';
-                    novoItemPreview.innerHTML = `<b>Item ${i}:</b> Lorem Ipsum`
+                    novoItemPreview = novaListaPreview.appendChild(elementGenerator('li', '', 'preview-item', `<b>Item ${i}:</b> Lorem Ipsum`));
                 }
                 break
         }
@@ -961,7 +1037,7 @@ function mixWrapper() {
                 }
                 // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
                 novaLista = (novaLista.outerHTML.toString().replaceAll('<li>', "\n" + '<li>'));
-                escreveNaTextareaGeradores(novaLista);
+                escreveNaTextarea(novaLista);
                 break;
 
             // Opção 2
@@ -975,7 +1051,7 @@ function mixWrapper() {
                 }
                 // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
                 novaLista = (novaLista.outerHTML.toString().replaceAll('<li>', "\n" + '<li>'));
-                escreveNaTextareaGeradores(novaLista);
+                escreveNaTextarea(novaLista);
                 break;
 
             // Opção 3
@@ -989,10 +1065,9 @@ function mixWrapper() {
                 }
                 // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
                 novaLista = (novaLista.outerHTML.toString().replaceAll('<li>', "\n" + '<li>'));
-                escreveNaTextareaGeradores(novaLista);
+                escreveNaTextarea(novaLista);
                 break;
         }
-
     }
 
     // Função para adicionar uma tabela ao tópico de manual
@@ -1023,9 +1098,6 @@ function mixWrapper() {
 
         // <tbody>
         const tBody = novaTabela.appendChild(elementGenerator('tbody'));
-
-        // adiciona o cabeçalho à tabela
-        // if (cabecalho === true) {
 
         const novoCabecalho = elementGenerator('tr');
         for (i = 1; i <= numColunas; i++) {
@@ -1060,50 +1132,37 @@ function mixWrapper() {
                 novaTabela.classList = 'phcgo-new-table-blue';
                 novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + modernTableStyleBlue + "\n" + novaTabela); break
         }
-        escreveNaTextareaGeradores(novaTabela);
+        escreveNaTextarea(novaTabela);
     }
 
+    // Função para converter tabelas
     function convertTable() {
 
+        // publicar a tabela recebida
         let nome;
+
         switch (tableType) {
             case 'normal-table': nome = 'Normal'; break
             case 'modern-table': nome = 'Moderna'; break
             case 'modern-table-blue': nome = 'Moderna Azul'; break
         }
 
-        const tablecode = prompt(`Introduz o código da tua tabela.\n\nEsta será convertida no estilo atualmente selecionado ( ${nome} )`);
+        let tablecode = prompt(`Introduz o código da tua tabela.\n\nEsta será convertida no estilo atualmente selecionado ( ${nome} )`);
         if (tablecode === null) { return }
 
-        const tablecodeSlices = [];
+        // temporario
+        escreveNaTextarea(elementGenerator('div', 'tempTable', '', tablecode).outerHTML);
 
-        if (tablecode.toString().includes('<tbody>') && tablecode.toString().includes('</tbody>')) {
-
-            tablecodeSlices.push(tablecode.toString().indexOf('<tbody>'))
-            tablecodeSlices.push(tablecode.toString().indexOf('</tbody>'))
-            tablecodeSlices.push(tablecode.toString().slice(tablecodeSlices[0] + 7, tablecodeSlices[1]))
-
-        } else if (tablecode.toString().includes('<table>') && tablecode.toString().includes('</table>')) {
-
-            tablecodeSlices.push(tablecode.toString().indexOf('<table>'))
-            tablecodeSlices.push(tablecode.toString().indexOf('</table>'))
-            tablecodeSlices.push(tablecode.toString().slice(tablecodeSlices[0] + 7, tablecodeSlices[1]))
-
-        } else { alert('A tabela fornecida não está corretamente formatada.'); return }
-
-        // <table>
+        let novaTabela;
         switch (tableType) {
             case 'normal-table': novaTabela = elementGenerator('table', '', 'phcgo-old-table'); break
             case 'modern-table': novaTabela = elementGenerator('table', '', 'phcgo-new-table'); break
             case 'modern-table-blue': novaTabela = elementGenerator('table', '', 'phcgo-new-table-blue'); break
         }
-
         novaTabela.style.display = 'flex';
         novaTabela.style.justifyContent = 'center';
 
-        // <tbody>
-        const tBody = novaTabela.appendChild(elementGenerator('tbody'));
-        tBody.innerHTML = tablecodeSlices[2]
+        novaTabela.innerHTML = (convertTableEngine()).outerHTML;
 
         // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
         novaTabela = (novaTabela.outerHTML.toString().replaceAll('<tr>', "\n" + '<tr>'));
@@ -1122,14 +1181,42 @@ function mixWrapper() {
                 novaTabela.classList = 'phcgo-new-table-blue';
                 novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + modernTableStyleBlue + "\n" + novaTabela); break
         }
-        escreveNaTextareaGeradores(novaTabela);
+        escreveNaTextarea(novaTabela);
+    }
 
+    // Função que pega na tabela temporária, envia os conteúdos para array, e devolve uma nova tabela, sem estilos nem classes
+    function convertTableEngine() {
+
+        const itemsParaConverter = [];
+        const numLinhas = document.querySelectorAll('#tempTable tr').length
+
+        itemsParaConverter.push(document.querySelectorAll(`#tempTable th`));
+
+        for (i = 1; i < numLinhas; i++) {
+            itemsParaConverter.push(document.querySelectorAll(`#tempTable tr:nth-child(${i}) td`))
+        }
+        const tabelaConvertida = elementGenerator('table')
+        for (i = 0; i < numLinhas; i++) {
+            tabelaConvertida.appendChild(elementGenerator('tr'));
+
+            for (x = 0; x < itemsParaConverter[i].length; x++) {
+                tabelaConvertida.lastChild.appendChild(elementGenerator('td', '', '', itemsParaConverter[i][x].innerText))
+                let colspan = itemsParaConverter[i][x].attributes.colspan;
+                try { tabelaConvertida.lastChild.lastChild.setAttribute('colspan', colspan.value) }
+                catch { }
+                let rowspan = itemsParaConverter[i][x].attributes.rowspan;
+                try { tabelaConvertida.lastChild.lastChild.setAttribute('rowspan', rowspan.value) }
+                catch { }
+            }
+        }
+        return tabelaConvertida
     }
 
     // Função para adicionar um seprador horizontal <hr> código do tópico
     function writeHR() {
-        const novoSeparador = elementGenerator('hr');
+        let novoSeparador = elementGenerator('hr');
         novoSeparador.style.borderTop = '3px solid #eee';
+        novoSeparador = novoSeparador.outerHTML
         escreveNaTextarea(novoSeparador);
     }
 
@@ -1144,7 +1231,6 @@ function mixWrapper() {
 
         // Anexar ao appControls o wrapper principal
         let appControlsLinksAndTitles = appControls.appendChild(elementGenerator('div', '', `row page-${pag}`));
-
 
         // Anexar ao wrapper principal, o Wrapper da secção da esquerda
         const novoVariosWrapperLeft = appControlsLinksAndTitles.appendChild(elementGenerator('div', 'left-wrapper', 'col-md-8'));
@@ -1174,29 +1260,23 @@ function mixWrapper() {
         tipoTituloDropdown.addEventListener('change', previewTitle)
 
         // Opção 1    
-        tipoTituloDropdown.appendChild(elementGenerator('option'));
+        tipoTituloDropdown.appendChild(elementGenerator('option', '', '', '&nbsp;Título H1'));
         tipoTituloDropdown.lastChild.value = 'default1' // Valor a se passado para a função construtora de lista
-        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H1';
         // Opção 2
-        tipoTituloDropdown.appendChild(elementGenerator('option'));
+        tipoTituloDropdown.appendChild(elementGenerator('option', '', '', '&nbsp;Título H2'));
         tipoTituloDropdown.lastChild.value = 'default2'
-        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H2';
         // Opção 3
-        tipoTituloDropdown.appendChild(elementGenerator('option'));
+        tipoTituloDropdown.appendChild(elementGenerator('option', '', '', '&nbsp;Título H3'));
         tipoTituloDropdown.lastChild.value = 'default3'
-        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H3';
         // Opção 4
-        tipoTituloDropdown.appendChild(elementGenerator('option'));
+        tipoTituloDropdown.appendChild(elementGenerator('option', '', '', '&nbsp;Título H1 - 2'));
         tipoTituloDropdown.lastChild.value = 'old1' // Valor a se passado para a função construtora de lista
-        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H1 (antigo)';
         // Opção 5
-        tipoTituloDropdown.appendChild(elementGenerator('option'));
+        tipoTituloDropdown.appendChild(elementGenerator('option', '', '', '&nbsp;Título H2 - 2'));
         tipoTituloDropdown.lastChild.value = 'old2'
-        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H2 (antigo)';
         // Opção 6
-        tipoTituloDropdown.appendChild(elementGenerator('option'));
+        tipoTituloDropdown.appendChild(elementGenerator('option', '', '', '&nbsp;Título H3 - 2'));
         tipoTituloDropdown.lastChild.value = 'old3'
-        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H3 (antigo)';
 
         col = row.appendChild(elementGenerator('div', '', 'col-md-1'));   //Filler col
 
@@ -1207,13 +1287,15 @@ function mixWrapper() {
         let criarTituloButton = col.appendChild(elementGenerator('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar título'));
         criarTituloButton.addEventListener('click', writeTitle)
 
-
         col = row.appendChild(elementGenerator('div', '', 'col-md-1'));   //Filler col
         row = geradorTitulosWrapper.appendChild(elementGenerator('div', '', 'row'));
 
         // Col 1 (pre-view do título)
         col = row.appendChild(elementGenerator('div', 'preview-heading-row', 'col-md-12'));
+        row.lastChild.appendChild(elementGenerator('h1', '', 'manuais', 'Título/Heading 1'))
         row = novoVariosWrapperLeft.appendChild(elementGenerator('div', '', 'row title-link-filler'));         // Filler Row
+
+        
 
         // Wrapper da secção das ligações
         const novaLigacaoWrapper = novoVariosWrapperLeft.appendChild(elementGenerator('div', '', 'row gerador-links-wrapper'));
@@ -1223,7 +1305,6 @@ function mixWrapper() {
 
         // Col 1
         col = novaLigacaoWrapper.appendChild(elementGenerator('div', '', 'col-md-3 text-left'));
-
 
         // Span 'Descrição da ligação'
         const spanDescricao = col.appendChild(elementGenerator('span', 'nome-span', '', 'Descrição da ligação:'));
@@ -1323,7 +1404,6 @@ function mixWrapper() {
                 titulosPreview.appendChild(elementGenerator('h3', '', '', 'Título/Heading 3'))
                 break;
         }
-
     }
 
     // Função para adicionar o título ao tópico de manual
@@ -1333,22 +1413,22 @@ function mixWrapper() {
 
             // Opção 1
             case 'default1':
-                escreveNaTextarea(elementGenerator('h1', '', 'manuais', 'Título/Heading 1'))
+                escreveNaTextarea(elementGenerator('h1', '', 'manuais', 'Título/Heading 1').outerHTML)
                 break;
             case 'default2':
-                escreveNaTextarea(elementGenerator('h2', '', 'manuais', 'Título/Heading 2'))
+                escreveNaTextarea(elementGenerator('h2', '', 'manuais', 'Título/Heading 2').outerHTML)
                 break;
             case 'default3':
-                escreveNaTextarea(elementGenerator('h3', '', 'manuais', 'Título/Heading 3'))
+                escreveNaTextarea(elementGenerator('h3', '', 'manuais', 'Título/Heading 3').outerHTML)
                 break;
             case 'old1':
-                escreveNaTextarea(elementGenerator('h1', '', '', 'Título/Heading 1'))
+                escreveNaTextarea(elementGenerator('h1', '', '', 'Título/Heading 1').outerHTML)
                 break;
             case 'old2':
-                escreveNaTextarea(elementGenerator('h2', '', '', 'Título/Heading 2'))
+                escreveNaTextarea(elementGenerator('h2', '', '', 'Título/Heading 2').outerHTML)
                 break;
             case 'old3':
-                escreveNaTextarea(elementGenerator('h3', '', '', 'Título/Heading 3'))
+                escreveNaTextarea(elementGenerator('h3', '', '', 'Título/Heading 3').outerHTML)
                 break;
         }
     }
@@ -1368,10 +1448,10 @@ function mixWrapper() {
                 return
             }
         }
-        const novaLigacao = elementGenerator('a', '', 'manuais', nome);
+        let novaLigacao = elementGenerator('a', '', 'manuais', nome);
         novaLigacao.setAttribute('href', link);
         novaLigacao.setAttribute('target', '_blank');
-
+        novaLigacao = novaLigacao.outerHTML
         escreveNaTextarea(novaLigacao);
     }
 
@@ -1401,7 +1481,6 @@ function mixWrapper() {
             colaphcPreview.classList.add('no-display');
             helpcenterPreviewWrapper.classList.remove('no-display');
         }
-
     }
 
     // Função para mostrar a appControls dos colapsáveis
@@ -1421,22 +1500,22 @@ function mixWrapper() {
             for (i = 1; i <= colapList.length; i++) {
 
                 // Row 1
-                let row = colapWrapper.appendChild(newColapRow());
+                let row = colapWrapper.appendChild(elementGenerator('div', '', 'row'));
                 (i % 2 === 0) ? row.classList.add('par') : row.classList.add('impar');
-                let wrapperLeft = row.appendChild(newColapInput(i));
-                let wrapperRight = row.appendChild(newColapDisplay(i));
+                let wrapperLeft = row.appendChild(elementGenerator('div', `inputs-${i}`, 'col-md-5 inputs-wrapper'));
+                let wrapperRight = row.appendChild(elementGenerator('div', '', 'col-md-7'));
 
                 // Col 1 (inputs)
 
                 // Input 1
-                wrapperLeft.appendChild(newSpan('colap-id', 'ID do colapsável (minúsculas, sem acentuação, sem espaçamento)'));
-                let idInput = wrapperLeft.appendChild(newColapIDInput(i));
+                wrapperLeft.appendChild(elementGenerator('span', '', 'colap-id', 'ID do colapsável (minúsculas, sem acentuação, sem espaçamento)'));
+                let idInput = wrapperLeft.appendChild(elementGenerator('input', '', `colap-input-id-${i}`));
                 idInput.value = colapList[i - 1].nextElementSibling.id;
                 idInput.addEventListener('keyup', updateColapPreviewByID)
 
                 // Input 2
-                wrapperLeft.appendChild(newSpan('colap-h2', 'Título do colapsável'));
-                let h2Input = wrapperLeft.appendChild(newColapH2Input(i));
+                wrapperLeft.appendChild(elementGenerator('span', '', 'colap-h2', 'Título do colapsável'));
+                let h2Input = wrapperLeft.appendChild(elementGenerator('input', '', `colap-input-h2-${i}`));
                 let h2Trim = colapList[i - 1].innerText.trim().split('	');     // trim para ficar direitinho
                 h2Input.value = h2Trim[0];
                 h2Input.addEventListener('keyup', updateColapHeading)
@@ -1446,28 +1525,24 @@ function mixWrapper() {
                     h2Input.value = h2Input.value.replace('Abrir/Fechar', '');
 
                 // Input 3
-                wrapperLeft.appendChild(newSpan('colap-body', 'Corpo do colapsável'));
-                let bodyInput = wrapperLeft.appendChild(newColapBodyInput(i));
-                bodyInput.addEventListener('keyup', colapTextAreaEvents)
+                wrapperLeft.appendChild(elementGenerator('span', '', 'colap-body', 'Corpo do colapsável'));
+                let bodyInput = wrapperLeft.appendChild(elementGenerator('textarea', '', `colap-input-body-${i}`));
+                bodyInput.addEventListener('keyup', colapTextAreaEventsSlim)
                 bodyInput.addEventListener('click', colapTextAreaEvents)
 
                 let bodyTempInput = colapList[i - 1].nextElementSibling.innerHTML;
                 // Remove o cursor laranja ao passar para os collaps
                 bodyInput.value = String(bodyTempInput).replace('<span id="pulse">|</span>', '');
 
-                // Button
-                let updateCollaps = wrapperLeft.appendChild(elementGenerator('button'));
-                updateCollaps.id = `colap-save-btn-${i}`;
-                updateCollaps.innerHTML = `<i class="lni lni-save"></i> Guardar alterações`
-                updateCollaps.classList = 'btn btn-success no-display'
+                // Guardar alterações Button
+                let updateCollaps = wrapperLeft.appendChild(elementGenerator('button', `colap-save-btn-${i}`, 'btn btn-success no-display', `<i class="lni lni-save"></i> Guardar alterações`));
                 updateCollaps.addEventListener('click', gerarColapsaveis)
 
                 // filler div para padding
-                wrapperLeft.appendChild(elementGenerator('div'));
-                wrapperLeft.lastChild.classList = 'save-padding';
+                wrapperLeft.appendChild(elementGenerator('div', '', 'save-padding'));
 
                 // Col 2 (display)
-                wrapperRight.appendChild(newColapH2Display(i));
+                wrapperRight.appendChild(elementGenerator('div', '', `colap-display-h2-${i}`));
                 wrapperRight.lastChild.innerText = h2Trim[0];
 
                 //hotfix, estava a aparecer "Abrir/Fechar" várias vezes nos preview
@@ -1475,37 +1550,24 @@ function mixWrapper() {
                     wrapperRight.lastChild.innerText = wrapperRight.lastChild.innerText.replace('Abrir/Fechar', '');
                 }
 
-                wrapperRight.appendChild(newColapBodyDisplay(i));
-                wrapperRight.lastChild.innerHTML = colapList[i - 1].nextElementSibling.innerHTML;
+                wrapperRight.appendChild(elementGenerator('div', '', `colap-display-body-${i}`, colapList[i - 1].nextElementSibling.innerHTML));
             }
 
             // adicionar novo collap
-            row = colapWrapper.appendChild(newColapRow());
+            row = colapWrapper.appendChild(elementGenerator('div', '', 'row'));
 
-            col = row.appendChild(elementGenerator('div'));
-            col.id = 'add-new-collap'
-            const newCollapBtn = col.appendChild(elementGenerator('button'));
-            newCollapBtn.classList = "btn btn-info"
-            newCollapBtn.innerHTML = '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'
+            col = row.appendChild(elementGenerator('div', 'add-new-collap'));
+            const newCollapBtn = col.appendChild(elementGenerator('button', '', "btn btn-info", '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
             newCollapBtn.addEventListener('click', novoColapsavel)
-            const scrollToTop = col.appendChild(elementGenerator('button'));
-            scrollToTop.classList = "btn btn-info"
-            scrollToTop.innerHTML = '<i class="lni lni-arrow-up-circle"></i>&nbsp;&nbsp;Voltar ao início'
+            const scrollToTop = col.appendChild(elementGenerator('button', '', "btn btn-info", '<i class="lni lni-arrow-up-circle"></i>&nbsp;&nbsp;Voltar ao início'));
             scrollToTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); })
 
         } else {
-            let geradorColapWrapper = colaphcPreview.appendChild(elementGenerator('div'));
-            geradorColapWrapper.id = 'gerador-colaps-wrapper';
-            geradorColapWrapper.classList = 'row'
+            let geradorColapWrapper = colaphcPreview.appendChild(elementGenerator('div', 'gerador-colaps-wrapper', 'row'));
 
-            let col = geradorColapWrapper.appendChild(elementGenerator('div'));
-            col.classList = 'col-md-12 gerador-colaps-1'
-            col.innerHTML = 'Não foi encontrado nenhum colapsável.'
+            let col = geradorColapWrapper.appendChild(elementGenerator('div', '', 'col-md-12 gerador-colaps-1', 'Não foi encontrado nenhum colapsável.'));
 
-
-            geradornewCollapBtn = geradorColapWrapper.appendChild(elementGenerator('button'));
-            geradornewCollapBtn.classList = "btn btn-info"
-            geradornewCollapBtn.innerHTML = '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'
+            geradornewCollapBtn = geradorColapWrapper.appendChild(elementGenerator('button', '', "btn btn-info", '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
             geradornewCollapBtn.addEventListener('click', novoColapsavel)
 
             col.appendChild(elementGenerator('div'));
@@ -1547,7 +1609,7 @@ function mixWrapper() {
     }
 
     // função para atualizar o preview do body
-    function colapTextAreaEvents(e) {
+    function colapTextAreaEventsSlim(e) {
         // Atualiza a active textarea
         activeTextarea = e.target;
 
@@ -1574,10 +1636,60 @@ function mixWrapper() {
         saveButton.classList.remove('no-display');
     }
 
-    function gerarColapsaveis() {
+    // função para atualizar o preview do body
+    function colapTextAreaEvents(e) {
+        // Atualiza a active textarea
+        activeTextarea = e.target;
 
+        let inputText = activeTextarea.value;
+        let cursorappControlsPos = getCursorPos(e);
+        let inputColapTextStrings1;
+        let inputColapTextStrings2;
+
+        // babyproof para quando colocamos o cursor numa tag, ele se mostrado for da tag (para não partir o prewview)
+        novoColapsCursorPos = cursorappControlsPos;
+        if (inputText[cursorappControlsPos] === '>') {
+            inputColapTextStrings = inputText.slice(0, cursorappControlsPos + 2)
+            inputColapTextStrings = inputText.slice(cursorappControlsPos + 2, inputText.length)
+        } else {
+            (function rotinaCursor() {
+                switch (inputText[novoColapsCursorPos]) {
+                    case '<':
+                        inputColapTextStrings1 = inputText.slice(0, novoColapsCursorPos)
+                        inputColapTextStrings2 = inputText.slice(novoColapsCursorPos, inputText.length)
+                        break
+                    case '>':
+                        inputColapTextStrings1 = inputText.slice(0, cursorappControlsPos)
+                        inputColapTextStrings2 = inputText.slice(cursorappControlsPos, inputText.length)
+                        break
+                    case undefined:
+                        inputColapTextStrings1 = inputText.slice(0, cursorappControlsPos)
+                        inputColapTextStrings2 = inputText.slice(cursorappControlsPos, inputText.length)
+                        break
+                    default:
+                        novoColapsCursorPos--
+                        rotinaCursor()
+                }
+
+                // introduz o cursor laranja
+                let inputColapTextWithCursor = `${inputColapTextStrings1}<span id="pulse">|</span>${inputColapTextStrings2}`;
+
+                stringCursorColap[0] = inputColapTextStrings1;
+                stringCursorColap[1] = inputColapTextStrings2;
+
+                // Preview do input
+                let inputPreview = e.target.parentElement.nextElementSibling.children[1];
+                inputPreview.innerHTML = inputColapTextWithCursor;
+
+                // Mostra o save button
+                const saveButton = e.target.nextElementSibling
+                saveButton.classList.remove('no-display');
+            })();
+        }
+    }
+
+    function gerarColapsaveis(e) {
         const colapList = document.querySelectorAll('.row .seccao-phcgo');
-
         let newCollapFinal = '';
         let newCollapseArray = [[], [], []];
 
@@ -1588,12 +1700,10 @@ function mixWrapper() {
             newCollapseArray[2][i - 1] = document.querySelector(`.colap-input-body-${i}`).value;
 
             // wrapper do collapsavel
-            let newCollap = elementGenerator('div');
-            newCollap.classList = 'row seccao-phcgo';
+            let newCollap = elementGenerator('div', '', 'row seccao-phcgo');
 
             // título
-            let newCollapColTitulo = newCollap.appendChild(elementGenerator('div'))
-            newCollapColTitulo.classList = 'col-xs-8'
+            let newCollapColTitulo = newCollap.appendChild(elementGenerator('div', '', 'col-xs-8'));
 
             //link do h2
             let h2Link = newCollapColTitulo.appendChild(elementGenerator('a'));
@@ -1601,9 +1711,7 @@ function mixWrapper() {
             h2Link.setAttribute('data-toggle', 'collapse');
 
             //h2
-            let newtituloH2 = h2Link.appendChild(elementGenerator('h2'))
-            newtituloH2.classList = 'manuais'
-            newtituloH2.innerText = newCollapseArray[1][i - 1]
+            let newtituloH2 = h2Link.appendChild(elementGenerator('h2', '', 'manuais', newCollapseArray[1][i - 1]))
 
             //abrir/fechar
             let newCollapCol1 = newCollap.appendChild(elementGenerator('div', '', 'col-xs-4 text-right'))
@@ -1630,66 +1738,16 @@ function mixWrapper() {
         newCollapFinal = topicoAntesColapsaveis() + newCollapFinal;
         textarea.value = newCollapFinal;
         hcPreview.innerHTML = fixArtigosRelacionadosLogo(newCollapFinal);
+
+        //obtem a nossa localização vertical ao gravar
+        const whereWasI = document.querySelector('#' + e.target.parentElement.id).parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().bottom
+        const totalHeight = document.querySelector('#' + e.target.parentElement.id).parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().height
+
         appControlsColap();
         autosave2JSON();
 
-    }
-
-
-    function newColapRow() { // wrapper row
-        const newColapRow = elementGenerator('div');
-        newColapRow.classList.add('row');
-        return newColapRow
-    }
-
-    function newColapInput() { // wrapper esquerdo
-        const newColapInput = elementGenerator('div');
-        newColapInput.classList = 'col-md-5 inputs-wrapper';
-        return newColapInput
-    }
-
-    function newColapDisplay() { // wrapper direito
-        const newColapDisplay = elementGenerator('div');
-        newColapDisplay.classList.add('col-md-7');
-        newColapDisplay.style.paddingRight = '0px'
-        return newColapDisplay
-    }
-
-    function newColapIDInput(i) { // input para o cliente conseguir editar o ID colap
-        const newColapIDInput = elementGenerator('input');
-        newColapIDInput.classList.add(`colap-input-id-${i}`);
-        return newColapIDInput
-    }
-
-    function newColapH2Display(i) { // div para mostrar o atual h2 do colap
-        const newColapH2Display = elementGenerator('div');
-        newColapH2Display.classList.add(`colap-display-h2-${i}`);
-        return newColapH2Display
-    }
-
-    function newColapH2Input(i) {    // input para o cliente conseguir editar o h2 do colap
-        const newColapH2Input = elementGenerator('input');
-        newColapH2Input.classList.add(`colap-input-h2-${i}`);
-        return newColapH2Input
-    }
-
-    function newColapBodyDisplay(i) { // div para mostrar o atual body do colap
-        const newColapBodyDisplay = elementGenerator('div');
-        newColapBodyDisplay.classList.add(`colap-display-body-${i}`);
-        return newColapBodyDisplay
-    }
-
-    function newColapBodyInput(i) {    // input para o cliente conseguir editar o body do colap
-        const newColapBodyInput = elementGenerator('textarea');
-        newColapBodyInput.classList.add(`colap-input-body-${i}`);
-        return newColapBodyInput
-    }
-
-    function newSpan(cla, text) {    // input para o cliente conseguir editar o body do colap
-        const newSpan = elementGenerator('span');
-        newSpan.classList.add(cla);
-        newSpan.innerText = `${text}`;
-        return newSpan
+        // volta-nos a posicionar onde estávamos aquando da gravação (é necessário, porque o ecrã é re-escrito ao gravar)
+        window.scrollTo(0, totalHeight - whereWasI);
     }
 
     function singleColapsavel() {
@@ -1747,7 +1805,6 @@ function mixWrapper() {
                     alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
                 }
             }
-
             textarea.value = textarea.value + "\n" + '<!-- Início do Colapsável #' + (colapList.length + 1) + ' -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #' + (colapList.length + 1) + ' -->');
             textarea.value = textarea.value.replaceAll('><div class="collapse', '>' + "\n" + "\n" + '<div class="collapse ')
             hcPreview.innerHTML = textarea.value;
@@ -1757,16 +1814,10 @@ function mixWrapper() {
     }
 
     function writeImage() {
-        const code = prompt('Link direto para a imagem (http ou data:image base 64)')
+        const code = prompt('Link direto para a imagem (http ou data:image)')
         if (code === null) { return }
         let imagem = `<span style="display:flex;justify-content:center;align-self:center;"><img style="max-width:100%;"\nsrc="${code}"></span>`;
-        escreveNaTextareaGeradores(imagem);
+        escreveNaTextarea(imagem);
     }
-
-
 }
 mixWrapper();
-
-
-
-

@@ -85,7 +85,7 @@ a:hover {
 
 /* Cabeçalho */
 .header {
-    min-height: 34vh;
+        min-height: 330px;
     background: #1D1D1D;
     background-image: url('../img/header-bg.png');
     background-size: 2%;
@@ -213,27 +213,27 @@ a:hover {
 
 .color-pick>i {
     display: flex;
-justify-content: center;
-align-self: center;
-align-content: center;
-margin-top: 25%;
-opacity:0;
+    justify-content: center;
+    align-self: center;
+    align-content: center;
+    margin-top: 25%;
+    opacity: 0;
 }
 
 .selected-color {
     opacity: 1;
 }
 
-.selected-color > i{
-    opacity:1;
-    color:orange;
-    font-size:18px;
+.selected-color>i {
+    opacity: 1;
+    color: orange;
+    font-size: 18px;
 }
 
-#icon-color-2.selected-color > i,
-#icon-color-5.selected-color > i {
-    color:black;
-} 
+#icon-color-2.selected-color>i,
+#icon-color-5.selected-color>i {
+    color: black;
+}
 
 .color-pick:hover {
     cursor: pointer;
@@ -272,7 +272,7 @@ opacity:0;
 /*######################################*/
 
 .phc-buttons {
-    padding-top:5px;
+    padding-top: 5px;
 }
 
 .botao {
@@ -316,27 +316,26 @@ opacity:0;
 
 .theme-pick>i {
     display: flex;
-justify-content: center;
-align-self: center;
-align-content: center;
-margin-top: 25%;
-opacity:0;
+    justify-content: center;
+    align-self: center;
+    align-content: center;
+    margin-top: 25%;
+    opacity: 0;
 }
 
 .selected-theme {
     opacity: 1;
 }
 
-.selected-theme > i{
-    opacity:1;
-    color:orange;
-    font-size:18px;
+.selected-theme>i {
+    opacity: 1;
+    color: orange;
+    font-size: 18px;
 }
 
-#icon-color-2.selected-color > i,
-#theme-5.selected-color > i {
-    color:black;
-} 
+#theme-4.selected-theme>i {
+    color: black;
+}
 
 .theme-pick:hover {
     cursor: pointer;
@@ -703,6 +702,10 @@ a.manuais:hover {
     margin-left: 2%;
 }
 
+#colapsables-wrapper>div>div>.col-md-7 {
+    padding-right: 0px;
+}
+
 /* todos os h2 preview */
 #colapsables-wrapper>div>div>.col-md-7>div:first-child {
     background-color: #333;
@@ -717,15 +720,15 @@ a.manuais:hover {
 }
 
 .row.impar {
-    background: rgb(218,227,251);
-    background: linear-gradient(180deg, rgba(218,227,251,1) 0%, rgba(176,184,209,1) 100%);  
+    background: rgb(218, 227, 251);
+    background: linear-gradient(180deg, rgba(218, 227, 251, 1) 0%, rgba(176, 184, 209, 1) 100%);
     border-top: 2px solid #333;
 }
 
 .row.par {
-    background: rgb(251,228,218);
-background: linear-gradient(180deg, rgba(251,228,218,1) 0%, rgba(209,188,176,1) 100%); 
-border-top: 2px solid #333;
+    background: rgb(251, 228, 218);
+    background: linear-gradient(180deg, rgba(251, 228, 218, 1) 0%, rgba(209, 188, 176, 1) 100%);
+    border-top: 2px solid #333;
 }
 
 /* todos os body preview  */

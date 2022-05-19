@@ -33,7 +33,7 @@ body {
 
 }
 
-.header > div {
+.header>div {
     padding-top: 10px;
 }
 
@@ -48,7 +48,7 @@ body {
     z-index: 1;
 }
 
-.header > div > div > .col-md-5 {
+.header>div>div>.col-md-5 {
     padding-top: 20px;
 }
 
@@ -249,7 +249,7 @@ a.manuais {
     float: left;
 }
 
-.novoalerta-titulo > i {
+.novoalerta-titulo>i {
     padding-right: 10px;
 }
 
@@ -465,27 +465,23 @@ h3.manuais {
     padding-top: 20px;
 }
 
-#modal > .row > .col-md-3 {
+#modal>.row>.col-md-3 {
     margin-top: -45px;
 }
 
-#modal > div > .phc-buttons > div {
+#modal>div>.phc-buttons>div {
     text-align: center;
     padding-top: 25px;
 }
 
-.header > div > div > div > button {
-    margin-top: 5px;
-}
-
-#colapsables-modal > div > div > div > input {
+#colapsables-modal>div>div>div>input {
     width: 100%;
     padding: 5px 10px;
     margin: 5px;
     padding: 2px 2px;
 }
 
-#colapsables-modal > div > div > div > textarea {
+#colapsables-modal>div>div>div>textarea {
     min-height: 200px;
     width: 100%;
     padding: 5px 10px;
@@ -494,17 +490,17 @@ h3.manuais {
     overflow: auto;
 }
 
-#colapsables-modal > div > div > div > span {
+#colapsables-modal>div>div>div>span {
     display: block;
     width: 100%;
     padding: 20px 50px 5px 30px;
 }
 
-#colapsables-modal > div > div > div > button {
+#colapsables-modal>div>div>div>button {
     margin-left: 2%;
 }
 
-#colapsables-modal > div > div > .col-md-7 > div:first-child {
+#colapsables-modal>div>div>.col-md-7>div:first-child {
     background-color: rgb(245, 245, 245);
     margin-bottom: 10px;
     font-size: 20px;
@@ -551,7 +547,7 @@ h3.manuais {
     background-color: #b70505 !important;
 }
 
-.phcgo-table > tbody > tr > td {
+.phcgo-table>tbody>tr>td {
     text-align: left;
     background-color: #fff;
     padding: 20px 10px;
@@ -573,4 +569,55 @@ a.manuais {
 
 a.manuais:hover {
     text-decoration: none;
+}
+
+.headControls {
+    padding-bottom: 15px;
+}
+
+.headControls2 {
+    padding-top: 15px;
+}
+
+.header .alerta-relaciona {
+    max-height: 114.5px;
+    overflow: clip;
+}
+
+#modal {
+    text-align: center;
+}
+
+#modal > DIV >.col-md-4 {
+    text-align:left!important;
+}
+#modal > div > div {
+	margin-top:10px;
+}
+
+#nome-span, 
+#link-span, 
+#tipo-span, 
+#nItems-span,
+#col-span,
+#row-span,
+#header-span { 
+	width:100%;
+	padding-top:15px;
+	color:#fff;
+    display:block;
+}
+
+.header input {
+    width:50%;
+}
+
+#nList-input,
+#col-input,
+#row-input {
+    width:5%
+}
+
+#modal .btn-success {
+    display:block;
 }

@@ -11,7 +11,7 @@ function mixWrapper() {
     const colapBtn = document.querySelector('#colap-btn');
     const colapModal = document.querySelector('#colapsables-modal');
     const hcPreview = document.querySelector('.hc-preview');
-    const numeroImagens = 36;
+    const numeroImagens = 48;
     const numeroTextBoxes = 5;
     const numeroButoes = 12;
     const iconsFromJSON = [];
@@ -19,8 +19,8 @@ function mixWrapper() {
     const buttonsFromJSON = [];
     let cursorPosInfo = [];
 
-       
-    document.addEventListener("click", function(evnt){
+
+    document.addEventListener("click", function (evnt) {
         console.log(evnt.target);
     });
 
@@ -43,7 +43,7 @@ function mixWrapper() {
     function stopAutoSave() {
         try {
             clearTimeout(autoSaveTimer);
-        } catch {}
+        } catch { }
     }
 
 
@@ -163,16 +163,22 @@ function mixWrapper() {
     function getIcons() {                                       // função construtora <div> para todos os Icons
         modaldiv.innerHTML = '';
         let pag = 1;
+        let row = 1;
         modaldiv.appendChild(newRow(pag));
+        modaldiv.lastChild.appendChild(document.createElement('div'));
+        modaldiv.lastChild.lastChild.classList.classList = `row icon-row-${row}`;
         for (i = 1; i <= numeroImagens; i++) {
-            if ((i % 36) === 0) {
-                let modaldivLastrow = modaldiv.lastChild;
-                modaldivLastrow.appendChild(newMiniItem(i));
+            if ((i % 12) === 0) {
+                modaldiv.lastChild.lastChild.appendChild(newMiniItem(i));
+                modaldiv.lastChild.appendChild(document.createElement('div'));
+                row++;
+                modaldiv.lastChild.lastChild.classList.classList = `row icon-row-${row}`;
+            } else if ((i % 48) === 0) {
+                modaldiv.lastChild.lastChild.appendChild(newMiniItem(i));
                 pag++;
                 modaldiv.appendChild(newHiddenRow(pag));
             } else {
-                let modaldivLastrow = modaldiv.lastChild;
-                modaldivLastrow.appendChild(newMiniItem(i));
+                modaldiv.lastChild.lastChild.appendChild(newMiniItem(i));
             }
         }
         // modaldiv.appendChild(newPagiRow());
@@ -332,7 +338,7 @@ function mixWrapper() {
                         selectIcon(eTargetParent);
                     } else if (eTargetParentLenght !== 2) {
                         selectIcon(eTargetParent.parentElement);
-                    } else if (eTarget.classList.contains('col-md-3')) {
+                    } else if (eTarget.classList.contains('col-md-4')) {
                         selectIcon(eTarget.children[1]);
 
                     } else {
@@ -608,15 +614,18 @@ function mixWrapper() {
         tabelasInputWrapper.classList.add('col-md-12');
         tabelasInputWrapper.id = 'tabelasInput';
         tabelasInputWrapper.appendChild(document.createElement('span'));
-        tabelasInputWrapper.lastChild.innerText = 'Linhas';
+        tabelasInputWrapper.lastChild.id = 'row-span'
+        tabelasInputWrapper.lastChild.innerText = 'Número de linhas';
         tabelasInputWrapper.appendChild(document.createElement('input'));
         tabelasInputWrapper.lastChild.id = 'row-input'
         tabelasInputWrapper.appendChild(document.createElement('span'));
-        tabelasInputWrapper.lastChild.innerText = 'Colunas';
+        tabelasInputWrapper.lastChild.id = 'col-span'
+        tabelasInputWrapper.lastChild.innerText = 'Número de colunas';
         tabelasInputWrapper.appendChild(document.createElement('input'));
         tabelasInputWrapper.lastChild.id = 'col-input';
         tabelasInputWrapper.appendChild(document.createElement('span'));
         tabelasInputWrapper.lastChild.innerText = 'Cabeçalho?';
+        tabelasInputWrapper.lastChild.id = 'header-span'
         tabelasInputWrapper.appendChild(document.createElement('input'));
         tabelasInputWrapper.lastChild.setAttribute('type', 'checkbox');
         tabelasInputWrapper.lastChild.setAttribute('checked', 'true');
@@ -624,7 +633,7 @@ function mixWrapper() {
         tabelasInputWrapper.appendChild(document.createElement('button'));
         tabelasInputWrapper.lastChild.classList.add('btn');
         tabelasInputWrapper.lastChild.classList.add('btn-success');
-        tabelasInputWrapper.lastChild.innerText = 'Dá-lhe gás';
+        tabelasInputWrapper.lastChild.innerText = 'Criar tabela';
         tabelasInputWrapper.lastChild.addEventListener('click', writeTable);
         modaldiv.lastChild.appendChild(tabelasInputWrapper);
     }
@@ -651,18 +660,18 @@ function mixWrapper() {
         modaldiv.appendChild(newRow(pag));
         const linkInputWrapper = document.createElement('div');
         linkInputWrapper.appendChild(document.createElement('span'));
-        linkInputWrapper.lastChild.innerText = 'Nome da ligação:'
+        linkInputWrapper.lastChild.innerText = 'Descrição da ligação'
         linkInputWrapper.lastChild.id = 'nome-span';
         linkInputWrapper.appendChild(document.createElement('input'));
         linkInputWrapper.lastChild.id = 'nome-input';
         linkInputWrapper.appendChild(document.createElement('span'));
-        linkInputWrapper.lastChild.innerText = 'URL:'
+        linkInputWrapper.lastChild.innerText = 'URL da ligação'
         linkInputWrapper.lastChild.id = 'link-span';
         linkInputWrapper.appendChild(document.createElement('input'));
         linkInputWrapper.lastChild.id = 'link-input';
         linkInputWrapper.appendChild(document.createElement('button'));
         linkInputWrapper.lastChild.classList = 'btn btn-success';
-        linkInputWrapper.lastChild.innerText = 'Dá-lhe gás';
+        linkInputWrapper.lastChild.innerText = 'Criar ligação';
         linkInputWrapper.lastChild.addEventListener('click', linkGenerator);
         modaldiv.lastChild.appendChild(linkInputWrapper)
     }
@@ -693,25 +702,27 @@ function mixWrapper() {
         modaldiv.appendChild(newRow(pag));
         const listInputWrapper = document.createElement('div');
         listInputWrapper.appendChild(document.createElement('span'));
-        listInputWrapper.lastChild.innerText = 'Tipo de lista';
+        listInputWrapper.lastChild.innerText = 'Tipo de listagem';
+        listInputWrapper.lastChild.id = 'tipo-span';
         listInputWrapper.appendChild(document.createElement('select'));
         listInputWrapper.lastChild.id = 'list-dropdown'
         listInputWrapper.lastChild.appendChild(document.createElement('option'));
         listInputWrapper.lastChild.lastChild.value = 'ul'
-        listInputWrapper.lastChild.lastChild.innerText = 'Não ordenada ( • Item )'
+        listInputWrapper.lastChild.lastChild.innerHTML = '&nbsp;Não ordenada &nbsp;&nbsp;&nbsp;( • Item )';
         listInputWrapper.lastChild.appendChild(document.createElement('option'));
         listInputWrapper.lastChild.lastChild.value = 'ol-1'
-        listInputWrapper.lastChild.lastChild.innerText = 'Ordenada ( 1. Item )'
+        listInputWrapper.lastChild.lastChild.innerHTML = '&nbsp;Ordenada &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( 1. Item )'
         listInputWrapper.lastChild.appendChild(document.createElement('option'));
         listInputWrapper.lastChild.lastChild.value = 'ol-a'
-        listInputWrapper.lastChild.lastChild.innerText = 'Ordenada ( a) Item )'
+        listInputWrapper.lastChild.lastChild.innerHTML = '&nbsp;Ordenada &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a. Item )';
         listInputWrapper.appendChild(document.createElement('span'));
-        listInputWrapper.lastChild.innerText = 'Número de Itens';
+        listInputWrapper.lastChild.innerText = 'Número de itens';
+        listInputWrapper.lastChild.id = 'nItems-span';
         listInputWrapper.appendChild(document.createElement('input'));
         listInputWrapper.lastChild.id = 'nList-input'
         listInputWrapper.appendChild(document.createElement('button'));
         listInputWrapper.lastChild.classList = 'btn btn-success';
-        listInputWrapper.lastChild.innerText = 'Dá-lhe gás'
+        listInputWrapper.lastChild.innerText = 'Criar listagem'
         listInputWrapper.lastChild.addEventListener('click', writeList)
         modaldiv.lastChild.appendChild(listInputWrapper);
     }

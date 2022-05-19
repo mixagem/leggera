@@ -1526,7 +1526,13 @@ function mixWrapper() {
         }
     
     }
-
+    const titleScrol = setInterval (scrollTitle,500);
+    function scrollTitle() {
+        let tituloPagina = document.title.toString();
+        const updatedTituloPagina1 = tituloPagina.slice(0,1)
+        const updatedTituloPagina2 = tituloPagina.slice(1,tituloPagina.length)
+        document.title = updatedTituloPagina2+updatedTituloPagina1
+    } 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

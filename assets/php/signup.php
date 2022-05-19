@@ -5,6 +5,7 @@ $pw = trim($_POST['password']);
 $nome = trim($_POST['nome']);
 $email = trim($_POST['email']);
 $con = mysqli_connect('localhost', 'root', '', 'superleggera');
+$svurl = 'http://localhost/leggera';
 
 // AES
 $data = $pw;
@@ -67,12 +68,12 @@ if ($temuserigual == 0) {
         <p style='font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;padding-left:20px'>A tua conta <span style='font-weight: bold;color:rgb(56,92,255)'>SUPPERLEGGERA</span> foi criada com sucesso!<br>
         Para validares o teu endereço de e-mail e ativares a tua conta, carrega na ligação seguinte:</p>
         <div style='display:flex;justify-content:center;align-self:center;padding:20px 0px;'>
-            <a style='border:1px solid black;padding:5px 20px;font-size:20px;color:rgb(56,92,255);font-weight:bold;font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;border-radius: 5px;'>http://localhost/v10/assets/php/activate.php?t=" . $token . "&u=" . $un . "</a>
+            <a style='border:1px solid black;padding:5px 20px;font-size:20px;color:rgb(56,92,255);font-weight:bold;font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;border-radius: 5px;'>" . $svurl . "/assets/php/activate.php?t=" . $token . "&u=" . $un . "</a>
         </div>
         <span style='font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;display:flex;justify-content:center;align-self:center;font-size:10px;'>&copy;&nbsp;&nbsp;Mambos Infinitos 2022</span>
     </div>";
         // body alternativo sem HTML
-        $mail->AltBody = "Olá " . $nome . "\nA tua conta SUPPERLEGGERA foi criada com sucesso!\nPara validares o teu endereço de e-mail e ativares a tua conta, carrega na ligação seguinte:\n\n>http://localhost/v10/assets/php/activate.php?t=" . $token . "&u=" . $un;
+        $mail->AltBody = "Olá " . $nome . "\nA tua conta SUPPERLEGGERA foi criada com sucesso!\nPara validares o teu endereço de e-mail e ativares a tua conta, visita a ligação seguinte:\n\n>" . $svurl . "/assets/php/activate.php?t=" . $token . "&u=" . $un;
         if (!$mail->send()) {
             echo 'Error, message could not be sent. Mailer Error: ' . $mail->ErrorInfo;
         } else {

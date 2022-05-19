@@ -3,60 +3,73 @@
 /* mambosinfinitos, 2022            */
 /* featurelist:
     - helpcenter preview
-    - helpcenter darkmode (vista de edição, o código gerado continua 100% compatível com o helpcenter live)
-    - injetor caixas texto (v2, com idons do material)
-    - injetor de icons (v2, ions do material) com seletor de cor
-    - injetor de buttons com seletor de tema
-    - construtor de listas numeradas, não numeradas, e com links
+    - helpcenter darkmode 
+        (apenas vista de edição, o código gerado continua 100% compatível com o helpcenter live)
+    - injetor caixas texto 
+        (v2, com icons do material)
+    - injetor de icons 
+        (v2, icons do material e com seletor de cor)
+    - injetor de buttons 
+        (v2, com seletor de tema)
+    - construtor de listas 
+        (numeradas, não numeradas, e com links)
     - construtor de tabelas, com selector de estilos e injeção dos <style> necessários 
-        (inclui comentários informativos)
+        (v3, com selector de estilos, inecção de <styles> e <!-- comentários informativos -->)
     - injetor de imagens
-    - injetor de <hr> (separador horizontal)
+    - injetor de separador horizontal <hr>
     - injetor de títulos
+        (v2, com preview to título)
     - construtor de links
-    - editor live na vista principal 
+    - editor live
         (atualização ao vivo do preview com a posição do cursor + com o que foi acabado de escrever + introdução de <br> ao carregar Enter)
         (limite de 100.000 caracteres, para evitar a baixa performance em tópicos muito longos)
         (inclui alerta [pulse vermelho] para icons fontawesome + topiclink [conteúdos antigos])
-    - construtor/editor live de colapsáveis 
-        (inclui reformatação automática dos colapsáveis de tópicos antigos, para adicionar ligação ao título do colapsável ao gravar as alterações efetuadas)
+    - construtor de colapsáveis 
+        (v4, inclui reformatação automática dos colapsáveis de tópicos antigos, para adicionar ligação ao título do colapsável ao gravar as alterações efetuadas)
     - ligação api hilite.me c/ formatação automática para helpcenter 
-        (inclui indentação json, vb.net e typescript compatível com o HelpCenter)
+        (v3, json, vb.net, sql e typescript + identação + linhas numeradas)
     - importação & conversão de tabelas 
-        (remove os estilos que a tabela importada tem, e aplica o que estiver definido)
-    - autosave / autoload - grava o tópico em cache quando clickamos ou escrevemos na textarea principal. 
+        (v3, remove os estilos que a tabela importada tem, e aplica o que estiver definido)
+    - autosave / autoload - vai gravando o tópico em cache quando clickamos ou escrevemos na textarea principal (até 100.000 caracteres). 
         (ao carregar a página, vai buscar o tópico que ficou em cache caso exista)
     - quicksave / quickload 
         (segundo slot da cache, disponível através das ações respetivas)
-    - userstats - mostra estatísticas do utilizador quando não foi encontrado nenhum tópico de manual
-    - cleancode™ - formatação de todos os códigos injetados, de modo a adicionar quebras de linha onde justificável, de modo a tornar o código mais legível fora da aplicação 
-    - titlescroller - flashback aos tempos do myspace e hi5. groovy af. 
+    - userstats 
+        (estatísticas do utilizador quando não foi encontrado nenhum tópico de manual)
+        (v2, incluí preferências do utilizador)
+    - cleancode™
+        (formatação de todos os códigos injetados, de modo a adicionar quebras de linha onde justificável, de modo a tornar o código mais legível fora da aplicação)
+    - titlescroller
+        (flashback aos tempos do myspace e hi5. groovy af.) 
     - gestão completa de utilizadores 
         (páginas para signup, reset password, activate account, login)
         (incluí envio de email aquando do registo [para ativar a conta] + envio de email para resetar a password)
-    - cookie login (aka mantenha a sessão iniciada)
+    - cookie login 
+        (manter a sessão iniciada)
     - myManuals™ 
         (permite carregar, criar/atualizar e apagar novos tópicos)
-        (incluí searchbox [v2, suporta procura incluída]) 
-    
+        (incluí searchbox [v2, suporta procura incluída])
+
 /************************************/
 // Wrapper principal a ser invocado no login
 function mixWrapper() {
 
-
     // ################ variáveis globais da aplicação
-
     const leggeraVariables = {
-        // textarea principal
+        // constante com o caminho da textarea principal
         textarea: document.querySelector('textarea'),
-        // area de controlos
+        // constante com o caminho da area de controlos
         appControls: document.querySelector('#app-controls-wrapper'),
-        // preview helpcenter
+        // constante com o caminho do preview helpcenter
         hcPreview: document.querySelector('#helpcenter-preview'),
-        // arrays a serem utilizados para guardar os slices das textareas, aquando da introdução de elementos
+        // constante com o caminho do wrapper dos colapsáveis
+        colapHCPreview: document.querySelector('#colapsables-wrapper'),
+        // constante com o caminho do botao da vista de colapsáveis
+        botaoVistaColap: document.querySelector('#colap-btn'),
+        // arrays variáveis a serem utilizados para guardar os slices das textareas, aquando da introdução de elementos
         stringCursor: [],
         stringCursorColap: [],
-        // Array onde vão ser guardados os colapsáveis existentes (.row .seccao-phcgo) a ser utilizado para a construção da vista de colapsáveis
+        // arrays variáveis onde vão ser guardados os colapsáveis existentes (.row .seccao-phcgo) a ser utilizado para a construção da vista de colapsáveis
         colapList: [],
         // variável com o valor da última textarea selecionada
         activeTextarea: '',
@@ -70,17 +83,13 @@ function mixWrapper() {
         currentTheme: 'horizon',
         // variável de controlo do autosave (a ser utilizado quando temos um tópico com 100.000+ chars)
         limitExceded: 0,
-        // variável com o tema atual do leggera (lightTheme vem do leggera-loading.js)
-        currentLeggeraTheme: lightTheme,
         // variável com a resposta do servidor com as estatísticas do utilizador
-        userInfo: '',
+        userInfo: ''
     }
 
-
     // ################ métodos a aplicar no preview do helpcenter (alertas + darkmode)
-
     const leggeraPreviewAdjustments = {
-        // método principal, executa todos os métodos seguintes
+        // método principal, executa todos os métodos da class
         execute: function (convertedPreview) {
             if (Number(userWantAlerts) === 1) {
                 convertedPreview = leggeraPreviewAdjustments.oldRelatedTopics(convertedPreview);
@@ -137,18 +146,8 @@ function mixWrapper() {
         }
     }
 
-
-    // ################ métodos vários da aplicação 
+    // ################ métodos vários da aplicação
     const leggeraMethods = {
-
-        // document.querySelector mais curta
-        quepassa: function (selector, func, tipo = 'click') {
-            if (selector instanceof String) {
-                return document.querySelector(selector).addEventListener(tipo, func);
-            } else {
-                return selector.addEventListener(tipo, func);
-            }
-        },
         // document.createElement, mais turbinada senão nunca mais saía daqui paixão kkkkkkkkk
         mambo: function (ele, id = '', classlist = '', inner = '') {
             const elementGenerated = document.createElement(`${ele}`);
@@ -157,7 +156,7 @@ function mixWrapper() {
             if (inner !== '') { elementGenerated.innerHTML = `${inner}` }
             return elementGenerated
         },
-        // cartão com estatísticas de utilizador, exibido quando a textarea está vazia (executado on load, e ao mudar de tema)
+        // método para obter as estatísticas e preferências do utilizador
         getUserInfo: function () {
             $.ajax({
                 type: "POST",
@@ -193,7 +192,7 @@ function mixWrapper() {
                 // Atualiza o preview
                 leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(novoSourceCode);
                 // Atualiza a vista de colapsáveis
-                appControlsColap();
+                leggeraCollapsables.appControlsColap();
                 // Guarda as alterações em cache
                 leggeraMethods.autosave2JSON();
             }
@@ -237,7 +236,7 @@ function mixWrapper() {
                 leggeraMethods.escreveNaTextarea('<br>');
             }
         },
-        // método para atualiza o preview, textarea e os previews manualmente (a ser utilizado quando o tópico tem 100.000+ chars)
+        // método para atualizar o preview e guardar em cache manualmente (a ser utilizado quando o tópico tem 100.000+ chars)
         saveByPreviewBtn: function () {
             // altera a textarea utilizada
             leggeraVariables.activeTextarea = leggeraVariables.textarea;
@@ -245,7 +244,7 @@ function mixWrapper() {
             // Atualiza o preview
             leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(novoSourceCode);
             // Atualiza a vista de colapsáveis
-            appControlsColap();
+            leggeraCollapsables.appControlsColap();
             // Guarda as alterações em cache
             leggeraMethods.autosave2JSON();
         },
@@ -274,7 +273,7 @@ function mixWrapper() {
             // caso a textarea esteja vazia, adiciona o cartão com estatísticas do utilizador
             leggeraVariables.hcPreview.innerHTML = '';
             leggeraMethods.displayUserStats();
-            appControlsColap();
+            leggeraCollapsables.appControlsColap();
             leggeraVariables.stringCursor = ['', ''];
             // Guarda as alterações em cache
             leggeraMethods.autosave2JSON();
@@ -287,7 +286,7 @@ function mixWrapper() {
             // Atualiza o preview
             leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
             // Atualiza a vista de colapsáveis
-            appControlsColap();
+            leggeraCollapsables.appControlsColap();
             // Guarda as alterações em cache
             leggeraMethods.autosave2JSON();
         },
@@ -351,6 +350,7 @@ function mixWrapper() {
                 }
             })
         },
+        // método para ativar/desativar os alertas
         updateWantAlerts: function () {
             if (Number(userWantAlerts) === 1) {
                 console.log(`só lá, eu tinha o want alerts a: ${userWantAlerts}`)
@@ -398,6 +398,7 @@ function mixWrapper() {
                 })
             }
         },
+        // método para mostrar o painel de estatísticas do utilizador
         displayUserStats: function () {
             // caso a textarea esteja vazia, adiciona o cartão com estatísticas do utilizador
             const userPanelWrapper = leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('div', 'user-panel-container', '', `${leggeraVariables.userInfo}`));
@@ -405,7 +406,6 @@ function mixWrapper() {
             let alertToggle;
             let wantAlertsOption;
             let wantAlertsOptionBG;
-
             switch (Number(userWantAlerts)) {
                 case 0:
                     alertToggle = userOptions.appendChild(leggeraMethods.mambo('span', 'alerts-toggle', `mix-toggle-${userWantAlerts}`));
@@ -422,9 +422,7 @@ function mixWrapper() {
                     alertToggle.addEventListener('click', leggeraMethods.updateWantAlerts)
                     break;
             }
-
             const userOptions2 = userPanelWrapper.appendChild(leggeraMethods.mambo('div', 'user-options-2', '', 'Tema escuro&nbsp;&nbsp;&nbsp;&nbsp;'));
-
             switch (Number(lightTheme)) {
                 case 1:
                     alertToggle = userOptions2.appendChild(leggeraMethods.mambo('span', 'darktheme-toggle', `mix-toggle-0`));
@@ -444,12 +442,11 @@ function mixWrapper() {
         }
     }
 
-
     // ################ métodos para atualizar o preview com o cursor laranja/azul
     const leggeraUpdatePreviews = {
         execute: function (e) {
             // babyproof caso existam alterações pendentes na vista colapsáveis
-            if (botaoVistaColap.classList.contains('btn-info')) {
+            if (leggeraVariables.botaoVistaColap.classList.contains('btn-info')) {
                 leggeraVariables.colapList = document.querySelectorAll('.row .seccao-phcgo');
                 for (i = 1; i <= leggeraVariables.colapList.length; i++) {
                     let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
@@ -472,7 +469,7 @@ function mixWrapper() {
                 leggeraVariables.stringCursor[0] = inputTextString1;
                 leggeraVariables.stringCursor[1] = inputTextString2;
                 leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(inputTextWithCursor);
-                appControlsColap();
+                leggeraCollapsables.appControlsColap();
                 leggeraMethods.autosave2JSON();
                 // caso contrário, não atualiza on-the-fly o preview, nem guarda em cache
             } else {
@@ -490,7 +487,6 @@ function mixWrapper() {
             }
         }
     }
-
 
     // ################ myManuals
     const leggeraManuais = {
@@ -616,7 +612,7 @@ function mixWrapper() {
             // Atualiza o preview
             leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
             leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
-            appControlsColap();
+            leggeraCollapsables.appControlsColap();
             // Guarda as alterações em cache
             leggeraMethods.autosave2JSON();
         },
@@ -688,9 +684,7 @@ function mixWrapper() {
         }
     }
 
-
     // ################ go assets 
-
     const leggeraGOAssets = {
         // arrays para guardar os assets do GO
         iconsFromDB: [],
@@ -722,9 +716,7 @@ function mixWrapper() {
         }
     }
 
-
     // ################ método para chamadas API c/ Hilite.me
-
     const leggeraHiliteAPI = {
         post: function () {
             // Babyproof
@@ -756,14 +748,11 @@ function mixWrapper() {
             // compatibilidade helpcenter
             fixedHilite = fixedHilite.replaceAll('<pre style="', '<pre style="background:transparent;border:0px;');
             fixedHilite = fixedHilite.replaceAll('<tr><td><pre style="background:transparent;border:0px;', '<tr><td><pre style="background:transparent;border:0px;color:#eb8475; ');
-
             leggeraMethods.escreveNaTextarea(fixedHilite);
         }
     }
 
-
     // ################ app start
-
     window.onload = (function () {
         // vai buscar os assets do phc GO
         leggeraGOAssets.grabThemAll();
@@ -789,9 +778,7 @@ function mixWrapper() {
         }
     })();
 
-
     // ################ textboxes
-
     const leggeraTextboxes = {
         // método para atualizar o appControls com as textboxes
         displayControls: function () {
@@ -802,7 +789,7 @@ function mixWrapper() {
             // anexa as textboxes ao wrapper
             for (i = 1; i <= leggeraGOAssets.textboxesFromDB.length; i++) {
                 textboxControls.appendChild(leggeraMethods.mambo('div', `textbox-${i}`, 'col-md-4 helpcenter-textbox', leggeraGOAssets.textboxesFromDB[i - 1]));
-                leggeraMethods.quepassa(textboxControls.lastChild, leggeraTextboxes.write)
+                textboxControls.lastChild.addEventListener('click',leggeraTextboxes.write)
             }
         },
         // Função para escrever as textboxes na textarea
@@ -827,9 +814,7 @@ function mixWrapper() {
         }
     }
 
-
     // ################ icons
-
     const leggeraIcons = {
         // método para atualizar a cor selecionada para os icons
         changeCurrentColor: function (e) {
@@ -864,7 +849,7 @@ function mixWrapper() {
                 // A cada 24 interações, cria uma nova row de 24 icons
                 if ((i % 24) === 0) {
                     appControlsIconsSubWrapper.appendChild(leggeraMethods.mambo('div', `icon-${i}`, 'col-md-1 phcgo-icon', leggeraGOAssets.iconsFromDB[i - 1]));
-                    leggeraMethods.quepassa(appControlsIconsSubWrapper.lastChild, leggeraIcons.writeIcon);
+                    appControlsIconsSubWrapper.lastChild.addEventListener('click',leggeraIcons.writeIcon);
                     nSubWrapper = 1;
                     nWrapper++;
                     appControlsIconsMainWrapper = appControlsIcons.appendChild(leggeraMethods.mambo('div', '', `row icon-row-wrapper icon-row-${nWrapper}`));
@@ -873,13 +858,13 @@ function mixWrapper() {
                 // A cada 12 interações, cria um novo row de 12 icons
                 else if ((i % 12) === 0) {
                     appControlsIconsSubWrapper.appendChild(leggeraMethods.mambo('div', `icon-${i}`, 'col-md-1 phcgo-icon', leggeraGOAssets.iconsFromDB[i - 1]));
-                    leggeraMethods.quepassa(appControlsIconsSubWrapper.lastChild, leggeraIcons.writeIcon);
+                    appControlsIconsSubWrapper.lastChild.addEventListener('click',leggeraIcons.writeIcon);
                     nSubWrapper++;
                     appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(leggeraMethods.mambo('div', '', `col-md-6 icon-sub-row-${nSubWrapper}`));
                 }
                 else {
                     appControlsIconsSubWrapper.appendChild(leggeraMethods.mambo('div', `icon-${i}`, 'col-md-1 phcgo-icon', leggeraGOAssets.iconsFromDB[i - 1]));
-                    leggeraMethods.quepassa(appControlsIconsSubWrapper.lastChild, leggeraIcons.writeIcon);
+                    appControlsIconsSubWrapper.lastChild.addEventListener('click',leggeraIcons.writeIcon);
                 }
             }
             const colorPickerRow = appControlsIcons.appendChild(leggeraMethods.mambo('div', 'color-picker'));
@@ -891,7 +876,7 @@ function mixWrapper() {
                     colorPickerRow.appendChild(leggeraMethods.mambo('div', `icon-color-${i}`, 'color-pick', '<i class="lni lni-checkmark unselected-i"></i>'))
                 }
                 colorPickerRow.lastChild.value = colorTable[i - 1];
-                leggeraMethods.quepassa(colorPickerRow.lastChild, leggeraIcons.changeCurrentColor);
+                colorPickerRow.lastChild.addEventListener('click',leggeraIcons.changeCurrentColor);
             }
         },
         // Função para introduzir o icon no manual
@@ -908,9 +893,7 @@ function mixWrapper() {
         }
     }
 
-
     // ################ botões & chips
-
     const leggeraButtons = {
         // Função para alterar os botões de acordo com o tema selecionado
         changeCurrentTheme: function (e) {
@@ -992,11 +975,7 @@ function mixWrapper() {
         }
     }
 
-
-    // ############ APPCONTROLS LISTS & TABLES ############
-
-
-    // Função para mostrar o appControls de Listas e Tabela
+    // ################ listas, tabelas, separador horizontal & carregamento de imagens
     const leggeraListsAndTables = {
         displayControls: function () {
             // ########## Listas ##########
@@ -1008,7 +987,7 @@ function mixWrapper() {
             let col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-8'));
             const tipoListaSpan = col.appendChild(leggeraMethods.mambo('span', 'tipo-lista-span', '', 'Tipo de lista'));
             col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-4'));
-            const numItensSpan = col.appendChild(leggeraMethods.mambo('span', 'num-itens-span', '', '# Itens'));
+            const numItensSpan = col.appendChild(leggeraMethods.mambo('span', 'num-itens-span', '', '# de itens'));
             row = appControlsLists.appendChild(leggeraMethods.mambo('div', '', 'row'));
             col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-8'));
             let tipoListaDropdown = col.appendChild(leggeraMethods.mambo('select', 'tipo-lista-dropdown'));
@@ -1033,7 +1012,7 @@ function mixWrapper() {
             col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-4'));
             const wantLinks = col.appendChild(leggeraMethods.mambo('input', 'want-links-checkbox'));
             wantLinks.setAttribute('type', 'checkbox')
-            const wantLinksSpan = col.appendChild(leggeraMethods.mambo('span', 'want-links-span', '', '&nbsp;&nbsp;&nbsp;Links?'));
+            const wantLinksSpan = col.appendChild(leggeraMethods.mambo('span', 'want-links-span', '', '&nbsp;&nbsp;&nbsp;Links ?'));
             let criarListaButton = col.appendChild(leggeraMethods.mambo('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir lista'));
             criarListaButton.addEventListener('click', leggeraListsAndTables.writeList)
             // ########## Separador Horizontal ##########
@@ -1094,11 +1073,10 @@ function mixWrapper() {
             file2Upload.setAttribute('name', 'file-upload-input')
             const imagemCentradaCheckbox = novaImagemWrapper.appendChild(leggeraMethods.mambo('input', 'imagem-centrada', '', ''));
             imagemCentradaCheckbox.setAttribute('type', 'checkbox');
-            const imagemCentradaLabel = novaImagemWrapper.appendChild(leggeraMethods.mambo('span', 'imagem-centrada-span', '', '&nbsp;&nbsp;&nbsp;Centrada?'));
+            const imagemCentradaLabel = novaImagemWrapper.appendChild(leggeraMethods.mambo('span', 'imagem-centrada-span', '', '&nbsp;&nbsp;&nbsp;Centrar imagem'));
             const fileUploadBtn = novaImagemWrapper.appendChild(leggeraMethods.mambo('button', 'nova-quebra-btn', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir imagem'));
             fileUploadBtn.addEventListener('click', leggeraListsAndTables.writeImage);
         },
-
         // Função para atualizar com o tipo de lista selecionada
         listPreview: function () {
             const valorTipoLista = document.querySelector('#tipo-lista-dropdown').value;
@@ -1371,223 +1349,218 @@ function mixWrapper() {
         }
     }
 
-
-    // ############ APPCONTROLS TITLES & LINKS ############
-    // Função para mostrar a modal de Títulos e Ligações
-    function appControlsTitulosELigacoes() {
-        // Limpa o appControls + inicia paginador
-        let pag = leggeraMethods.appControlsChange();
-        // Anexar ao appControls o wrapper principal
-        let appControlsLinksAndTitles = leggeraVariables.appControls.appendChild(leggeraMethods.mambo('div', '', `row page-${pag}`));
-        // Anexar ao wrapper principal, o Wrapper da secção da esquerda
-        const novoVariosWrapperLeft = appControlsLinksAndTitles.appendChild(leggeraMethods.mambo('div', 'left-wrapper', 'col-md-8'));
-        // Anexar ao wrapper principal, o Wrapper da secção da direita
-        const geradorTitulosWrapper = novoVariosWrapperLeft.appendChild(leggeraMethods.mambo('div', 'gerador-titulos', 'row', '<i class="lni lni-pilcrow gold"></i>&nbsp;Gerador de títulos'));
-        // Row 1
-        row = geradorTitulosWrapper.appendChild(leggeraMethods.mambo('div', '', 'row'));
-        let col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1')); // Filler col
-        // Col 1
-        col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-11'));
-        // Span Tipo Lista
-        let tipoListaSpan = col.appendChild(leggeraMethods.mambo('span', 'tipo-lista-span', '', 'Tipo de título'));
-        // Row 2 
-        row = geradorTitulosWrapper.appendChild(leggeraMethods.mambo('div', '', 'row'));
-        col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1')); // Filler col
-        // Col 1
-        col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-7'));
-        // Dropdown para "Tipo de título"
-        let tipoTituloDropdown = col.appendChild(leggeraMethods.mambo('select', 'tipo-titulo-dropdown'));
-        tipoTituloDropdown.addEventListener('change', previewTitle)
-        // Opção 4
-        tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H1'));
-        tipoTituloDropdown.lastChild.value = 'old1' // Valor a se passado para a função construtora de lista
-        // Opção 5
-        tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H2'));
-        tipoTituloDropdown.lastChild.value = 'old2'
-        // Opção 6
-        tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H3'));
-        tipoTituloDropdown.lastChild.value = 'old3'
-        // Opção 1    
-        tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H1 (alternativo)'));
-        tipoTituloDropdown.lastChild.value = 'default1' // Valor a se passado para a função construtora de lista
-        // Opção 2
-        tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H2 (alternativo)'));
-        tipoTituloDropdown.lastChild.value = 'default2'
-        // Opção 3
-        tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H3 (alternativo)'));
-        tipoTituloDropdown.lastChild.value = 'default3'
-        col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1'));   //Filler col
-        // Col Button criar título
-        row.appendChild(leggeraMethods.mambo('div', 'cria-lista-btn-div', 'col-md-2'));
-        // Button "Criar título"
-        let criarTituloButton = col.appendChild(leggeraMethods.mambo('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir título'));
-        criarTituloButton.addEventListener('click', writeTitle)
-        col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1'));   //Filler col
-        row = geradorTitulosWrapper.appendChild(leggeraMethods.mambo('div', '', 'row'));
-        // Col 1 (pre-view do título)
-        col = row.appendChild(leggeraMethods.mambo('div', 'preview-heading-row', 'col-md-12'));
-        row.lastChild.appendChild(leggeraMethods.mambo('h1', '', 'manuais', 'Título/Heading 1'))
-        row = novoVariosWrapperLeft.appendChild(leggeraMethods.mambo('div', '', 'row title-link-filler'));         // Filler Row
-        // Wrapper da secção das ligações
-        const novaLigacaoWrapper = novoVariosWrapperLeft.appendChild(leggeraMethods.mambo('div', '', 'row gerador-links-wrapper'));
-        // Col 0
-        col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', 'gerador-links-h1', 'col-md-12', '<i class="lni lni-website gold"></i>&nbsp;&nbsp;Gerador de links'));
-        // Col 1
-        col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-3 text-left'));
-        // Span 'Descrição da ligação'
-        const spanDescricao = col.appendChild(leggeraMethods.mambo('span', 'nome-span', '', 'Descrição da ligação:'));
-        // Col 2
-        col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-6'));
-        // Input 'Descrição da ligação'
-        const inputDescricao = col.appendChild(leggeraMethods.mambo('input', 'nome-input'));
-        // Col 3
-        col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-2 nova-ligacao-btn-col'));
-        // Button Criar ligação
-        const criarLigacao = col.appendChild(leggeraMethods.mambo('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir ligação'));
-        criarLigacao.addEventListener('click', writeLink);
-        // Col 4
-        col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-3 text-left'));
-        // Span 'URL'
-        const spanURL = col.appendChild(leggeraMethods.mambo('span', 'link-span', '', 'URL da ligação:'));
-        // Col 5
-        col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-6'));
-        // Input 'URL'
-        const inputURL = col.appendChild(leggeraMethods.mambo('input', 'link-input'));
-        // Wrapper da secção dos extras
-        const novoVariosWrapperRight = appControlsLinksAndTitles.appendChild(leggeraMethods.mambo('div', 'hilite-wrapper', 'col-md-4'));
-        // Row 0
-        row = novoVariosWrapperRight.appendChild(leggeraMethods.mambo('div', 'hilite-subwrapper', 'row', '<i class="lni lni-skipping-rope gold"></i>&nbsp;&nbsp;Hilite.me API'));
-        // Row 1
-        row = novoVariosWrapperRight.appendChild(leggeraMethods.mambo('div', '', 'row'));
-        // Wrapper Hilite.me
-        const hiliteWrapper = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-12'));
-        // Button para formatar hilite.me
-        const hiliteTextarea = hiliteWrapper.appendChild(leggeraMethods.mambo('textarea', 'hilite-textarea'));
-        const novaHiliteCheckboxesRow = hiliteWrapper.appendChild(leggeraMethods.mambo('div', 'hilite-checkboxes-row', 'row'));
-        leggeraVariables.codeType = 'vbnet' //reset ao trocar de página
-        let miniWrapper1 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
-        miniWrapper1.appendChild(leggeraMethods.mambo('input', 'vbnet'));
-        miniWrapper1.lastChild.type = 'radio'
-        miniWrapper1.lastChild.name = 'hilite'
-        miniWrapper1.lastChild.setAttribute('checked', 'true');
-        miniWrapper1.addEventListener('change', leggeraMethods.updateCodeType)
-        miniWrapper1.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;VB'));
-        let miniWrapper2 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
-        miniWrapper2.appendChild(leggeraMethods.mambo('input', 'ts'));
-        miniWrapper2.lastChild.type = 'radio'
-        miniWrapper2.lastChild.name = 'hilite'
-        miniWrapper2.addEventListener('change', leggeraMethods.updateCodeType)
-        miniWrapper2.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;TS'));
-        let miniWrapper3 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
-        miniWrapper3.appendChild(leggeraMethods.mambo('input', 'json'));
-        miniWrapper3.lastChild.type = 'radio'
-        miniWrapper3.lastChild.name = 'hilite'
-        miniWrapper3.addEventListener('change', leggeraMethods.updateCodeType)
-        miniWrapper3.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;JSON'));
-        let miniWrapper4 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
-        miniWrapper4.appendChild(leggeraMethods.mambo('input', 'sql'));
-        miniWrapper4.lastChild.type = 'radio'
-        miniWrapper4.lastChild.name = 'hilite'
-        miniWrapper4.addEventListener('change', leggeraMethods.updateCodeType)
-        miniWrapper4.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;SQL'));
-        let miniWrapper5 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-12'))
-        miniWrapper5.appendChild(leggeraMethods.mambo('input', 'line-numbers'));
-        miniWrapper5.lastChild.type = 'checkbox'
-        miniWrapper5.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;Linhas numeradas ?'));
-        const novaHiliteBtn = hiliteWrapper.appendChild(leggeraMethods.mambo('button', '', 'btn btn-warning', '<i class="lni lni-code"></i>&nbsp;&nbsp;Introduzir código'));
-        novaHiliteBtn.addEventListener('click', leggeraHiliteAPI.post);
-    }
-    // Função para mostrar uma preview do título selecionado na secção dos títulos
-    function previewTitle() {
-        let dropdownTitulos = document.querySelector('#tipo-titulo-dropdown');
-        let titulosPreview = document.querySelector('#preview-heading-row');
-        titulosPreview.innerHTML = '';
-        switch (dropdownTitulos.value) {
-            // Opção 1
-            case 'default1':
-                titulosPreview.appendChild(leggeraMethods.mambo('h1', '', 'manuais', 'Título/Heading 1'))
-                break;
-            case 'default2':
-                titulosPreview.appendChild(leggeraMethods.mambo('h2', '', 'manuais', 'Título/Heading 2'))
-                break;
-            case 'default3':
-                titulosPreview.appendChild(leggeraMethods.mambo('h3', '', 'manuais', 'Título/Heading 3'))
-                break;
-            case 'old1':
-                titulosPreview.appendChild(leggeraMethods.mambo('h1', '', '', 'Título/Heading 1'));
-                break;
-            case 'old2':
-                titulosPreview.appendChild(leggeraMethods.mambo('h2', '', '', 'Título/Heading 2'))
-                break;
-            case 'old3':
-                titulosPreview.appendChild(leggeraMethods.mambo('h3', '', '', 'Título/Heading 3'))
-                break;
-        }
-    }
-    // Função para adicionar o título ao tópico de manual
-    function writeTitle() {
-        let dropdownTitulos = document.querySelector('#tipo-titulo-dropdown');
-        switch (dropdownTitulos.value) {
-            // Opção 1
-            case 'default1':
-                leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h1', '', 'manuais', 'Título/Heading 1').outerHTML)
-                break;
-            case 'default2':
-                leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h2', '', 'manuais', 'Título/Heading 2').outerHTML)
-                break;
-            case 'default3':
-                leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h3', '', 'manuais', 'Título/Heading 3').outerHTML)
-                break;
-            case 'old1':
-                leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h1', '', '', 'Título/Heading 1').outerHTML)
-                break;
-            case 'old2':
-                leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h2', '', '', 'Título/Heading 2').outerHTML)
-                break;
-            case 'old3':
-                leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h3', '', '', 'Título/Heading 3').outerHTML)
-                break;
-        }
-    }
-    // Função para adicionar uma ligação ao código do tópico
-    function writeLink() {
-        // Obter os parâmetros para a ligação
-        const nome = document.querySelector('#nome-input').value;
-        const getlink = document.querySelector('#link-input').value;
-        const link = getlink.toLowerCase();
-        // babyproof
-        if (link.slice(0, 4) !== 'http') {
-            if (link.slice(0, 1) !== '#') {
-                alert('A ligação tem de começar por "#" (para ligações no mesmo tópico)\nou http (para ligações fora do tópico).')
-                return
+    // ################ títulos, links & hilite.me
+    const leggeraTitlesAndLinks = {
+        displayControls: function () {
+            // Limpa o appControls + inicia paginador
+            let pag = leggeraMethods.appControlsChange();
+            // Anexar ao appControls o wrapper principal
+            let appControlsLinksAndTitles = leggeraVariables.appControls.appendChild(leggeraMethods.mambo('div', '', `row page-${pag}`));
+            // Anexar ao wrapper principal, o Wrapper da secção da esquerda
+            const novoVariosWrapperLeft = appControlsLinksAndTitles.appendChild(leggeraMethods.mambo('div', 'left-wrapper', 'col-md-8'));
+            // Anexar ao wrapper principal, o Wrapper da secção da direita
+            const geradorTitulosWrapper = novoVariosWrapperLeft.appendChild(leggeraMethods.mambo('div', 'gerador-titulos', 'row', '<i class="lni lni-pilcrow gold"></i>&nbsp;Gerador de títulos'));
+            // Row 1
+            row = geradorTitulosWrapper.appendChild(leggeraMethods.mambo('div', '', 'row'));
+            let col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1')); // Filler col
+            // Col 1
+            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-11'));
+            // Span Tipo Lista
+            let tipoListaSpan = col.appendChild(leggeraMethods.mambo('span', 'tipo-lista-span', '', 'Tipo de título'));
+            // Row 2 
+            row = geradorTitulosWrapper.appendChild(leggeraMethods.mambo('div', '', 'row'));
+            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1')); // Filler col
+            // Col 1
+            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-7'));
+            // Dropdown para "Tipo de título"
+            let tipoTituloDropdown = col.appendChild(leggeraMethods.mambo('select', 'tipo-titulo-dropdown'));
+            tipoTituloDropdown.addEventListener('change', leggeraTitlesAndLinks.previewTitle)
+            // Opção 4
+            tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H1'));
+            tipoTituloDropdown.lastChild.value = 'old1' // Valor a se passado para a função construtora de lista
+            // Opção 5
+            tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H2'));
+            tipoTituloDropdown.lastChild.value = 'old2'
+            // Opção 6
+            tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H3'));
+            tipoTituloDropdown.lastChild.value = 'old3'
+            // Opção 1    
+            tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H1 (alternativo)'));
+            tipoTituloDropdown.lastChild.value = 'default1' // Valor a se passado para a função construtora de lista
+            // Opção 2
+            tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H2 (alternativo)'));
+            tipoTituloDropdown.lastChild.value = 'default2'
+            // Opção 3
+            tipoTituloDropdown.appendChild(leggeraMethods.mambo('option', '', '', '&nbsp;Título H3 (alternativo)'));
+            tipoTituloDropdown.lastChild.value = 'default3'
+            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1'));   //Filler col
+            // Col Button criar título
+            row.appendChild(leggeraMethods.mambo('div', 'cria-lista-btn-div', 'col-md-2'));
+            // Button "Criar título"
+            let criarTituloButton = col.appendChild(leggeraMethods.mambo('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir título'));
+            criarTituloButton.addEventListener('click', leggeraTitlesAndLinks.writeTitle)
+            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1'));   //Filler col
+            row = geradorTitulosWrapper.appendChild(leggeraMethods.mambo('div', '', 'row'));
+            // Col 1 (pre-view do título)
+            col = row.appendChild(leggeraMethods.mambo('div', 'preview-heading-row', 'col-md-12'));
+            row.lastChild.appendChild(leggeraMethods.mambo('h1', '', 'manuais', 'Título/Heading 1'))
+            row = novoVariosWrapperLeft.appendChild(leggeraMethods.mambo('div', '', 'row title-link-filler'));         // Filler Row
+            // Wrapper da secção das ligações
+            const novaLigacaoWrapper = novoVariosWrapperLeft.appendChild(leggeraMethods.mambo('div', '', 'row gerador-links-wrapper'));
+            // Col 0
+            col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', 'gerador-links-h1', 'col-md-12', '<i class="lni lni-website gold"></i>&nbsp;&nbsp;Gerador de links'));
+            // Col 1
+            col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-3 text-left'));
+            // Span 'Descrição da ligação'
+            const spanDescricao = col.appendChild(leggeraMethods.mambo('span', 'nome-span', '', 'Descrição da ligação:'));
+            // Col 2
+            col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-6'));
+            // Input 'Descrição da ligação'
+            const inputDescricao = col.appendChild(leggeraMethods.mambo('input', 'nome-input'));
+            // Col 3
+            col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-2 nova-ligacao-btn-col'));
+            // Button Criar ligação
+            const criarLigacao = col.appendChild(leggeraMethods.mambo('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir ligação'));
+            criarLigacao.addEventListener('click', leggeraTitlesAndLinks.writeLink);
+            // Col 4
+            col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-3 text-left'));
+            // Span 'URL'
+            const spanURL = col.appendChild(leggeraMethods.mambo('span', 'link-span', '', 'URL da ligação:'));
+            // Col 5
+            col = novaLigacaoWrapper.appendChild(leggeraMethods.mambo('div', '', 'col-md-6'));
+            // Input 'URL'
+            const inputURL = col.appendChild(leggeraMethods.mambo('input', 'link-input'));
+            // Wrapper da secção dos extras
+            const novoVariosWrapperRight = appControlsLinksAndTitles.appendChild(leggeraMethods.mambo('div', 'hilite-wrapper', 'col-md-4'));
+            // Row 0
+            row = novoVariosWrapperRight.appendChild(leggeraMethods.mambo('div', 'hilite-subwrapper', 'row', '<i class="lni lni-skipping-rope gold"></i>&nbsp;&nbsp;Hilite.me API'));
+            // Row 1
+            row = novoVariosWrapperRight.appendChild(leggeraMethods.mambo('div', '', 'row'));
+            // Wrapper Hilite.me
+            const hiliteWrapper = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-12'));
+            // Button para formatar hilite.me
+            const hiliteTextarea = hiliteWrapper.appendChild(leggeraMethods.mambo('textarea', 'hilite-textarea'));
+            const novaHiliteCheckboxesRow = hiliteWrapper.appendChild(leggeraMethods.mambo('div', 'hilite-checkboxes-row', 'row'));
+            leggeraVariables.codeType = 'vbnet' //reset ao trocar de página
+            let miniWrapper1 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
+            miniWrapper1.appendChild(leggeraMethods.mambo('input', 'vbnet'));
+            miniWrapper1.lastChild.type = 'radio'
+            miniWrapper1.lastChild.name = 'hilite'
+            miniWrapper1.lastChild.setAttribute('checked', 'true');
+            miniWrapper1.addEventListener('change', leggeraMethods.updateCodeType)
+            miniWrapper1.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;VB'));
+            let miniWrapper2 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
+            miniWrapper2.appendChild(leggeraMethods.mambo('input', 'ts'));
+            miniWrapper2.lastChild.type = 'radio'
+            miniWrapper2.lastChild.name = 'hilite'
+            miniWrapper2.addEventListener('change', leggeraMethods.updateCodeType)
+            miniWrapper2.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;TS'));
+            let miniWrapper3 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
+            miniWrapper3.appendChild(leggeraMethods.mambo('input', 'json'));
+            miniWrapper3.lastChild.type = 'radio'
+            miniWrapper3.lastChild.name = 'hilite'
+            miniWrapper3.addEventListener('change', leggeraMethods.updateCodeType)
+            miniWrapper3.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;JSON'));
+            let miniWrapper4 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
+            miniWrapper4.appendChild(leggeraMethods.mambo('input', 'sql'));
+            miniWrapper4.lastChild.type = 'radio'
+            miniWrapper4.lastChild.name = 'hilite'
+            miniWrapper4.addEventListener('change', leggeraMethods.updateCodeType)
+            miniWrapper4.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;SQL'));
+            let miniWrapper5 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-12'))
+            miniWrapper5.style.paddingTop = '10px';
+            miniWrapper5.appendChild(leggeraMethods.mambo('input', 'line-numbers'));
+            miniWrapper5.lastChild.type = 'checkbox'
+            miniWrapper5.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;Linhas numeradas'));
+            const novaHiliteBtn = hiliteWrapper.appendChild(leggeraMethods.mambo('button', '', 'btn btn-warning', '<i class="lni lni-code"></i>&nbsp;&nbsp;Introduzir código'));
+            novaHiliteBtn.addEventListener('click', leggeraHiliteAPI.post);
+        },
+         // Função para mostrar uma preview do título selecionado na secção dos títulos
+        previewTitle: function () {
+            let dropdownTitulos = document.querySelector('#tipo-titulo-dropdown');
+            let titulosPreview = document.querySelector('#preview-heading-row');
+            titulosPreview.innerHTML = '';
+            switch (dropdownTitulos.value) {
+                // Opção 1
+                case 'default1':
+                    titulosPreview.appendChild(leggeraMethods.mambo('h1', '', 'manuais', 'Título/Heading 1'))
+                    break;
+                case 'default2':
+                    titulosPreview.appendChild(leggeraMethods.mambo('h2', '', 'manuais', 'Título/Heading 2'))
+                    break;
+                case 'default3':
+                    titulosPreview.appendChild(leggeraMethods.mambo('h3', '', 'manuais', 'Título/Heading 3'))
+                    break;
+                case 'old1':
+                    titulosPreview.appendChild(leggeraMethods.mambo('h1', '', '', 'Título/Heading 1'));
+                    break;
+                case 'old2':
+                    titulosPreview.appendChild(leggeraMethods.mambo('h2', '', '', 'Título/Heading 2'))
+                    break;
+                case 'old3':
+                    titulosPreview.appendChild(leggeraMethods.mambo('h3', '', '', 'Título/Heading 3'))
+                    break;
             }
+        },
+        // Função para adicionar o título ao tópico de manual
+        writeTitle: function () {
+            let dropdownTitulos = document.querySelector('#tipo-titulo-dropdown');
+            switch (dropdownTitulos.value) {
+                // Opção 1
+                case 'default1':
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h1', '', 'manuais', 'Título/Heading 1').outerHTML)
+                    break;
+                case 'default2':
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h2', '', 'manuais', 'Título/Heading 2').outerHTML)
+                    break;
+                case 'default3':
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h3', '', 'manuais', 'Título/Heading 3').outerHTML)
+                    break;
+                case 'old1':
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h1', '', '', 'Título/Heading 1').outerHTML)
+                    break;
+                case 'old2':
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h2', '', '', 'Título/Heading 2').outerHTML)
+                    break;
+                case 'old3':
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h3', '', '', 'Título/Heading 3').outerHTML)
+                    break;
+            }
+        },
+        // Função para adicionar uma ligação ao código do tópico
+        writeLink: function () {
+            // Obter os parâmetros para a ligação
+            const nome = document.querySelector('#nome-input').value;
+            const getlink = document.querySelector('#link-input').value;
+            const link = getlink.toLowerCase();
+            // babyproof
+            if (link.slice(0, 4) !== 'http') {
+                if (link.slice(0, 1) !== '#') {
+                    alert('A ligação tem de começar por "#" (para ligações no mesmo tópico)\nou http (para ligações fora do tópico).')
+                    return
+                }
+            }
+            let novaLigacao = leggeraMethods.mambo('a', '', 'manuais', nome);
+            novaLigacao.setAttribute('href', link);
+            novaLigacao.setAttribute('target', '_blank');
+            novaLigacao = novaLigacao.outerHTML
+            leggeraMethods.escreveNaTextarea(novaLigacao);
         }
-        let novaLigacao = leggeraMethods.mambo('a', '', 'manuais', nome);
-        novaLigacao.setAttribute('href', link);
-        novaLigacao.setAttribute('target', '_blank');
-        novaLigacao = novaLigacao.outerHTML
-        leggeraMethods.escreveNaTextarea(novaLigacao);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Collapsables (ainda tenho de fazer review)
-
-    // Variáveis globais
-    const colaphcPreview = document.querySelector('#colapsables-wrapper');
-    const botaoVistaColap = document.querySelector('#colap-btn');
-    botaoVistaColap.addEventListener('click', toogleColapsablesappControls);
-
-    // Função ao carregar no botão Vista Colapsavel    
-    function toogleColapsablesappControls() {
-        const helpcenterPreviewWrapper = document.querySelector('.hc-preview');
+    // ################ colapsáveis
+    const leggeraCollapsables = {
+        // Função ao carregar no botão Vista Colapsavel   
+        toogleColapsablesappControls: function() {
+            const helpcenterPreviewWrapper = document.querySelector('.hc-preview');
         //babyproof - reset à activeTextarea
         leggeraVariables.activeTextarea = '';
-        if (colaphcPreview.classList.contains('no-display') === true) {
-            botaoVistaColap.classList.replace('btn-light', 'btn-info');
+        if (leggeraVariables.colapHCPreview.classList.contains('no-display') === true) {
+            leggeraVariables.botaoVistaColap.classList.replace('btn-light', 'btn-info');
             document.querySelector('#helpcenter-preview').innerHTML = document.querySelector('#textarea').value;
-            colaphcPreview.classList.remove('no-display');
+            leggeraVariables.colapHCPreview.classList.remove('no-display');
             helpcenterPreviewWrapper.classList.add('no-display');
-            appControlsColap();
+            leggeraCollapsables.appControlsColap();
         } else {
             leggeraVariables.colapList = document.querySelectorAll('.row .seccao-phcgo');
             for (i = 1; i <= leggeraVariables.colapList.length; i++) {
@@ -1596,21 +1569,21 @@ function mixWrapper() {
                     alert(`Não é possível retornar à vista principal, enquanto existirem alterações pendentes.`); return
                 }
             }
-            botaoVistaColap.classList.replace('btn-info', 'btn-light');        // a ordem invertida do getcollaps é importante, não sei porque nao me lembra
-            appControlsColap();
-            colaphcPreview.classList.add('no-display');
+            leggeraVariables.botaoVistaColap.classList.replace('btn-info', 'btn-light');        // a ordem invertida do getcollaps é importante, não sei porque nao me lembra
+            leggeraCollapsables.appControlsColap();
+            leggeraVariables.colapHCPreview.classList.add('no-display');
             helpcenterPreviewWrapper.classList.remove('no-display');
             leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.hcPreview.innerHTML);
         }
-    }
-    // Função para mostrar a appControls dos colapsáveis
-    function appControlsColap() {
-        // Array com todos os colapsáveis do tópico
+        },
+        // Função para mostrar a appControls dos colapsáveis
+        appControlsColap: function() {
+             // Array com todos os colapsáveis do tópico
         leggeraVariables.colapList = document.querySelectorAll('.row .seccao-phcgo');
         // Limpa a appControls
-        colaphcPreview.innerHTML = '';
+        leggeraVariables.colapHCPreview.innerHTML = '';
         // Wrapper (row)
-        let colapWrapper = colaphcPreview.appendChild(leggeraMethods.mambo('div', '', `page-1`));
+        let colapWrapper = leggeraVariables.colapHCPreview.appendChild(leggeraMethods.mambo('div', '', `page-1`));
         if (leggeraVariables.colapList.length !== 0) {
             // Loop para cada item do Array
             for (i = 1; i <= leggeraVariables.colapList.length; i++) {
@@ -1624,13 +1597,13 @@ function mixWrapper() {
                 wrapperLeft.appendChild(leggeraMethods.mambo('span', '', 'colap-id', 'ID do colapsável (minúsculas, sem acentuação, sem espaçamento)'));
                 let idInput = wrapperLeft.appendChild(leggeraMethods.mambo('input', '', `colap-input-id-${i}`));
                 idInput.value = leggeraVariables.colapList[i - 1].nextElementSibling.id;
-                idInput.addEventListener('keyup', updateColapPreviewByID)
+                idInput.addEventListener('keyup', leggeraCollapsables.updateColapPreviewByID)
                 // Input 2
                 wrapperLeft.appendChild(leggeraMethods.mambo('span', '', 'colap-h2', 'Título do colapsável'));
                 let h2Input = wrapperLeft.appendChild(leggeraMethods.mambo('input', '', `colap-input-h2-${i}`));
                 let h2Trim = leggeraVariables.colapList[i - 1].innerText.trim().split('	');     // trim para ficar direitinho
                 h2Input.value = h2Trim[0];
-                h2Input.addEventListener('keyup', updateColapHeading)
+                h2Input.addEventListener('keyup', leggeraCollapsables.updateColapHeading)
                 //hotfix, estava a aparecer no input dos novos manuais.;
                 while (h2Input.value.includes('Abrir/Fechar'))
                     h2Input.value = h2Input.value.replace('Abrir/Fechar', '');
@@ -1640,17 +1613,17 @@ function mixWrapper() {
                 // Input 3
                 wrapperLeft.appendChild(leggeraMethods.mambo('span', '', 'colap-body', 'Corpo do colapsável'));
                 let bodyInput = wrapperLeft.appendChild(leggeraMethods.mambo('textarea', '', `colap-input-body-${i}`));
-                bodyInput.addEventListener('keyup', colapTextAreaEventsSlim)
-                bodyInput.addEventListener('click', colapTextAreaEvents)
+                bodyInput.addEventListener('keyup', leggeraCollapsables.colapTextAreaEventsSlim)
+                bodyInput.addEventListener('click', leggeraCollapsables.colapTextAreaEvents)
                 let bodyTempInput = leggeraVariables.colapList[i - 1].nextElementSibling.innerHTML;
                 // Remove o cursor laranja ao passar para os collaps
                 bodyInput.value = String(bodyTempInput).replace('<span id="pulse">|</span>', '');
                 // Guardar alterações Button
                 let updateCollaps = wrapperLeft.appendChild(leggeraMethods.mambo('button', `colap-save-btn-${i}`, 'btn btn-success no-display', `<i class="lni lni-save"></i> Guardar alterações`));
-                updateCollaps.addEventListener('click', gerarColapsaveis)
+                updateCollaps.addEventListener('click', leggeraCollapsables.gerarColapsaveis)
                 // Rejeitar alterações Button
                 let dropCollaps = wrapperLeft.appendChild(leggeraMethods.mambo('button', `colap-drop-btn-${i}`, 'btn btn-danger no-display', `<i class="lni lni-cross-circle"></i> Descartar alterações`));
-                dropCollaps.addEventListener('click', appControlsColap)
+                dropCollaps.addEventListener('click', leggeraCollapsables.appControlsColap)
                 // filler div para padding
                 wrapperLeft.appendChild(leggeraMethods.mambo('div', '', 'save-padding'));
                 // Col 2 (display)
@@ -1666,30 +1639,30 @@ function mixWrapper() {
             row = colapWrapper.appendChild(leggeraMethods.mambo('div', '', 'row'));
             col = row.appendChild(leggeraMethods.mambo('div', 'add-new-collap'));
             const newCollapBtn = col.appendChild(leggeraMethods.mambo('button', '', "btn btn-info", '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
-            newCollapBtn.addEventListener('click', novoColapsavel)
+            newCollapBtn.addEventListener('click', leggeraCollapsables.novoColapsavel)
             const scrollToTop = col.appendChild(leggeraMethods.mambo('button', '', "btn btn-info", '<i class="lni lni-arrow-up-circle"></i>&nbsp;&nbsp;Voltar ao início'));
             scrollToTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); })
         } else {
-            let geradorColapWrapper = colaphcPreview.appendChild(leggeraMethods.mambo('div', 'gerador-colaps-wrapper', 'row'));
+            let geradorColapWrapper = leggeraVariables.colapHCPreview.appendChild(leggeraMethods.mambo('div', 'gerador-colaps-wrapper', 'row'));
             let col = geradorColapWrapper.appendChild(leggeraMethods.mambo('div', '', 'gerador-colaps-1', ''));
             col.appendChild(leggeraMethods.mambo('span', 'no-colaps-span', '', 'Não foi encontrado nenhum colapsável.'));
             geradorColapWrapper.appendChild(leggeraMethods.mambo('div', '', 'flex-br', ''));
             let geradornewCollapBtn = geradorColapWrapper.appendChild(leggeraMethods.mambo('button', '', "btn btn-info", '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
-            geradornewCollapBtn.addEventListener('click', novoColapsavel)
+            geradornewCollapBtn.addEventListener('click', leggeraCollapsables.novoColapsavel)
             col.appendChild(leggeraMethods.mambo('div'));
         }
-    }
-    // Função para mostrar o savebutton ao atualizar o ID dos colapsáveis
-    function updateColapPreviewByID(e) {
-        // Mostra o save button
+        },
+        // Função para mostrar o savebutton ao atualizar o ID dos colapsáveis
+        updateColapPreviewByID: function(e) {
+             // Mostra o save button
         const saveButton = e.target.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling
         saveButton.classList.remove('no-display');
         const cancelButton = saveButton.nextElementSibling
         cancelButton.classList.remove('no-display');
-    }
-    // Função para atualizar o prewview dos colapsáveis (H2)
-    function updateColapHeading(e) {
-        leggeraVariables.activeTextarea = e.target;
+        },
+        // Função para atualizar o prewview dos colapsáveis (H2)
+        updateColapHeading: function(e) {
+            leggeraVariables.activeTextarea = e.target;
         let inputText = leggeraVariables.activeTextarea.value;
         let cursorappControlsPos = leggeraMethods.getCursorPos(e);
         // divide o input em duas partes (até ao cursor, e após o curos)
@@ -1708,10 +1681,10 @@ function mixWrapper() {
         saveButton.classList.remove('no-display');
         const cancelButton = saveButton.nextElementSibling
         cancelButton.classList.remove('no-display');
-    }
-    // função para atualizar o preview do body
-    function colapTextAreaEventsSlim(e) {
-        // Atualiza a active textarea
+        },
+        // função para atualizar o preview do body
+        colapTextAreaEventsSlim: function(e) {
+             // Atualiza a active textarea
         leggeraVariables.activeTextarea = e.target;
         let inputText = leggeraVariables.activeTextarea.value;
         let cursorappControlsPos = leggeraMethods.getCursorPos(e);
@@ -1731,10 +1704,10 @@ function mixWrapper() {
         saveButton.classList.remove('no-display');
         const cancelButton = saveButton.nextElementSibling
         cancelButton.classList.remove('no-display');
-    }
-    // função para atualizar o preview do body
-    function colapTextAreaEvents(e) {
-        // Atualiza a active textarea
+        },
+        // função para atualizar o preview do body
+        colapTextAreaEvents: function(e) {
+                // Atualiza a active textarea
         leggeraVariables.activeTextarea = e.target;
         let inputText = leggeraVariables.activeTextarea.value;
         let cursorappControlsPos = leggeraMethods.getCursorPos(e);
@@ -1778,57 +1751,57 @@ function mixWrapper() {
                 cancelButton.classList.remove('no-display');
             })();
         }
-    }
-    function gerarColapsaveis(e) {
-        leggeraVariables.colapList = document.querySelectorAll('.row .seccao-phcgo');
-        let newCollapFinal = '';
-        let newCollapseArray = [[], [], []];
-        for (i = 1; i <= leggeraVariables.colapList.length; i++) {
-            newCollapseArray[0][i - 1] = document.querySelector(`.colap-input-id-${i}`).value;
-            newCollapseArray[1][i - 1] = document.querySelector(`.colap-input-h2-${i}`).value;
-            newCollapseArray[2][i - 1] = document.querySelector(`.colap-input-body-${i}`).value;
-            // wrapper do collapsavel
-            let newCollap = leggeraMethods.mambo('div', '', 'row seccao-phcgo');
-            // título
-            let newCollapColTitulo = newCollap.appendChild(leggeraMethods.mambo('div', '', 'col-xs-8'));
-            //link do h2
-            let h2Link = newCollapColTitulo.appendChild(leggeraMethods.mambo('a'));
-            h2Link.setAttribute('href', `#${newCollapseArray[0][i - 1]}`)
-            h2Link.setAttribute('data-toggle', 'collapse');
-            //h2
-            let newtituloH2 = h2Link.appendChild(leggeraMethods.mambo('h2', '', 'manuais', newCollapseArray[1][i - 1]))
-            newtituloH2.style.fontWeight = 'normal';
-            //abrir/fechar
-            let newCollapCol1 = newCollap.appendChild(leggeraMethods.mambo('div', '', 'col-xs-4 text-right'))
-            //link do abrir/fechar
-            let link = newCollapCol1.appendChild(leggeraMethods.mambo('a', '', '', 'Abrir/Fechar'));
-            link.setAttribute('href', `#${newCollapseArray[0][i - 1]}`)
-            link.setAttribute('data-toggle', "collapse")
-            link.style.display = 'block'
-            // wrapper do conteudo
-            let newCollapConteudo = leggeraMethods.mambo('div', newCollapseArray[0][i - 1], 'collapse multi-collapse', newCollapseArray[2][i - 1]);
-            newCollapFinal = newCollapFinal + `<!-- Início do Colapsável #${i} -->` + "\n" + (newCollap.outerHTML.toString() + "\n\n" + newCollapConteudo.outerHTML.toString() + "\n" + `<!-- Fim do Colapsável #${i} -->` + "\n")
-        }
-        // função para obter o texto antes do primeiro collap
-        function topicoAntesColapsaveis() {
-            let charCountAntes = leggeraVariables.textarea.value.search('<!-- Início do Colapsável #1 -->');
-            // compatibilidade para tópicos pre-LEGGERA
-            if (charCountAntes < 0) { charCountAntes = leggeraVariables.textarea.value.search('<div class="row seccao-phcgo">') }
-            return textoAntesCollaps = leggeraVariables.textarea.value.slice(0, charCountAntes);
-        }
-        newCollapFinal = topicoAntesColapsaveis() + newCollapFinal;
-        leggeraVariables.textarea.value = newCollapFinal;
-        leggeraVariables.hcPreview.innerHTML = newCollapFinal;
-        //obtem a nossa localização vertical ao gravar
-        const whereWasI = document.querySelector('body').getBoundingClientRect().bottom;
-        const totalHeight = document.querySelector('body').getBoundingClientRect().height;
-        appControlsColap();
-        leggeraMethods.autosave2JSON();
-        // volta-nos a posicionar onde estávamos aquando da gravação (é necessário, porque o ecrã é re-escrito ao gravar)
-        window.scrollTo(0, totalHeight - whereWasI);
-    }
-    function singleColapsavel() {
-        // wrapper do collapsavel
+        },
+        gerarColapsaveis: function(e) {
+            leggeraVariables.colapList = document.querySelectorAll('.row .seccao-phcgo');
+            let newCollapFinal = '';
+            let newCollapseArray = [[], [], []];
+            for (i = 1; i <= leggeraVariables.colapList.length; i++) {
+                newCollapseArray[0][i - 1] = document.querySelector(`.colap-input-id-${i}`).value;
+                newCollapseArray[1][i - 1] = document.querySelector(`.colap-input-h2-${i}`).value;
+                newCollapseArray[2][i - 1] = document.querySelector(`.colap-input-body-${i}`).value;
+                // wrapper do collapsavel
+                let newCollap = leggeraMethods.mambo('div', '', 'row seccao-phcgo');
+                // título
+                let newCollapColTitulo = newCollap.appendChild(leggeraMethods.mambo('div', '', 'col-xs-8'));
+                //link do h2
+                let h2Link = newCollapColTitulo.appendChild(leggeraMethods.mambo('a'));
+                h2Link.setAttribute('href', `#${newCollapseArray[0][i - 1]}`)
+                h2Link.setAttribute('data-toggle', 'collapse');
+                //h2
+                let newtituloH2 = h2Link.appendChild(leggeraMethods.mambo('h2', '', 'manuais', newCollapseArray[1][i - 1]))
+                newtituloH2.style.fontWeight = 'normal';
+                //abrir/fechar
+                let newCollapCol1 = newCollap.appendChild(leggeraMethods.mambo('div', '', 'col-xs-4 text-right'))
+                //link do abrir/fechar
+                let link = newCollapCol1.appendChild(leggeraMethods.mambo('a', '', '', 'Abrir/Fechar'));
+                link.setAttribute('href', `#${newCollapseArray[0][i - 1]}`)
+                link.setAttribute('data-toggle', "collapse")
+                link.style.display = 'block'
+                // wrapper do conteudo
+                let newCollapConteudo = leggeraMethods.mambo('div', newCollapseArray[0][i - 1], 'collapse multi-collapse', newCollapseArray[2][i - 1]);
+                newCollapFinal = newCollapFinal + `<!-- Início do Colapsável #${i} -->` + "\n" + (newCollap.outerHTML.toString() + "\n\n" + newCollapConteudo.outerHTML.toString() + "\n" + `<!-- Fim do Colapsável #${i} -->` + "\n")
+            }
+            // função para obter o texto antes do primeiro collap
+            function topicoAntesColapsaveis() {
+                let charCountAntes = leggeraVariables.textarea.value.search('<!-- Início do Colapsável #1 -->');
+                // compatibilidade para tópicos pre-LEGGERA
+                if (charCountAntes < 0) { charCountAntes = leggeraVariables.textarea.value.search('<div class="row seccao-phcgo">') }
+                return textoAntesCollaps = leggeraVariables.textarea.value.slice(0, charCountAntes);
+            }
+            newCollapFinal = topicoAntesColapsaveis() + newCollapFinal;
+            leggeraVariables.textarea.value = newCollapFinal;
+            leggeraVariables.hcPreview.innerHTML = newCollapFinal;
+            //obtem a nossa localização vertical ao gravar
+            const whereWasI = document.querySelector('body').getBoundingClientRect().bottom;
+            const totalHeight = document.querySelector('body').getBoundingClientRect().height;
+            leggeraCollapsables.appControlsColap();
+            leggeraMethods.autosave2JSON();
+            // volta-nos a posicionar onde estávamos aquando da gravação (é necessário, porque o ecrã é re-escrito ao gravar)
+            window.scrollTo(0, totalHeight - whereWasI);  
+        },
+        singleColapsavel: function() {
+          // wrapper do collapsavel
         let newCollap = leggeraMethods.mambo('div');
         newCollap.classList = 'row seccao-phcgo';
         // título
@@ -1856,34 +1829,35 @@ function mixWrapper() {
         newCollapConteudo.id = 'novo-colapsavel'
         newCollapConteudo.innerHTML = 'Conteúdo do novo colapsável aqui!'
         newCollapFinal = newCollap.outerHTML + newCollapConteudo.outerHTML
-        return newCollapFinal
-    }
-    function novoColapsavel() {
-        if (leggeraVariables.colapList.length === 0) {
-            const abrirTodosDiv = '<br><a id="colapse-all-a" style="display: block;text-align: right;" data-toggle="collapse" data-target=".multi-collapse" href="#" role="button" aria-expanded="false"">Abrir Todos</a></p>'
-            leggeraVariables.textarea.value = leggeraVariables.textarea.value + "\n" + abrirTodosDiv + "\n" + '<!-- Início do Colapsável #1 -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #1 -->');
-            leggeraVariables.textarea.value = leggeraVariables.textarea.value.replaceAll('<div class="collapse', "\n" + "\n" + '<div class="collapse')
-            leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
-            leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
-            appControlsColap();
-        } else {
-            // babyproof, não deixa adicionar colapsável sem gravar alterações
-            for (i = 1; i <= leggeraVariables.colapList.length; i++) {
-                let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
-                if (saveBtn.classList.contains('no-display') == false) {
-                    alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
+        return newCollapFinal  
+        },
+        novoColapsavel: function() {
+            if (leggeraVariables.colapList.length === 0) {
+                const abrirTodosDiv = '<br><a id="colapse-all-a" style="display: block;text-align: right;" data-toggle="collapse" data-target=".multi-collapse" href="#" role="button" aria-expanded="false"">Abrir Todos</a></p>'
+                leggeraVariables.textarea.value = leggeraVariables.textarea.value + "\n" + abrirTodosDiv + "\n" + '<!-- Início do Colapsável #1 -->' + "\n" + (leggeraCollapsables.singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #1 -->');
+                leggeraVariables.textarea.value = leggeraVariables.textarea.value.replaceAll('<div class="collapse', "\n" + "\n" + '<div class="collapse')
+                leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+                leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
+                leggeraCollapsables.appControlsColap();
+            } else {
+                // babyproof, não deixa adicionar colapsável sem gravar alterações
+                for (i = 1; i <= leggeraVariables.colapList.length; i++) {
+                    let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
+                    if (saveBtn.classList.contains('no-display') == false) {
+                        alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
+                    }
                 }
+                leggeraVariables.textarea.value = leggeraVariables.textarea.value + "\n" + '<!-- Início do Colapsável #' + (leggeraVariables.colapList.length + 1) + ' -->' + "\n" + (leggeraCollapsables.singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #' + (leggeraVariables.colapList.length + 1) + ' -->');
+                leggeraVariables.textarea.value = leggeraVariables.textarea.value.replaceAll('><div class="collapse', '>' + "\n" + "\n" + '<div class="collapse ')
+                leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+                leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
+                leggeraCollapsables.appControlsColap();
+                window.scrollTo(0, document.body.scrollHeight);
             }
-            leggeraVariables.textarea.value = leggeraVariables.textarea.value + "\n" + '<!-- Início do Colapsável #' + (leggeraVariables.colapList.length + 1) + ' -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #' + (leggeraVariables.colapList.length + 1) + ' -->');
-            leggeraVariables.textarea.value = leggeraVariables.textarea.value.replaceAll('><div class="collapse', '>' + "\n" + "\n" + '<div class="collapse ')
-            leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
-            leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
-            appControlsColap();
-            window.scrollTo(0, document.body.scrollHeight);
-        }
+        },
     }
-    //############ event listeners
-    // Atualizar o botão dos menus conforme o menu onde estamos 
+    
+    // ################ event listeners
     const menus = document.querySelectorAll('.main-menu');
     for (menu of menus) { menu.addEventListener('click', leggeraMethods.updateWhereIAm) };
     document.querySelector('#quicksave-btn').addEventListener('click', leggeraMethods.quickSave);
@@ -1895,9 +1869,9 @@ function mixWrapper() {
     document.querySelector('#logos-btn').addEventListener('click', leggeraIcons.displayControls);
     document.querySelector('#textbox-btn').addEventListener('click', leggeraTextboxes.displayControls);
     document.querySelector('#listas-tabelas-btn').addEventListener('click', leggeraListsAndTables.displayControls);
-    document.querySelector('#titulos-ligacoes-btn').addEventListener('click', appControlsTitulosELigacoes);
+    document.querySelector('#titulos-ligacoes-btn').addEventListener('click', leggeraTitlesAndLinks.displayControls);
     document.querySelector('#manuals-btn').addEventListener('click', leggeraManuais.getManuals);
-    // document.querySelector('#theme-btn').addEventListener('click', leggeraMethods.changeLeggeraTheme);
+    document.querySelector('#colap-btn').addEventListener('click', leggeraCollapsables.toogleColapsablesappControls);
     document.addEventListener("keyup", leggeraMethods.newBr);
     leggeraVariables.textarea.addEventListener('keyup', leggeraUpdatePreviews.execute);
     leggeraVariables.textarea.addEventListener('click', leggeraUpdatePreviews.execute);

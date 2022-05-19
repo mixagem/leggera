@@ -4,37 +4,28 @@
 /************************************/
 let lightTheme = 1;
 let userWantAlerts;
-
 const getThemeFromCache = localStorage.getItem('lightTheme');
 if (getThemeFromCache !== null) {
     lightTheme = JSON.parse(getThemeFromCache);
 }
-
 document.querySelector('#theme-css').setAttribute('href', `assets/css/style${lightTheme}.css`);
 document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${lightTheme}.css`);
 document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${lightTheme}.css`);
-
 let loggedinUser;
 let currentUsername = document.querySelector('#username');
-
-
 // ############ LANDING START ############
-
 (function randomBG() {
 
     const rng = Math.floor(Math.random() * 1) + 1;
 
     document.querySelector('#loading-wrapper').style.backgroundImage = `url(assets/img/loading-bg-` + rng + `.png)`;
 })();
-
 (function leggeraLoading() {
     const loginWrapperFade = setTimeout(function () {
-
         const landingLogos = document.querySelectorAll('#loading-wrapper .animate__animated')
         for (i = 0; i < landingLogos.length; i++) {
             landingLogos[i].style.marginLeft = "0%"
         }
-
         const animationToTheLeft = setInterval(function () {
             let marginSize;
             for (i = 0; i < landingLogos.length; i++) {
@@ -49,15 +40,11 @@ let currentUsername = document.querySelector('#username');
                 document.querySelector('#login-wrapper').classList = ('animate__fadeInUp animate__animated');
             }
         }, 5)
-
     }, 1400)
 })();
-
-
 const showPasswordBtn = document.querySelector('#show-password');
 showPasswordBtn.addEventListener('click', wantMeToShowPassword);
 const passwordInput = document.querySelector('#password');
-
 function wantMeToShowPassword() {
     if (showPasswordBtn.classList.contains('show-password-active')) {
         showPasswordBtn.classList.remove('show-password-active');
@@ -68,24 +55,19 @@ function wantMeToShowPassword() {
         passwordInput.setAttribute('type', 'text');
     }
 }
-
 document.addEventListener("keyup", enterPress);
 function enterPress(e) {
     if (e.target.tagName === 'INPUT' && e.key === 'Enter') {
         leggeraLogin();
     }
 }
-
 // ############ COOKIE LOGIN ############
-
 document.querySelector('#login-btn').addEventListener('click', leggeraLogin);
 // Vai buscar a cookie à cache (caso exista)
 function cookieLogin() {
-
     const bolachinha = localStorage.getItem('bolachinha');
     if (bolachinha == null) { return }
     else {
-
         $.ajax({    //create an ajax request to display.php
             type: "POST",
             url: "assets/php/cookie.php",
@@ -103,12 +85,9 @@ function cookieLogin() {
         });
     }
 }
-
 // ############ SUBMIT LOGIN ############
-
 const wantCookieCheckbox = document.querySelector('#cookie-checkbox')
 wantCookieCheckbox.addEventListener('click', cookieCheckbox);
-
 let wantCookie = 0
 function cookieCheckbox() {
     if (wantCookie === 0) {
@@ -124,7 +103,6 @@ function cookieCheckbox() {
         else { wantCookieCheckbox.style.color = 'white' }
     }
 }
-
 function leggeraLogin() {
     $.ajax({    //create an ajax request to display.php
         type: "POST",
@@ -133,7 +111,6 @@ function leggeraLogin() {
         data: {
             username: currentUsername.value,
             password: document.querySelector('#password').value
-
         },
         success: function (response) {
             if (response.includes('Erro')) {
@@ -149,12 +126,8 @@ function leggeraLogin() {
         error: function (response) {
             leggeraLoginFail();
         }
-
-
     });
 }
-
-
 function leggeraLoginFail() {
     document.querySelector('#loading-gif').classList = 'animate__animated animate__fadeOut margin-animation-complete';
     const newTitle = document.createElement('div');
@@ -162,35 +135,25 @@ function leggeraLoginFail() {
     newTitle.id = 'loading-title';
     newTitle.innerText = String('Credenciais inválidas').toLocaleUpperCase();
     newTitle.style.marginLeft = '-150%'
-
     document.querySelector('#loading-title').replaceWith(newTitle);
-
     const revertGifTimer = setTimeout(function () {
-
         document.querySelector('#loading-gif').classList = 'animate__animated animate__fadeIn margin-animation-complete';
-
         const revertedTitle = document.createElement('div');
         revertedTitle.classList = 'animate__animated animate__fadeIn animate__delay-1s';
         revertedTitle.id = 'loading-title';
         revertedTitle.innerText = String('Superleggera').toLocaleUpperCase();
         revertedTitle.style.marginLeft = '-150%'
-
-
         // serve para dar fix no desync entre uma tentativa errada e certa
         if (document.querySelector('#loading-title').innerText.startsWith('CREDENCIAIS INVÁLIDAS')) {
             document.querySelector('#loading-title').replaceWith(revertedTitle);
         }
     }, 4000);
 }
-
 function leggeraLoginSucess(rsp) {
-
     lightTheme = rsp[1];
-
     document.querySelector('#theme-css').setAttribute('href', `assets/css/style${lightTheme}.css`);
     document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${lightTheme}.css`);
     document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${lightTheme}.css`);
-
     if (wantCookie === 1) {
         const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);
         const novaBolachinha = JSON.stringify(fornoBolachinha);
@@ -209,39 +172,28 @@ function leggeraLoginSucess(rsp) {
         }
         );
     }
-
-
     const landingLogos = document.querySelectorAll('#loading-wrapper .animate__animated')
     const landingLogosArray = Array.from(landingLogos);
-
     // remover o log-in wrapper da secelção
     landingLogosArray.pop();
-
     // animação fadeOut para o wrapper de login
     document.querySelector('#login-wrapper').classList = ('animate__fadeOutDown animate__animated');
-
     // voltar a colocar o gif/título no centro da página, com delay
     setTimeout(function () {
-
         let marginSize;
         let newMarginSize;
-
         const animationToTheRight = setInterval(function () {
-
             for (i = 0; i < landingLogosArray.length; i++) {
                 let tempPos = landingLogosArray[i].style.marginLeft.search('%');
                 marginSize = landingLogosArray[i].style.marginLeft.slice(0, tempPos)
                 newMarginSize = Number(marginSize) + 3;
                 landingLogosArray[i].style.marginLeft = `${newMarginSize}%`;
             }
-
             if (Number(newMarginSize) >= '0') {
                 clearInterval(animationToTheRight);
             }
         }, 5)
-
     }, 800)
-
     setTimeout(function () {
         const welcomeTitle = document.createElement('div');
         welcomeTitle.innerText = `Mekiee ${rsp[0]}`;
@@ -250,9 +202,7 @@ function leggeraLoginSucess(rsp) {
         welcomeTitle.innerText = String(welcomeTitle.innerText).toLocaleUpperCase();
         document.querySelector('#loading-title').replaceWith(welcomeTitle);
     }, 1200)
-
     setTimeout(function () {
-
         $.ajax({    //create an ajax request to display.php
             type: "GET",
             url: "assets/php/app.php",
@@ -262,11 +212,8 @@ function leggeraLoginSucess(rsp) {
             }
         })
     }, 3200)
-
     setTimeout(function () {
-
         // leggera-app.js
         mixWrapper();
-
     }, 3500)
 }

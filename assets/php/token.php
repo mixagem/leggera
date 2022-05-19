@@ -3,6 +3,7 @@
 $usermail = trim($_POST['usermail']);
 $un = trim($_POST['username']);
 $con = mysqli_connect('localhost', 'root', '', 'superleggera');
+$svurl = 'http://localhost/leggera';
 
 // Import PHPMailer classes into the global namespace 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -53,7 +54,7 @@ if (mysqli_num_rows($result) == 1) {
             " . $nome . ",</h1>
         <p style='font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;padding-left:20px'>Foi introduzido um
             pedido de recuperação de password para a conta <span style='font-weight: bold;color:rgb(56,92,255)'>" . $un . "</span>.<br>
-            Para alterar a tua password, visita a <a href='localhost/v10/unlock.html' style='font-weight: bold;color:rgb(56,92,255)'>página de recuperação</a>, e
+            Para alterar a tua password, visita a <a href='" . $svurl . "' style='font-weight: bold;color:rgb(56,92,255)'>página de recuperação</a>, e
             apresenta o seguinte token:</p>
         <div style='display:flex;justify-content:center;align-self:center;padding:20px 0px;'>
             <span style='border:1px solid black;padding:5px 20px;font-size:20px;color:rgb(56,92,255);font-weight:bold;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;border-radius: 5px;'>" . $token . "</span>
@@ -62,7 +63,7 @@ if (mysqli_num_rows($result) == 1) {
     </div>";
 
         // Envia o email alternativo, sem HTML 
-        $mail->AltBody = "Olá " . $nome . "\nFoi introduzido um pedido de recuperação de password para a conta" . $un . ".\nPara alterar a tua password, visita a página de recuperação (localhost/v10/unlock.html), e apresenta o seguinte token:\n\n" . $token . "\n\nCaso o pedido não tenha sido introduzido por ti, ignora este e-mail.";
+        $mail->AltBody = "Olá " . $nome . "\nFoi introduzido um pedido de recuperação de password para a conta" . $un . ".\nPara alterar a tua password, visita a página de recuperação (" . $svurl . "), e apresenta o seguinte token:\n\n" . $token . "\n\nCaso o pedido não tenha sido introduzido por ti, ignora este e-mail.";
         if (!$mail->send()) {
             echo 'Error, message could not be sent. Mailer Error: ' . $mail->ErrorInfo;
         } else {

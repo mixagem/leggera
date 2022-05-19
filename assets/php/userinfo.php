@@ -54,7 +54,6 @@ switch ($action) {
         $jsonarray[] =  $alertas;
         echo json_encode($jsonarray);
         break;
-
     case 'theme-update':
         $theme = trim($_POST['theme']);
         // vai buscar os dados do utilizador
@@ -66,7 +65,6 @@ switch ($action) {
         } else {
         };
         break; 
-        
     case 'alerts-update':
         $alertas = trim($_POST['alerts']);
         // vai buscar os dados do utilizador

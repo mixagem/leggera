@@ -6,6 +6,7 @@
 let loggedinUser;
 let currentUsername = document.querySelector('#username');
 
+
 // ############ LANDING START ############
 
 (function randomBG() {
@@ -42,6 +43,29 @@ let currentUsername = document.querySelector('#username');
 
     }, 1400)
 })();
+
+
+const showPasswordBtn = document.querySelector('#show-password');
+showPasswordBtn.addEventListener('click', wantMeToShowPassword);
+const passwordInput = document.querySelector('#password');
+
+function wantMeToShowPassword() {
+    if (showPasswordBtn.classList.contains('show-password-active')) {
+        showPasswordBtn.classList.remove('show-password-active');
+        passwordInput.setAttribute('type', 'password');
+    }
+    else {
+        showPasswordBtn.classList.add('show-password-active');
+        passwordInput.setAttribute('type', 'text');
+    }
+}
+
+document.addEventListener("keyup", enterPress);
+function enterPress (e) {
+    if (e.target.tagName === 'INPUT' && e.key === 'Enter') {
+        leggeraLogin();
+    }
+}
 
 // ############ COOKIE LOGIN ############
 

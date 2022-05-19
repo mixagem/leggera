@@ -2,11 +2,12 @@
 
 :root {
     --primary-title-color: gold;
-    --secondary-title-color: violet;
+    --secondary-title-color: rgb(81, 63, 255);
     --background-color: #000;
     --text-color-dark: #000;
     --text-color-light: #fff;
     --alert-color: red;
+    --success-color: green;
     --border-picker: inset 3px rgba(255, 255, 255, 0.5);
     --border-picker-active: inset 3px var(--primary-title-color);
 }
@@ -36,7 +37,6 @@ html {
 body {
     margin: 0;
     padding: 0;
-    /*!important for bootstrap overide*/
     font-size: 14px !important;
     font-family: 'Neutrif Pro' !important;
     background: var(--background-color) !important;
@@ -44,36 +44,46 @@ body {
     overflow-x: clip;
 }
 
-pre {
-    white-space: normal;
-}
-
-a {
-    color: var(--secondary-title-color);
-    font-weight: bold;
-}
-
-a:hover {
-    text-decoration: none;
-}
-
 .no-display {
     display: none !important;
 }
 
 .no-opacity {
-    opacity: 0;
+    opacity: 0 !important;
 }
 
 .alert-label {
     color: var(--alert-color) !important;
 }
 
-.flex-br {
-    flex-basis: 100%;
-    height: 0;
+.gold {
+    color:var(--primary-title-color)!important;
+};
+
+/* Cursor laranja */
+#pulse {
+    font-size: 30px;
+    color: rgb(255, 145, 0);
+    animation-name: periodicfading;
+    animation-duration: 1.3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: 0s;
 }
 
+@keyframes periodicfading {
+    0% {
+        opacity: 0.1;
+    }
+
+    50% {
+        opacity: 1.0;
+    }
+
+    100% {
+        opacity: 0.1;
+    }
+}
 
 /*###########    Landing     ###########*/
 
@@ -82,7 +92,7 @@ a:hover {
     display: grid;
     justify-content: center;
     align-content: center;
-    background-color: #000;
+    background-color: var(--background-color);
 }
 
 #loading-title,
@@ -96,14 +106,7 @@ a:hover {
     color: var(--primary-title-color);
 }
 
-#welcome-text {
-    color: var(--success-title-color);
-}
-
-/** hotfix para a troca dos gifs. 
-não foi muito inteligente,
-devia ter feito tudo via js. teve que martelar mais
-á frente no js cript para compensar. oh well**/
+/** hotfix para a troca dos gifs. **/
 .margin-animation-complete {
     margin-left: -160%;
 }
@@ -158,15 +161,34 @@ devia ter feito tudo via js. teve que martelar mais
     margin-bottom: 20px;
 }
 
-/*submit*/
+/* show password toggle */
+#show-password {
+    color: var(--text-color-dark);
+    position: absolute;
+    margin-left: -34px;
+    font-size: 22px;
+    padding: 4px;
+    background: var(--primary-title-color);
+    border-radius: 25%;
+    margin-top: -6px;
+    border: solid 4px var(--background-color);
+}
+
+#show-password:hover,
+.show-password-active {
+    cursor: pointer;
+    background: var(--secondary-title-color) !important;
+    color: var(--text-color-light) !important;
+}
+
+/*login btn*/
 #login-btn {
-    /* bootstrap overide */
     width: 100%;
     background-color: var(--primary-title-color) !important;
     margin-top: 10px;
 }
 
-/* cookie */
+/* cookie checkbox wrapper */
 #cookie {
     width: 100%;
     text-align: center;
@@ -194,7 +216,6 @@ devia ter feito tudo via js. teve que martelar mais
     cursor: pointer;
 }
 
-
 /*###########     Editor     ###########*/
 
 .sticky-top {
@@ -208,7 +229,6 @@ devia ter feito tudo via js. teve que martelar mais
 .header {
     min-height: 330px;
     background: var(--background-color);
-    /*padrão repetitivo*/
     background-image: url('../img/app-bg.png');
     background-size: 2%;
 }
@@ -272,7 +292,7 @@ devia ter feito tudo via js. teve que martelar mais
 }
 
 .helpcenter-textbox:hover .novoalerta {
-    box-shadow: 2px 2px #000, 4px 5px var(--primary-title-color) !important;
+    box-shadow: 2px 2px var(--background-color), 4px 5px var(--primary-title-color) !important;
     transition-duration: 250ms;
 }
 
@@ -285,28 +305,26 @@ devia ter feito tudo via js. teve que martelar mais
 
 .phcgo-icon {
     font-size: 35px;
-    color: #fff;
+    color: var(--text-color-light);
     text-align: center;
     padding-bottom: 20px;
     cursor: pointer;
-    text-shadow: 1px 1px black;
+    text-shadow: 1px 1px var(--background-color);
 }
 
 .phcgo-icon:hover>span {
     color: var(--primary-title-color) !important;
     font-size: 35px;
-    text-shadow: 1px 1px black;
+    text-shadow: 1px 1px var(--background-color);
     transition-duration: 150ms;
 }
 
-/* sub-wrappers icons do lado esquerdo */
 .icon-sub-row-1 {
     padding-right: 0 !important;
     padding-left: 30px !important;
     padding-bottom: 0px !important;
 }
 
-/* sub-wrappers icons do lado direito*/
 .icon-sub-row-2 {
     padding-left: 0 !important;
     padding-right: 30px !important;
@@ -315,7 +333,6 @@ devia ter feito tudo via js. teve que martelar mais
 #color-picker {
     padding-top: 15px;
     text-align: center;
-
 }
 
 .color-pick {
@@ -330,6 +347,7 @@ devia ter feito tudo via js. teve que martelar mais
     border: var(--border-picker);
 }
 
+/* checkmark */
 .color-pick>i {
     display: flex;
     justify-content: center;
@@ -339,19 +357,20 @@ devia ter feito tudo via js. teve que martelar mais
     opacity: 0;
 }
 
+/* checkmark opacity */
 .selected-color {
     opacity: 1;
 }
 
 .selected-color>i {
     opacity: 1;
-    color: orange;
+    color: var(--primary-title-color);
     font-size: 18px;
 }
 
 #icon-color-2.selected-color>i,
 #icon-color-5.selected-color>i {
-    color: black;
+    color: var(--text-color-dark);
 }
 
 .color-pick:hover {
@@ -375,7 +394,6 @@ devia ter feito tudo via js. teve que martelar mais
 
 #icon-color-4 {
     background-color: #b70505;
-
 }
 
 #icon-color-5 {
@@ -403,11 +421,11 @@ devia ter feito tudo via js. teve que martelar mais
 .botao:hover button,
 .botao:hover div {
     transition-duration: 250ms;
-    box-shadow: 1px 1px #000, 2px 3px var(--primary-title-color) !important;
+    box-shadow: 1px 1px var(--background-color), 2px 3px var(--primary-title-color) !important;
 }
 
 #theme-picker {
-    padding-top: 31px;
+    padding-top: 26px;
     text-align: center;
 }
 
@@ -438,12 +456,12 @@ devia ter feito tudo via js. teve que martelar mais
 
 .selected-theme>i {
     opacity: 1;
-    color: orange;
+    color: var(--primary-title-color);
     font-size: 18px;
 }
 
 #theme-4.selected-theme>i {
-    color: black;
+    color: var(--text-color-dark);
 }
 
 .theme-pick:hover {
@@ -453,33 +471,28 @@ devia ter feito tudo via js. teve que martelar mais
     border: var(--border-picker-active);
 }
 
-
 #theme-1 {
     background-color: #1a237e;
-    border: var(--border-picker);
 }
 
 #theme-2 {
     background-color: #004d40;
-    border: var(--border-picker);
 }
 
 #theme-3 {
     background-color: #000000;
-    border: var(--border-picker);
 }
 
 #theme-4 {
     background-color: #e0e0e0;
-    border: var(--border-picker);
 }
 
-/*########################################*/
+
 /*########### Listas & Tabelas ###########*/
-/*########################################*/
+
 
 #preview-list-row {
-    color: #fff;
+    color: var(--text-color-light);
     min-height: 80px;
     padding: 10px 0px;
 }
@@ -491,7 +504,7 @@ devia ter feito tudo via js. teve que martelar mais
 #header-listas,
 #header-tabelas {
     text-align: center;
-    color: #fff;
+    color: var(--text-color-light);
     padding-bottom: 20px;
     font-size: 20px;
 }
@@ -499,7 +512,7 @@ devia ter feito tudo via js. teve que martelar mais
 #tipo-lista-span {
     display: block;
     text-align: left;
-    color: #fff;
+    color: var(--text-color-light);
     padding-left: 2px;
     font-size: 14.5px;
 }
@@ -507,20 +520,14 @@ devia ter feito tudo via js. teve que martelar mais
 #num-itens-span {
     display: block;
     text-align: right;
-    color: #fff;
+    color: var(--text-color-light);
     padding-right: 2px
 }
 
-#num-itens-input {
-    width: 100%;
-}
-
-#tipo-lista-dropdown {
-    width: 100%
-}
-
+#num-itens-input,
+#tipo-lista-dropdown,
 #tipo-titulo-dropdown {
-    width: 100%
+    width: 100%;
 }
 
 #cria-tabela-btn-div {
@@ -531,7 +538,7 @@ devia ter feito tudo via js. teve que martelar mais
 #num-colunas-span,
 #cabecalho-span {
     display: block;
-    color: #fff;
+    color: var(--text-color-light);
 }
 
 #num-linhas-input {
@@ -543,7 +550,7 @@ devia ter feito tudo via js. teve que martelar mais
 }
 
 #want-links-span {
-    color: #fff;
+    color: var(--text-color-light);
     display: inline-block;
     padding: 10px 10px 10px 0px;
 }
@@ -563,14 +570,14 @@ devia ter feito tudo via js. teve que martelar mais
 
 .novo-separador>span {
     font-size: 20px;
-    color: #fff;
+    color: var(--text-color-light);
     padding: 10px 0px;
     display: block;
 }
 
 #cria-tabela-checkbox-wrapper {
     padding-top: 30px;
-    color: #fff;
+    color: var(--text-color-light);
 }
 
 #cria-tabela-checkbox-wrapper span {
@@ -578,354 +585,52 @@ devia ter feito tudo via js. teve que martelar mais
     padding-right: 20px;
 }
 
+#import-table-btn {
+    padding-top: 15px;
+}
+
 #preview-list-row {
-    color: #fff;
+    color: var(--text-color-light);
     text-align: center;
 }
-
-
-#imageb64-span {
-    font-size: 20px;
-    color: #fff;
-    display: block;
-    padding: 10px 0px;
-    text-align: center;
-}
-
 
 .nova-imagem {
     padding-top: 10px;
+    color: var(--text-color-light);
 }
 
-
-
-
-
-
-
-
-/*########### Live preview         */
-#helpcenter-preview {
-    padding-top: 40px;
-}
-
-.display-preview {
-    background-color: #fff;
-}
-
-/* Cursor laranja */
-#pulse {
-    font-size: 30px;
-    color: rgb(255, 145, 0);
-    animation-name: periodicfading;
-    animation-duration: 1.3s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    animation-delay: 0s;
-}
-
-@keyframes periodicfading {
-    0% {
-        opacity: 0.1;
-    }
-
-    50% {
-        opacity: 1.0;
-    }
-
-    100% {
-        opacity: 0.1;
-    }
-}
-
-
-/* Cabeçalho HelpCenter */
-.header-hc {
-    padding-top: 20px;
-    background-color: #EB8475;
-    height: 90px;
-}
-
-.header-hc img {
-    padding-left: 16px;
-    margin-top: -2px;
-}
-
-.head-slogan {
-    font-size: 13px;
-    color: #fff;
-    text-align: right;
-    padding-right: 20px !important;
-    padding-top: 30px;
-    letter-spacing: 0px;
-}
-
-.head-slogan span {
-    color: #F4CC91;
-}
-
-/* Body HelpCenter */
-.text-body-hc {
-    min-height: 80vh;
-}
-
-#main-div {
-    padding-top: 40px;
-    padding-bottom: 15px;
-}
-
-/* Rodapé HelpCenter */
-.footer-hc {
-    background-color: #C3751B;
-    height: 94px;
-}
-
-.footer-hc img {
-    padding-left: 25px;
-    padding-top: 20px;
-}
-
-.hc-preview {
-    background-color: #fff;
-    padding: 0 !important;
-    color: #000 !important;
-}
-
-/** Estilos utilizados em tópicos de manual HelpCenter  **/
-.alerta {
-    width: 100%;
-    background-color: rgb(224, 224, 224);
-    line-height: 1.5;
-    float: left;
-    text-align: justify;
-    border-radius: 5px;
-    margin: 30px 0px;
-}
-
-.alerta-titulo {
-    width: 59%;
-    margin-left: 50px;
-    margin-top: 20px;
-    margin-right: 50px;
-    font-size: 16px;
-    float: left;
-    font-style: italic;
-}
-
-.alerta-contido {
-    font-size: 14px;
-    margin: 20px 50px 20px;
-    float: left;
-}
-
-.dica {
-    width: 100%;
-    background-color: rgb(255, 225, 189);
-    line-height: 1.5;
-    float: left;
-    border-radius: 5px;
-    margin: 30px 0px;
-}
-
-.dica-titulo {
-    width: 59%;
-    margin-left: 50px;
-    margin-top: 20px;
-    margin-right: 50px;
-    font-size: 16px;
-    float: left;
-    font-style: italic;
-}
-
-.dica-contido {
-    font-size: 14px;
-    margin: 20px 50px 20px;
-    float: left;
-}
-
-.novoalerta {
-    width: 100%;
-    line-height: 1.5;
-    float: left;
-    border-radius: 5px;
-    margin: 30px 0px
-}
-
-.novoalerta-titulo {
-    margin: 25px 50px 20px 50px;
-    font-size: 18px;
-    float: left;
-    font-weight: bold;
-    width: 100%;
-}
-
-.novoalerta-contido {
-    font-size: 15px;
-    margin: 0px 35px 20px 35px;
-    float: left;
-}
-
-.novoalerta-titulo>i {
-    padding-right: 10px;
-}
-
-.alerta-notas {
-    background-color: rgb(255, 225, 189);
-}
-
-.alerta-dicas {
-    background-color: rgb(255, 248, 200);
-}
-
-.alerta-info {
-    background-color: rgb(232, 239, 249);
-}
-
-.boas-praticas {
-    background-color: rgb(210, 251, 200);
-}
-
-.alerta-relaciona {
-    background-color: rgb(245, 245, 245);
-}
-
-.seccao-phcgo {
-    background: rgb(245, 245, 245);
+#upload-form {
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
+    padding-bottom: 14px;
 }
 
-h1.manuais {
-    font-size: 28px;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-h2.manuais {
+#imageb64-span {
     font-size: 20px;
-    font-weight: bold;
-    margin: 0;
-    padding: 10px;
-}
-
-h3.manuais {
-    font-size: 18px;
-    text-transform: none;
-    padding: 5px 15px;
-}
-
-a.manuais {
-    color: #3934BE !important;
-    font-size: 15px !important;
-    font-weight: 600;
-}
-
-a.manuais:hover {
-    text-decoration: none;
-}
-
-
-
-/*########### Colapsáveis         */
-
-#colapsables-wrapper {
-    background-color: #fff;
-    min-height: calc(100vh - 330px);
-    background-image: url('../img/colaps-bg.png');
-    width: 100%;
-}
-
-
-/* todos os inputs */
-#colapsables-wrapper>div>div>div>input {
-    width: 100%;
-    padding: 5px 10px;
-    margin: 5px;
-    padding: 2px 2px;
-    border-radius: 5px;
-}
-
-/* todas as textareas */
-#colapsables-wrapper>div>div>div>textarea {
-    min-height: 200px;
-    width: 100%;
-    padding: 5px 10px;
-    margin: 5px;
-    padding: 2px 2px;
-    /* overflow: auto; */
-    border-radius: 10px;
-}
-
-/* tod os spans*/
-#colapsables-wrapper>div>div>div>span {
     display: block;
-    width: 100%;
-    padding: 20px 50px 5px 30px;
+    padding: 10px 0px;
 }
 
-/* div para pading depois do save */
-.save-padding {
-    width: 100%;
-    height: 5px;
+#imagem-centrada-span {
+    padding-right: 30px;
 }
 
-/* todos os  save buttosn  */
-#colapsables-wrapper>div>div>div>button {
-    margin-left: 2%;
-}
 
-#colapsables-wrapper>div>div>.col-md-7 {
-    padding-right: 0px;
-}
-
-/* todos os h2 preview */
-#colapsables-wrapper>div>div>.col-md-7>div:first-child {
-    background-color: #333;
-    margin-bottom: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0;
-    padding: 10px 0px 10px 30px;
-    text-align: left;
-    border-left: 1px solid #333;
-    color: #fff;
-}
-
-.row.impar {
-    background: rgb(218, 227, 251);
-    background: linear-gradient(180deg, rgba(218, 227, 251, 1) 0%, rgba(176, 184, 209, 1) 100%);
-    border-top: 2px solid #333;
-}
-
-.row.par {
-    background: rgb(251, 228, 218);
-    background: linear-gradient(180deg, rgba(251, 228, 218, 1) 0%, rgba(209, 188, 176, 1) 100%);
-    border-top: 2px solid #333;
-}
-
-/* todos os body preview  */
-#colapsables-wrapper>div>div>.col-md-7>div:last-child {
-    background-color: #fff;
-    padding: 20px 20px;
-    border-left: 2px solid #333;
-    min-height: 420px;
-}
-
-/**** Notepad
-*/
-
+/*########## Títulos & Ligações ##########*/
 
 .nova-ligacao-btn-col {
     padding-top: 20px;
 }
 
 #preview-heading-row {
-    color: #fff;
+    color: var(--text-color-light);
     padding: 10px 0px;
     min-height: 60px;
-    padding: 0;
+}
+
+#gerador-links-h1 {
+    text-align: center;
+    padding-bottom: 20px;
 }
 
 #preview-heading-row>* {
@@ -933,15 +638,14 @@ a.manuais:hover {
     margin: 0px;
 }
 
-
 .gerador-links-wrapper {
-    color: #fff;
+    color: var(--text-color-light);
 }
 
 .gerador-links-wrapper>div>input {
     width: 90%;
     border-radius: 5px;
-    color: #000;
+    color: var(--text-color-dark);
 }
 
 .gerador-links-wrapper .col-md-7 {
@@ -949,168 +653,35 @@ a.manuais:hover {
 }
 
 #gerador-titulos {
-    color: #fff;
+    color: var(--text-color-light);
     font-size: 20px;
+    text-align: center;
 }
 
 #gerador-titulos select {
-    color: #000;
+    color: var(--text-color-dark);
 }
 
 .gerador-links-wrapper .col-md-12 {
     font-size: 20px;
 }
 
-#header-outros {
+#hilite-wrapper {
+    text-align: center;
+}
+
+#hilite-subwrapper {
     font-size: 20px;
-    color: #fff;
+    color: var(--text-color-light);
     padding-bottom: 20px;
 }
-
-#add-new-collap {
-    height: 10vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 4px solid #333;
-    background: #333;
-}
-
-#add-new-collap>button {
-    max-height: 34px;
-}
-
-#gerador-colaps-wrapper {
-    min-height: calc(100vh - 330px);
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    justify-items: center;
-}
-
-.no-colaps-span {
-    width: 100%;
-}
-
-.gerador-colaps-1 {
-    padding-top: 20px;
-    font-size: 30px;
-    padding-bottom: 20px;
-}
-
 
 #hilite-textarea {
-    min-height: 100px !important;
+    min-height: 150px !important;
     font-size: 12px;
 }
 
 #hilite-checkboxes-row {
     padding: 15px 0px;
-    color: #fff;
-}
-
-#novo-hilitecode-btn {
-    color: rgb(0, 255, 13);
-}
-
-
-
-/*  Manuals Modal */
-
-#manuals-modal {
-    height: 100vh;
-    background-color: #111;
-    background-image: url('../img/manuals-bg.png');
-}
-
-#modal-container {
-    background: var(--primary-title-color);
-    width: 80%;
-    padding-bottom: 25px;
-    margin: auto;
-    border-radius: 10px;
-}
-
-#modal-container>thead>th {
-    font-size: 16px;
-    color: var(--text-color-dark);
-    height: 50px;
-    border-bottom: 2px solid black;
-}
-
-
-#modal-container>tbody>tr {
     color: var(--text-color-light);
-}
-
-#modal-container>tbody>tr>td>span {
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-#modal-container>tbody>tr>td>span {
-    vertical-align: bottom;
-}
-
-#modal-container>tbody>tr>td:last-child:hover {
-    color: var(--alert-color);
-    transition-duration: 500ms;
-    cursor: pointer;
-}
-
-
-.manual-par {
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.manual-impar {
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.manual-par:hover,
-.manual-impar:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-    cursor: pointer;
-}
-
-
-#modal-container>thead>th:first-child,
-#modal-container>tbody>tr>td:first-child {
-    width: 85%;
-    padding-left: 30px;
-    height: 30px;
-}
-
-#modal-container>thead>td:nth-child(2),
-#modal-container>tbody>tr>td:nth-child(2) {
-    width: 10%;
-    text-align: right;
-}
-
-#modal-container>thead>td:last-child,
-#modal-container>tbody>tr>td:last-child {
-    width: 5%;
-    text-align: center;
-}
-
-#savemanual-container {
-    padding: 20px 10% 60px 10%;
-    display: flex;
-    align-items: end;
-}
-
-#savemanual-container h1 {
-    padding-left: 5%;
-    color: var(--primary-title-color);
-}
-
-#savemanual-container input {
-    border-radius: 5px;
-    width: 95%;
-    margin-left: 5%;
-}
-
-#close-myManuals-wrapper {
-    padding-right: 4%;
 }

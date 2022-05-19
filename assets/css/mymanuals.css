@@ -1,0 +1,121 @@
+#manuals-modal {
+    height: 100vh;
+    background-color: #111;
+    background-image: url('../img/manuals-bg.png');
+}
+
+#modal-container {
+    background: var(--primary-title-color);
+    width: 80%;
+    padding-bottom: 25px;
+    margin: auto;
+    border-radius: 10px;
+}
+
+#modal-container>thead>th {
+    font-size: 16px;
+    color: var(--text-color-dark);
+    height: 50px;
+    border-bottom: 2px solid var(--text-color-dark);
+}
+
+
+#modal-container>tbody>tr {
+    color: var(--text-color-light);
+}
+
+#modal-container>tbody>tr>td>span {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#modal-container>tbody>tr>td>span {
+    vertical-align: bottom;
+}
+
+#modal-container>tbody>tr>td:nth-child(3):hover {
+    color: var(--success-color);
+    transition-duration: 500ms;
+    cursor: pointer;
+}
+
+#modal-container>tbody>tr>td:last-child:hover {
+    color: var(--alert-color);
+    transition-duration: 500ms;
+    cursor: pointer;
+}
+
+#modal-container i {
+    background: var(--text-color-dark);
+    padding: 5px;
+    border-radius: 25%;
+    margin-bottom: 1px;
+}
+
+.manual-par {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.manual-impar {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.manual-par:hover,
+.manual-impar:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+
+#modal-container>thead>th:first-child,
+#modal-container>tbody>tr>td:first-child {
+    width: 80%;
+    padding-left: 30px;
+    height: 30px;
+}
+
+#modal-container>thead>th:nth-child(2),
+#modal-container>tbody>tr>td:nth-child(2) {
+    width: 9%;
+    text-align: right;
+}
+
+#modal-container>thead>th:nth-child(3),
+#modal-container>tbody>tr>td:nth-child(3) {
+    width: 3%;
+    text-align: center;
+    padding-left: 10px;
+}
+
+
+#modal-container>thead>th:last-child,
+#modal-container>tbody>tr>td:last-child {
+    width: 3%;
+    text-align: center;
+    padding-right: 30px;
+}
+
+#savemanual-container {
+    padding: 20px 10% 60px 10%;
+    display: flex;
+    align-items: end;
+}
+
+#savemanual-container h1 {
+    padding-left: 5%;
+    color: var(--primary-title-color);
+}
+
+#savemanual-container input {
+    border-radius: 5px;
+    width: 95%;
+    margin-left: 5%;
+}
+
+#close-myManuals-wrapper {
+    padding-right: 4%;
+}
+
+pre {
+    white-space: normal;
+}

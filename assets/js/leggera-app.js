@@ -34,7 +34,7 @@
 
 function mixWrapper() {
 
-    // ################ método com várias variáveis da aplicação
+    // ################ várias variáveis da aplicação
     const leggeraVariables = {
         // textarea principal
         textarea: document.querySelector('textarea'),
@@ -61,7 +61,7 @@ function mixWrapper() {
         limitExceded: 0,
     }
 
-    // ################ método com várias funções da aplicação 
+    // ################ funções várias da aplicação 
     const leggeraExtraFunctions = {
 
         // document.createElement, mais turbinada para a escritura de grids
@@ -216,8 +216,7 @@ function mixWrapper() {
         }
     }
 
-
-    // ################ metodo para atualizar o preview com o cursor laranja
+    // ################ atualizar o preview com o cursor laranja
     const leggeraUpdatePreviews = {
         // a ser utilizado quando é feito click
         full: function (e) {
@@ -352,7 +351,7 @@ function mixWrapper() {
         }
     }
 
-    // ############ Método com a ligação á BD para obter os manuals do utilizador
+    // ################ myManuals
     const leggeraMyManualsDBConnect = {
         // Query para buscar os manuais que o utilizador tem guardado
         getManuals: function () {
@@ -371,6 +370,18 @@ function mixWrapper() {
             })
         },
 
+        myManualsFilterResults: function () {
+            const keyword = document.querySelector('#save-manual-input').value.toLowerCase();
+            const numManuais = document.querySelector('#modal-container tbody').childElementCount;
+            for (i = 1; i <= numManuais; i++) {
+                if (document.querySelector('#modal-container tbody').children[i - 1].children[0].innerText.toLowerCase().includes(keyword)) {
+                    document.querySelector('#modal-container tbody').children[i - 1].classList.remove('no-display');
+                } else {
+                    document.querySelector('#modal-container tbody').children[i - 1].classList.add('no-display');
+                }
+            }
+        },
+
         // Constroi a modal com os manuais recebidos da DB
         myManuals: function (rsp) {
             console.log('here?')
@@ -385,6 +396,7 @@ function mixWrapper() {
             const leftWrapper = saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-8 text-left', ''));
             leftWrapper.appendChild(leggeraExtraFunctions.elementGenerator('h1', '', '', 'Nome do manual'));
             leftWrapper.appendChild(leggeraExtraFunctions.elementGenerator('input', 'save-manual-input', '', ''));
+            leftWrapper.lastChild.addEventListener('keyup', leggeraMyManualsDBConnect.myManualsFilterResults);
             const midWrapper = saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-2 text-left', ''));
             midWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-success', "<i class='lni lni-save'></i>&nbsp;&nbsp;Guardar Manual"));
             midWrapper.lastChild.addEventListener('click', leggeraMyManualsDBConnect.saveManual)
@@ -393,11 +405,12 @@ function mixWrapper() {
             rightWrapper.lastChild.addEventListener('click', leggeraMyManualsDBConnect.backHome)
 
 
-            const manualsWrapper = modal.appendChild(leggeraExtraFunctions.elementGenerator('div','my-manuals-wrapper','',''));
+            const manualsWrapper = modal.appendChild(leggeraExtraFunctions.elementGenerator('div', 'my-manuals-wrapper', '', ''));
             const modalTable = manualsWrapper.appendChild(leggeraExtraFunctions.elementGenerator('table', 'modal-container', '', ''));
             const modalHeader = modalTable.appendChild(leggeraExtraFunctions.elementGenerator('thead', '', '', ''));
             modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', '', 'Título do Manual'))
             modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', 'text-right', 'Última atualização'))
+            modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', '', ''))
             modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', '', ''))
             const modalBody = modalTable.appendChild(leggeraExtraFunctions.elementGenerator('tbody', '', '', ''));
             for (i = 0; i < rsp.length; i++) {
@@ -410,6 +423,8 @@ function mixWrapper() {
                 });
                 let data = new Date(Number(rsp[i].timestamp));
                 modalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', `${data.toLocaleDateString('pt-PT', { dateStyle: 'short' })} @ ${data.toLocaleTimeString('pt-PT', { timeStyle: 'short' })}`))
+                modalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', `<i class="lni lni-save"></i>`))
+                modalRow.lastChild.addEventListener('click', leggeraMyManualsDBConnect.saveManual);
                 modalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', `<i class="lni lni-eraser"></i>`))
                 modalRow.lastChild.addEventListener('click', leggeraMyManualsDBConnect.deleteManual);
             }
@@ -432,14 +447,20 @@ function mixWrapper() {
             leggeraExtraFunctions.autosave2JSON();
         },
 
-        saveManual: function () {
+        saveManual: function (e) {
+
+            console.log(e.target.parentElement.parentElement.firstChild.innerText);
+            let manualName = document.querySelector('#save-manual-input').value;
+
+            if (e.target.tagName === "TD") { manualName = e.target.parentElement.firstChild.innerText };
+            if (e.target.tagName === "I") { manualName = e.target.parentElement.parentElement.firstChild.innerText };
             $.ajax({    //create an ajax request to display.php
                 type: "POST",
                 url: "assets/php/manualsupdate.php",
                 dataType: "text",
                 data: {
                     username: loggedinUser,
-                    manual: document.querySelector('#save-manual-input').value,
+                    manual: manualName,
                     timestamp: Date.now(),
                     action: 'save',
                     code: document.querySelector('#textarea').value
@@ -469,10 +490,10 @@ function mixWrapper() {
 
         backHome: function () {
             const sectionsArray = document.querySelectorAll('section');
-                        for (i = 0; i < sectionsArray.length; i++) {
-                            sectionsArray[i].classList.remove('no-display')
-                        }
-                        document.querySelector('#manuals-modal').remove();
+            for (i = 0; i < sectionsArray.length; i++) {
+                sectionsArray[i].classList.remove('no-display')
+            }
+            document.querySelector('#manuals-modal').remove();
         },
 
         deleteManual: function (e) {
@@ -511,7 +532,7 @@ function mixWrapper() {
         }
     }
 
-    // ############ método com todas as funções que vão buscar dados JSON
+    // ################ go assets (antigos JSON)
     const leggeraJSONGrab = {
 
         //Delaração de arrays para guardar os dados vindos do fetch JSON, utilizados nas respetivas áreas de controlo
@@ -526,18 +547,18 @@ function mixWrapper() {
         numeroIcons: '',
         numeroButtons: '',
 
-        
+
 
         // Executa todas
         grabThemAll: function () {
-           
+
 
             $.ajax({    //create an ajax request to display.php
                 type: "POST",
                 url: "assets/php/assetsgo.php",
                 dataType: "JSON",
                 data: {
-                    action: 'icons' 
+                    action: 'icons'
                 },
                 success: function (rsp) {
                     leggeraJSONGrab.numeroIcons = rsp.length
@@ -552,7 +573,7 @@ function mixWrapper() {
                 url: "assets/php/assetsgo.php",
                 dataType: "JSON",
                 data: {
-                    action: 'textboxes' 
+                    action: 'textboxes'
                 },
                 success: function (rsp) {
                     leggeraJSONGrab.numeroTextboxes = rsp.length
@@ -568,7 +589,7 @@ function mixWrapper() {
                 url: "assets/php/assetsgo.php",
                 dataType: "JSON",
                 data: {
-                    action: 'buttons' 
+                    action: 'buttons'
                 },
                 success: function (rsp) {
                     // leggeraJSONGrab.numeroButtons = rsp[0].length;
@@ -584,14 +605,14 @@ function mixWrapper() {
                 }
             })
 
-           
+
 
 
 
         }
     }
 
-    // ############ método para chamadas API c/ Hilite.me
+    // ################ método para chamadas API c/ Hilite.me
     const leggeraHiliteAPI = {
         // API POST
         post: function () {
@@ -624,8 +645,7 @@ function mixWrapper() {
         }
     }
 
-    // ############ app start
-
+    // ################ app start
     window.onload = (function () {
         // Vai buscar os dados aos JSON
         leggeraJSONGrab.grabThemAll();
@@ -646,9 +666,7 @@ function mixWrapper() {
         }
     })();
 
-
-
-    // metodo para introduzir textboxes
+    // ################ textboxes
     const leggeraTextboxes = {
         // Função para mostar as textboxes no appControls
         displayControls: function () {
@@ -683,7 +701,7 @@ function mixWrapper() {
         }
     }
 
-    // metodo para introduzir icons
+    // ################ icons
     const leggeraIcons = {
         // Atualiza a cor selecionada para os icons
         changeCurrentColor: function (e) {
@@ -762,8 +780,7 @@ function mixWrapper() {
         }
     }
 
-
-    // metodo para introduzir botões/labels
+    // ################ botões & chips
     const leggeraButtons = {
 
         // Função para alterar os botões de acordo com o tema selecionado
@@ -786,7 +803,7 @@ function mixWrapper() {
 
         // Função para mostrar o appControls de botoes e etiquetas
         displayControls: function (e, control = 1) {
-            if (control === 1) {leggeraVariables.currentTheme = 'horizon' } // hotfix para quando escolhemos um outro tema, e voltamos a aceder ao menu (é precisao alterar para o tema principal)
+            if (control === 1) { leggeraVariables.currentTheme = 'horizon' } // hotfix para quando escolhemos um outro tema, e voltamos a aceder ao menu (é precisao alterar para o tema principal)
             // switch (control) {
             //     case 1: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.horizonButtonsFromJSON;
             //         
@@ -807,13 +824,22 @@ function mixWrapper() {
                 // A cada 5buttons, cria uma nova linha
                 if (i % 5 === 0) {
                     // console.log(leggeraJSONGrab.iconsFromJSON);
-                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[control-1][i-1]));
+                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[control - 1][i - 1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
+                    //regras de contraste no beat
+                    if (control !== 3 && (i >= 5 && i <= 10)) { appControlsButtonWrapper.lastChild.lastChild.style.borderColor = 'hsla(0,0%,100%,.12)' }
+                    if (control !== 3 && (i === 7 || i === 10)) { appControlsButtonWrapper.lastChild.lastChild.style.color = 'hsla(0,0%,100%,.12)' }
+                    if (i === 9 || i === 10) { appControlsButtonWrapper.lastChild.lastChild.style.background = 'hsla(0,0%,100%,.12)' }
                     appControlsButtonWrapper = appControlsButton.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row phc-buttons'));
                 } else {
-                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[control-1][i-1]));
+                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[control - 1][i - 1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
+                    //regras de contraste no beat
+                    if (control !== 3 && (i >= 5 && i <= 10)) { appControlsButtonWrapper.lastChild.lastChild.style.borderColor = 'hsla(0,0%,100%,.12)' }
+                    if (control !== 3 && (i === 7 || i === 10)) { appControlsButtonWrapper.lastChild.lastChild.style.color = 'hsla(0,0%,100%,.12)' }
+                    if (i === 9 || i === 10) { appControlsButtonWrapper.lastChild.lastChild.style.background = 'hsla(0,0%,100%,.12)' }
                 }
+
             }
             const themePickerRow = leggeraVariables.appControls.firstChild.appendChild(leggeraExtraFunctions.elementGenerator('div', 'theme-picker', 'row'));
             const themeTable = ['horizon', 'forest', 'dark', 'light']
@@ -835,7 +861,7 @@ function mixWrapper() {
             // Corrige o etarget quando carregamos ao lado do botão/etiqueta
             if (button.classList.length > 0) { button = button.firstChild };
 
-            const themeID = ['horizon','forest','dark','light'];
+            const themeID = ['horizon', 'forest', 'dark', 'light'];
             const currentThemeID = themeID.indexOf(leggeraVariables.currentTheme);
             // Vai buscar o número do botão e vai buscar ao array dos botões o código original 
             button = leggeraJSONGrab.buttonsFromJSON[currentThemeID][String(button.parentElement.id).replace(`botao-${leggeraVariables.currentTheme}-`, '') - 1];
@@ -854,7 +880,7 @@ function mixWrapper() {
             let pag = leggeraExtraFunctions.appControlsChange();
             let appControlsListsAndTables = leggeraVariables.appControls.appendChild(leggeraExtraFunctions.elementGenerator('div', '', `row page-${pag}`));
             const appControlsLists = appControlsListsAndTables.appendChild(leggeraExtraFunctions.elementGenerator('div', 'listas-wrapper', 'col-md-5'));
-            let row = appControlsLists.appendChild(leggeraExtraFunctions.elementGenerator('div', 'header-listas', 'row', '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de listas'));
+            let row = appControlsLists.appendChild(leggeraExtraFunctions.elementGenerator('div', 'header-listas', 'row', '<i class="lni lni-list gold"></i>&nbsp;&nbsp;Gerador de listas'));
             row = appControlsLists.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row'));
             let col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-8'));
             const tipoListaSpan = col.appendChild(leggeraExtraFunctions.elementGenerator('span', 'tipo-lista-span', '', 'Tipo de lista'));
@@ -864,11 +890,11 @@ function mixWrapper() {
             col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-8'));
             let tipoListaDropdown = col.appendChild(leggeraExtraFunctions.elementGenerator('select', 'tipo-lista-dropdown'));
             tipoListaDropdown.addEventListener('change', leggeraListsAndTables.listPreview)
-            tipoListaDropdown.appendChild(leggeraExtraFunctions.elementGenerator('option', '', '', '&nbsp;Não ordenada &nbsp;&nbsp;&nbsp;( • Item )'));
+            tipoListaDropdown.appendChild(leggeraExtraFunctions.elementGenerator('option', '', '', '&nbsp;Não ordenada'));
             tipoListaDropdown.lastChild.value = 'ul'; // Valor a se passado para a função construtora de lista
-            tipoListaDropdown.appendChild(leggeraExtraFunctions.elementGenerator('option', '', '', '&nbsp;Ordenada &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( 1. Item )'));
+            tipoListaDropdown.appendChild(leggeraExtraFunctions.elementGenerator('option', '', '', '&nbsp;Ordenada numérica'));
             tipoListaDropdown.lastChild.value = 'ol-1';
-            tipoListaDropdown.appendChild(leggeraExtraFunctions.elementGenerator('option', '', '', '&nbsp;Ordenada &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a. Item )'));
+            tipoListaDropdown.appendChild(leggeraExtraFunctions.elementGenerator('option', '', '', '&nbsp;Ordenada alfabética'));
             tipoListaDropdown.lastChild.value = 'ol-a';
             col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-2'));// Filler row
             col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-2'));
@@ -889,7 +915,7 @@ function mixWrapper() {
             criarListaButton.addEventListener('click', leggeraListsAndTables.writeList)
             // ########## Separador Horizontal ##########
             const novoSeparadorWrapper = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-12 novo-separador'));
-            novoSeparadorWrapper.appendChild(leggeraExtraFunctions.elementGenerator('span', '', '', '<i class="lni lni-hammer"></i> Separador horizontal<br>'));
+            novoSeparadorWrapper.appendChild(leggeraExtraFunctions.elementGenerator('span', '', '', '<i class="lni lni-page-break gold"></i> Separador horizontal<br>'));
             const novaQuebraBtn = novoSeparadorWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'nova-quebra-btn', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir separador horizontal'));
             novaQuebraBtn.addEventListener('click', leggeraListsAndTables.writeHR);
 
@@ -897,7 +923,7 @@ function mixWrapper() {
             // ########## Tabelas ##########
             leggeraVariables.tableType = 'normal-table'
             const novaTabelaWrapper = appControlsListsAndTables.appendChild(leggeraExtraFunctions.elementGenerator('div', 'tabelas-wrapper', 'col-md-7'));
-            row = novaTabelaWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', 'header-tabelas', 'row', '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de tabelas'));
+            row = novaTabelaWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', 'header-tabelas', 'row', '<i class="lni lni-layout gold"></i>&nbsp;&nbsp;Gerador de tabelas'));
             row = novaTabelaWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row'));
             col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-1')); // Filler col
             col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-3'));
@@ -909,7 +935,7 @@ function mixWrapper() {
             const numColunasInput = col.appendChild(leggeraExtraFunctions.elementGenerator('input', 'num-colunas-input'));
             numColunasInput.setAttribute('type', 'number')
             col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-1'));   // Filler col
-            col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-3'));
+            col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', 'import-table-btn', 'col-md-3'));
             let converterTabela = col.appendChild(leggeraExtraFunctions.elementGenerator('button', '', 'btn btn-warning', '<i class="lni lni-code"></i>&nbsp;&nbsp;Importar tabela'));
             converterTabela.addEventListener('click', leggeraListsAndTables.convertTable);
             col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-1')); //  Filler Col
@@ -936,7 +962,7 @@ function mixWrapper() {
 
             // ########## Injetor de imagens base64 ##########
             const novaImagemWrapper = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-12 nova-imagem'));
-            novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('span', 'imageb64-span', '', '<i class="lni lni-hammer"></i> Carregar imagem<br>'));
+            novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('span', 'imageb64-span', '', '<i class="lni lni-gallery gold"></i>&nbsp;&nbsp;Carregar imagem<br>'));
             const fileUplaodForm = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('form', 'upload-form'));
             fileUplaodForm.setAttribute('method', 'post');
             fileUplaodForm.setAttribute('enctype', 'multipart/form-data');
@@ -945,7 +971,7 @@ function mixWrapper() {
             file2Upload.setAttribute('name', 'file-upload-input')
             const imagemCentradaCheckbox = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('input', 'imagem-centrada', '', ''));
             imagemCentradaCheckbox.setAttribute('type', 'checkbox');
-            const imagemCentradaLabel = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('label', '', '', '&nbsp;&nbsp;&nbsp;Centrada?'));
+            const imagemCentradaLabel = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('span', 'imagem-centrada-span', '', '&nbsp;&nbsp;&nbsp;Centrada?'));
             const fileUploadBtn = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'nova-quebra-btn', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir imagem'));
             fileUploadBtn.addEventListener('click', leggeraListsAndTables.writeImage);
 
@@ -1214,7 +1240,7 @@ function mixWrapper() {
         const novoVariosWrapperLeft = appControlsLinksAndTitles.appendChild(leggeraExtraFunctions.elementGenerator('div', 'left-wrapper', 'col-md-8'));
 
         // Anexar ao wrapper principal, o Wrapper da secção da direita
-        const geradorTitulosWrapper = novoVariosWrapperLeft.appendChild(leggeraExtraFunctions.elementGenerator('div', 'gerador-titulos', 'row', '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de títulos'));
+        const geradorTitulosWrapper = novoVariosWrapperLeft.appendChild(leggeraExtraFunctions.elementGenerator('div', 'gerador-titulos', 'row', '<i class="lni lni-pilcrow gold"></i>&nbsp;Gerador de títulos'));
 
         // Row 1
         row = geradorTitulosWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row'));
@@ -1262,7 +1288,7 @@ function mixWrapper() {
         row.appendChild(leggeraExtraFunctions.elementGenerator('div', 'cria-lista-btn-div', 'col-md-2'));
 
         // Button "Criar título"
-        let criarTituloButton = col.appendChild(leggeraExtraFunctions.elementGenerator('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar título'));
+        let criarTituloButton = col.appendChild(leggeraExtraFunctions.elementGenerator('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir título'));
         criarTituloButton.addEventListener('click', writeTitle)
 
         col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-1'));   //Filler col
@@ -1279,7 +1305,7 @@ function mixWrapper() {
         const novaLigacaoWrapper = novoVariosWrapperLeft.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row gerador-links-wrapper'));
 
         // Col 0
-        col = novaLigacaoWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-12', '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de links'));
+        col = novaLigacaoWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', 'gerador-links-h1', 'col-md-12', '<i class="lni lni-website gold"></i>&nbsp;&nbsp;Gerador de links'));
 
         // Col 1
         col = novaLigacaoWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-3 text-left'));
@@ -1297,7 +1323,7 @@ function mixWrapper() {
         col = novaLigacaoWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-2 nova-ligacao-btn-col'));
 
         // Button Criar ligação
-        const criarLigacao = col.appendChild(leggeraExtraFunctions.elementGenerator('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar ligação'));
+        const criarLigacao = col.appendChild(leggeraExtraFunctions.elementGenerator('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir ligação'));
         criarLigacao.addEventListener('click', writeLink);
 
         // Col 4
@@ -1313,10 +1339,10 @@ function mixWrapper() {
         const inputURL = col.appendChild(leggeraExtraFunctions.elementGenerator('input', 'link-input'));
 
         // Wrapper da secção dos extras
-        const novoVariosWrapperRight = appControlsLinksAndTitles.appendChild(leggeraExtraFunctions.elementGenerator('div', 'extras-wrapper', 'col-md-4'));
+        const novoVariosWrapperRight = appControlsLinksAndTitles.appendChild(leggeraExtraFunctions.elementGenerator('div', 'hilite-wrapper', 'col-md-4'));
 
         // Row 0
-        row = novoVariosWrapperRight.appendChild(leggeraExtraFunctions.elementGenerator('div', 'header-outros', 'row', '<i class="lni lni-code"></i> Código Hilite.me'));
+        row = novoVariosWrapperRight.appendChild(leggeraExtraFunctions.elementGenerator('div', 'hilite-subwrapper', 'row', '<i class="lni lni-skipping-rope gold"></i>&nbsp;&nbsp;Hilite.me API'));
 
         // Row 1
         row = novoVariosWrapperRight.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row'));
@@ -1350,7 +1376,7 @@ function mixWrapper() {
         miniWrapper3.addEventListener('change', leggeraExtraFunctions.updatecodeType)
         miniWrapper3.appendChild(leggeraExtraFunctions.elementGenerator('span', '', '', '&nbsp;&nbsp;JSON'));
 
-        const novaHiliteBtn = hiliteWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'novo-hilitecode-btn', 'btn btn-warning', '<i class="lni lni-code"></i>&nbsp;&nbsp;Gerar código hilite.me'));
+        const novaHiliteBtn = hiliteWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', '', 'btn btn-warning', '<i class="lni lni-code"></i>&nbsp;&nbsp;Introduzir código'));
         novaHiliteBtn.addEventListener('click', leggeraHiliteAPI.post);
     }
 
@@ -1513,6 +1539,11 @@ function mixWrapper() {
                 while (h2Input.value.includes('Abrir/Fechar'))
                     h2Input.value = h2Input.value.replace('Abrir/Fechar', '');
 
+                //hotfix, estava a aparecer no input dos novos manuais.;
+                while (h2Input.value.includes('Mostrar/Ocultar'))
+                    h2Input.value = h2Input.value.replace('Mostrar/Ocultar', '');
+
+
                 // Input 3
                 wrapperLeft.appendChild(leggeraExtraFunctions.elementGenerator('span', '', 'colap-body', 'Corpo do colapsável'));
                 let bodyInput = wrapperLeft.appendChild(leggeraExtraFunctions.elementGenerator('textarea', '', `colap-input-body-${i}`));
@@ -1526,6 +1557,10 @@ function mixWrapper() {
                 // Guardar alterações Button
                 let updateCollaps = wrapperLeft.appendChild(leggeraExtraFunctions.elementGenerator('button', `colap-save-btn-${i}`, 'btn btn-success no-display', `<i class="lni lni-save"></i> Guardar alterações`));
                 updateCollaps.addEventListener('click', gerarColapsaveis)
+
+                // Rejeitar alterações Button
+                let dropCollaps = wrapperLeft.appendChild(leggeraExtraFunctions.elementGenerator('button', `colap-drop-btn-${i}`, 'btn btn-danger no-display', `<i class="lni lni-cross-circle"></i> Descartar alterações`));
+                dropCollaps.addEventListener('click', rejeitarColapsaveis)
 
                 // filler div para padding
                 wrapperLeft.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'save-padding'));
@@ -1596,6 +1631,8 @@ function mixWrapper() {
         // Mostra o save button
         const saveButton = e.target.nextElementSibling.nextElementSibling.nextElementSibling
         saveButton.classList.remove('no-display');
+        const cancelButton = saveButton.nextElementSibling
+        cancelButton.classList.remove('no-display');
     }
 
     // função para atualizar o preview do body
@@ -1624,6 +1661,8 @@ function mixWrapper() {
         // Mostra o save button
         const saveButton = e.target.nextElementSibling
         saveButton.classList.remove('no-display');
+        const cancelButton = saveButton.nextElementSibling
+        cancelButton.classList.remove('no-display');
     }
 
     // função para atualizar o preview do body
@@ -1674,8 +1713,14 @@ function mixWrapper() {
                 // Mostra o save button
                 const saveButton = e.target.nextElementSibling
                 saveButton.classList.remove('no-display');
+                const cancelButton = saveButton.nextElementSibling
+                cancelButton.classList.remove('no-display');
             })();
         }
+    }
+
+    function rejeitarColapsaveis(e) {
+        appControlsColap();
     }
 
     function gerarColapsaveis(e) {
@@ -1804,8 +1849,6 @@ function mixWrapper() {
             window.scrollTo(0, document.body.scrollHeight);
         }
     }
-
-
 
     //############ event listeners
 

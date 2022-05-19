@@ -1,4 +1,39 @@
+/* Cursor laranja */
+#pulse {
+    font-size: 30px;
+    color: rgb(255, 145, 0);
+    animation-name: periodicfading;
+    animation-duration: 1.3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+}
 
+@keyframes periodicfading {
+    0% {
+        opacity: 0.1;
+    }
+
+    50% {
+        opacity: 1.0;
+    }
+
+    100% {
+        opacity: 0.1;
+    }
+}
+
+.alerta-replaceme {
+    background-color: rgb(183, 5, 5);
+    color:#fff;
+    padding: 5px;
+    border-radius:5px;
+    animation-name: periodicfading;
+    animation-duration: 1.0s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+}
 
 
 /*########### Live preview         */
@@ -10,8 +45,13 @@
     background-color: #fff;
 }
 
-
-
+#helpcenter-preview a,
+#helpcenter-preview a:hover{
+    text-decoration: none !important;
+    color: #000;
+    font-size: 15px !important;
+    font-weight: 600;
+}
 
 /* Cabeçalho HelpCenter */
 .header-hc {
@@ -201,3 +241,16 @@ a.manuais:hover {
     text-decoration: none;
 }
 
+
+#user-info > div:first-child,
+#user-info > div > span {
+    color:rgb(0, 40, 255);
+}
+
+#user-stats > div > div {
+    color:rgb(0, 40, 255);
+}
+
+#user-pic {
+    box-shadow: 2px 2px white,4px 4px rgb(0, 40, 255);;border: 1px solid rgb(225, 235, 235);
+}

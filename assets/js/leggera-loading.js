@@ -244,7 +244,7 @@ function leggeraLoginSucess(rsp) {
 
     setTimeout(function () {
         const welcomeTitle = document.createElement('div');
-        welcomeTitle.innerText = `Welcome back ${rsp[0]}`;
+        welcomeTitle.innerText = `Mekiee ${rsp[0]}`;
         welcomeTitle.id = 'loading-title';
         welcomeTitle.classList = 'animate__animated animate__fadeIn animate__delay';
         welcomeTitle.innerText = String(welcomeTitle.innerText).toLocaleUpperCase();

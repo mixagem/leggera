@@ -23,6 +23,8 @@ $query = "SELECT * from manuals where author='$un'";
 $result = mysqli_query($con, $query);
 if (mysqli_num_rows($result) !== 0) {
     $totalmanuals = mysqli_num_rows($result);
+} else {
+    $totalmanuals = 0;
 }
 
 echo "<br><div class='container-fluid'>
@@ -30,24 +32,24 @@ echo "<br><div class='container-fluid'>
 
             <div style='display: flex;justify-content: center;' class='col-md-4'>
 
-                <img style='max-height: 200px;border-radius: 50%;box-shadow: 2px 2px white,4px 4px #0b4b9d;border: 1px solid #00000080;' src='" . $img . "'>
+                <img id='user-pic' style='max-height: 200px;border-radius: 50%;' src='" . $img . "'>
 
             </div>
 
 
-            <div id='user-info' class='col-md-8'>
+            <div id='user-info-wrapper' class='col-md-8'>
 
-                <div>
-                    <div style='color:rgb(0, 40, 255);width:100%;font-size:35px;font-weight: bold;'>" . $nome . "</div>
-                    <div style='width:100%;font-size:20px'>" . $email . "</div>
-                    <div style='width:100%;padding-top:5px;'>" . $cookie . "</div>
+                <div id='user-info'>
+                    <div style='width:100%;font-size:35px;font-weight: bold;'>" . $nome . "</div>
+                    <div style='width:100%;font-size:20px'><span class='material-icons' style='vertical-align:sub;font-size:22px'>contact_mail</span>&nbsp;&nbsp;&nbsp;" . $email . "</div>
+                    <div style='width:100%;padding-top:5px;'><span class='material-icons' style='vertical-align:top;font-size:22px'>cookie</span>&nbsp;&nbsp;&nbsp;&nbsp;" . $cookie . "</div>
                 </div>
-                <div style='display: flex;text-align: center; padding-top: 2%;font-size: 20px;'>
+                <div id='user-stats' style='display: flex;text-align: center; padding-top: 2%;font-size: 20px;'>
                     <div style='width:50%;'>Número de logins<br>
-                        <div style='padding:5px;color:rgb(0, 40, 255);width:100%;font-size:30px;font-weight: bold;'>" . $totallogins . "</div>
+                        <div style='padding:5px;;width:100%;font-size:30px;font-weight: bold;'>" . $totallogins . "</div>
                     </div>
                     <div style='width:50%;'>Número de manuais<br>
-                        <div style='padding:5px;color:rgb(0, 40, 255);width:100%;font-size:30px;font-weight: bold;'>" . $totalmanuals . "</div>
+                        <div style='padding:5px;;width:100%;font-size:30px;font-weight: bold;'>" . $totalmanuals . "</div>
                     </div>
                 </div>
 

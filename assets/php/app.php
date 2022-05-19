@@ -33,10 +33,10 @@ echo "<section class='header sticky-top'>
                     Icons</button>
                 <button type='button' class='btn btn-light main-menu' id='botoes-btn'><i
                         class='lni lni-pointer-top'></i>
-                    Botões & Etiquetas</button>
+                    Botões & Chips</button>
                 <button type='button' class='btn btn-light main-menu' id='listas-tabelas-btn'><i
                         class='lni lni-grid'></i>
-                    Listas & Tabelas</button>
+                    Listas/Tabelas & Imagens</button>
                 <button type='button' class='btn btn-light main-menu' id='titulos-ligacoes-btn'><i
                         class='lni lni-link'></i>
                     Títulos & Ligações</button>

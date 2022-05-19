@@ -1,36 +1,44 @@
 /************************************/
-/* helpcenter+ supperleggera        */
+/* supperleggera                    */
 /* mambosinfinitos, 2022            */
 /* featurelist:
     - helpcenter preview
-    - helpcenter darkmode (apenas na vista de edição, o código continua 100% compatível com o helpcenter)
-    - injetor caixas texto
-    - injetor de icons com seletor de cor
+    - helpcenter darkmode (vista de edição, o código gerado continua 100% compatível com o helpcenter live)
+    - injetor caixas texto (v2, com idons do material)
+    - injetor de icons (v2, ions do material) com seletor de cor
     - injetor de buttons com seletor de tema
     - construtor de listas numeradas, não numeradas, e com links
     - construtor de tabelas, com selector de estilos e injeção dos <style> necessários 
         (inclui comentários informativos)
     - injetor de imagens
-    - injetor de <hr>
+    - injetor de <hr> (separador horizontal)
     - injetor de títulos
-    - constutor de links
+    - construtor de links
     - editor live na vista principal 
         (atualização ao vivo do preview com a posição do cursor + com o que foi acabado de escrever + introdução de <br> ao carregar Enter)
         (limite de 100.000 caracteres, para evitar a baixa performance em tópicos muito longos)
+        (inclui alerta [pulse vermelho] para icons fontawesome + topiclink [conteúdos antigos])
     - construtor/editor live de colapsáveis 
         (inclui reformatação automática dos colapsáveis de tópicos antigos, para adicionar ligação ao título do colapsável ao gravar as alterações efetuadas)
-    - ligação api hilite.me c/ formatação automática para helpcenter (inclui compatibilidade indentação json, vb.net e typescript, desde que introduzidos com a indentação correta)
+    - ligação api hilite.me c/ formatação automática para helpcenter 
+        (inclui indentação json, vb.net e typescript compatível com o HelpCenter)
     - importação & conversão de tabelas 
-        (remove os estilos que tem, e aplica o que estiver definido)
+        (remove os estilos que a tabela importada tem, e aplica o que estiver definido)
     - autosave / autoload - grava o tópico em cache quando clickamos ou escrevemos na textarea principal. 
-        ao carregar a página, vai buscar o tópico que ficou em cache (caso exista).
+        (ao carregar a página, vai buscar o tópico que ficou em cache caso exista)
     - quicksave / quickload 
         (segundo slot da cache, disponível através das ações respetivas)
+    - userstats - mostra estatísticas do utilizador quando não foi encontrado nenhum tópico de manual
     - cleancode™ - formatação de todos os códigos injetados, de modo a adicionar quebras de linha onde justificável, de modo a tornar o código mais legível fora da aplicação 
     - titlescroller - flashback aos tempos do myspace e hi5. groovy af. 
-    - gestão de utilizador (signup, resetpassword, login)
-    - cookie login 
-    - myManuals™ - gestão de manuais c/ acesso a BD (carregar, guardar e apagar) 
+    - gestão completa de utilizadores 
+        (páginas para signup, reset password, activate account, login)
+        (incluí envio de email aquando do registo [para ativar a conta] + envio de email para resetar a password)
+    - cookie login (aka mantenha a sessão iniciada)
+    - myManuals™ 
+        (permite carregar, criar/atualizar e apagar novos tópicos)
+        (incluí searchbox [v2, suporta procura incluída]) 
+    
 /************************************/
 
 function mixWrapper() {
@@ -77,10 +85,10 @@ function mixWrapper() {
                 dataType: "HTML",
                 data: { username: loggedinUser },
                 success: function (rsp) {
-                    leggeraVariables.hcPreview.innerHTML = rsp;
+                    leggeraVariables.userInfo = rsp;
                 },
                 error: function (rsp) {
-                    leggeraVariables.hcPreview.innerHTML = rsp;
+                    leggeraVariables.userInfo = rsp;
                 }
             })
         },
@@ -88,8 +96,31 @@ function mixWrapper() {
         previewAdjustments: function (code) {
             let convertedPreview = code;
 
-            // alterar o icon antigo dos topicos relacionados
-            convertedPreview = convertedPreview.replaceAll('<img id="img_conteudo" src="../pimages/go/artigo.svg" alt="PHC GO" class="menu-top-logo-ptxview" style="margin-top:-5px;margin-right:2px;height:20px;width:auto;">', '<i class="fa fa-file-text-o"></i>');
+            // alterar o icons antigos  
+            convertedPreview = convertedPreview.replaceAll('<img id="img_conteudo" src="../pimages/go/artigo.svg" alt="PHC GO" class="menu-top-logo-ptxview" style="margin-top:-5px;margin-right:2px;height:20px;width:auto;">', '<span class="alerta-replaceme"><i class="fa fa-file-text-o"></i></span>');
+
+            (function oldRelatedTopicIconAlert() {
+                convertedPreview = convertedPreview.replaceAll('<%=', '<span class="alerta-replaceme"><%=');
+                convertedPreview = convertedPreview.replaceAll('%>', '%></span>');
+            })();
+
+            (function oldIconsAlert() {
+                const allFontawesomeIcons = document.querySelectorAll('.fa');
+                for (i = 0; i < allFontawesomeIcons.length; i++) {
+                    // Como estou a fazer replace all, dá skip caso já tenha introduzido o alerta   
+                    if (convertedPreview.includes(`<span class="alerta-replaceme">${allFontawesomeIcons[i].outerHTML}`)) {
+                        continue;
+                    } else {
+                        convertedPreview = convertedPreview.replaceAll(allFontawesomeIcons[i].outerHTML, `<span class="alerta-replaceme">${allFontawesomeIcons[i].outerHTML}</span>`);
+                    }
+                }
+            })();
+
+            // alertar para topic link
+            (function topicLinkAlert() {
+                convertedPreview = convertedPreview.replaceAll('<%=', '<span class="alerta-replaceme"><%=');
+                convertedPreview = convertedPreview.replaceAll('%>', '%></span>');
+            })();
 
             // conversão para darktheme
             if (Number(darktheme) === 0) {
@@ -116,6 +147,9 @@ function mixWrapper() {
                 (function hiliteCodebox() {
                     convertedPreview = convertedPreview.replaceAll(';border:solid #eb8475;', ';border:solid #147b8a;');
                 })();
+
+
+
             }
             return convertedPreview;
         },
@@ -271,8 +305,8 @@ function mixWrapper() {
         // Função para fazer logout
         logout: function () {
             localStorage.removeItem('bolachinha');
-            location.reload();
             localStorage.removeItem('darktheme');
+            location.reload();
         },
 
         changeLeggeraTheme: function () {
@@ -282,7 +316,9 @@ function mixWrapper() {
             document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${darktheme}.css`);
             document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${darktheme}.css`);
             leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(leggeraVariables.textarea.value);
-            if (leggeraVariables.hcPreview.innerHTML == '') {leggeraExtraFunctions.getUserInfo()};
+            if (leggeraVariables.hcPreview.innerHTML == '') {
+                leggeraVariables.hcPreview.appendChild(leggeraExtraFunctions.elementGenerator('div', 'container', '', leggeraVariables.userInfo))
+            };
         }
     }
 
@@ -296,7 +332,7 @@ function mixWrapper() {
                 for (i = 1; i <= leggeraVariables.colapList.length; i++) {
                     let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
                     if (saveBtn.classList.contains('no-display') == false) {
-                        alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
+                        alert(`Não é possível aceder à textarea principal, enquanto existirem alterações pendentes.`); return
                     }
                 }
             }
@@ -377,7 +413,7 @@ function mixWrapper() {
                 for (i = 1; i <= leggeraVariables.colapList.length; i++) {
                     let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
                     if (saveBtn.classList.contains('no-display') == false) {
-                        alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
+                        alert(`Não é possível aceder à textarea principal, enquanto existirem alterações pendentes.`); return
                     }
                 }
             }
@@ -779,10 +815,9 @@ function mixWrapper() {
         catch { }
         // Função que atualiza o hcPreview, conforme tenha encontrado ou não cache 
         if (leggeraVariables.textarea.value === '') {
-
-
-
-            leggeraVariables.hcPreview.appendChild(leggeraExtraFunctions.elementGenerator('div', 'container', '', leggeraVariables.userInfo));
+            setTimeout(function () {
+                leggeraVariables.hcPreview.appendChild(leggeraExtraFunctions.elementGenerator('div', 'container', '', leggeraVariables.userInfo));
+            }, 200);
         } else {
             leggeraVariables.hcPreview.appendChild(leggeraExtraFunctions.elementGenerator('span', '', '', 'Encontrei um tópico em cache. A carregar...'));
             setTimeout(function () {
@@ -1204,9 +1239,13 @@ function mixWrapper() {
         },
 
         // Estilos a serem utilizados para formatação das tabelas
-        normalTableStyle: '<style>.phcgo-old-table>tbody>tr>td{text-align:left;background-color:#fff;padding:20px 10px;border:solid 1px #000}.phcgo-old-table>tbody>tr:nth-child(1)>td{background-color:rgb(255, 225, 189)!important;border:solid 1px #000!important;font-size:16px!important;font-weight:700}</style>',
-        modernTableStyle: '<style>.phcgo-new-table>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:rgb(255, 225, 189);color:#000;padding:4px 20px;font-size:20px}</style>',
-        modernTableStyleBlue: '<style>.phcgo-new-table-blue>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table-blue>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:#3fa8f6;color:#fff;padding:4px 20px;font-size:20px}</style>',
+        normalTableStyle: '<style>.phcgo-old-table>tbody>tr>td{text-align:left;background-color:#fff;padding:20px 10px;border:solid 1px #000}.phcgo-old-table>tbody>tr:nth-child(1)>td{background-color:rgb(255, 225, 189)!important;border:solid 1px #000!important;font-size:16px!important;font-weight:700}',
+        modernTableStyle: '<style>.phcgo-new-table>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:rgb(255, 225, 189);color:#000;padding:4px 20px;font-size:20px}',
+        modernTableStyleBlue: '<style>.phcgo-new-table-blue>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table-blue>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:#3fa8f6;color:#fff;padding:4px 20px;font-size:20px}',
+
+        // necessário para o injetor de estilos de largura
+        colunas: 0,
+        estilosExtra: '',
 
         // Função para adicionar uma tabela ao tópico de manual
         writeTable: function () {
@@ -1281,22 +1320,44 @@ function mixWrapper() {
             }
             novaTabela.style.display = 'flex';
             novaTabela.style.justifyContent = 'center';
-            novaTabela.innerHTML = (leggeraListsAndTables.convertTableEngine()).outerHTML;
+            novaTabela.innerHTML = leggeraListsAndTables.convertTableEngine();
+
+
             // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
             novaTabela = (novaTabela.outerHTML.toString().replaceAll('<tr>', "\n" + '<tr>'));
             novaTabela = (novaTabela.toString().replaceAll('</td><td>', '</td>' + "\n" + '<td>'));
-            novaTabela.replaceAll('</tbody>', "\n" + '</tbody>');
+            novaTabela = (novaTabela.toString().replaceAll('</tbody>', "\n" + '</tbody>'));
+
+            // gerador estilos para redimensionar larguras 
+            function tableWidthLegoo(cla) {
+                let tablewidth = prompt(`Introduz as larguras das colunas ( ${leggeraListsAndTables.colunas} ), separadas por vírgua (20px, 400px).\n\nCaso vazio, estas ficaram adaptadas de acordo com o HelpCenter live.`);
+                if (tablewidth === null || tablewidth === '') { return }
+
+                else {
+                    //transforma as medidas recebidas em  em array 
+                    tablewidth = tablewidth.replaceAll(' ', '').split(',');
+                    leggeraListsAndTables.estilosExtra = '';
+                    for (i = 1; i <= leggeraListsAndTables.colunas; i++) {
+                        leggeraListsAndTables.estilosExtra = leggeraListsAndTables.estilosExtra + `.${cla}>tbody>tr>td:nth-child(${i}){width:${tablewidth[i - 1]};}`
+                    }
+                    leggeraListsAndTables.estilosExtra = leggeraListsAndTables.estilosExtra + '</style>'
+                }
+            }
+
             // Anexar o <style> necessário, de acordo com a tabela selecionada
             switch (leggeraVariables.tableType) {
                 case 'normal-table':
                     novaTabela.classList = 'phcgo-old-table';
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle + "\n" + novaTabela); break
+                    tableWidthLegoo('phcgo-old-table');
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle + leggeraListsAndTables.estilosExtra + "\n" + novaTabela); break
                 case 'modern-table':
                     novaTabela.classList = 'phcgo-new-table';
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle + "\n" + novaTabela); break
+                    tableWidthLegoo('phcgo-new-table');
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle + leggeraListsAndTables.estilosExtra + "\n" + novaTabela); break
                 case 'modern-table-blue':
                     novaTabela.classList = 'phcgo-new-table-blue';
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue + "\n" + novaTabela); break
+                    tableWidthLegoo('phcgo-new-table-blue');
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue + leggeraListsAndTables.estilosExtra + "\n" + novaTabela); break
             }
             leggeraExtraFunctions.escreveNaTextarea(novaTabela);
         },
@@ -1309,8 +1370,13 @@ function mixWrapper() {
             for (i = 1; i <= numLinhas; i++) {
                 itemsParaConverter.push(document.querySelectorAll(`#tempTable tr:nth-child(${i}) td`))
             }
-            const tabelaConvertida = leggeraExtraFunctions.elementGenerator('table')
-            for (i = 0; i < numLinhas; i++) {
+            // número de colunas
+            if (itemsParaConverter[0].length !== 0) {
+                leggeraListsAndTables.colunas = itemsParaConverter[0].length
+            } else { leggeraListsAndTables.colunas = itemsParaConverter[1].length }
+
+            let tabelaConvertida = leggeraExtraFunctions.elementGenerator('table')
+            for (i = 0; i <= numLinhas; i++) {
                 tabelaConvertida.appendChild(leggeraExtraFunctions.elementGenerator('tr'));
                 for (x = 0; x < itemsParaConverter[i].length; x++) {
                     tabelaConvertida.lastChild.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', itemsParaConverter[i][x].innerText))
@@ -1322,6 +1388,8 @@ function mixWrapper() {
                     catch { }
                 }
             }
+
+            tabelaConvertida = tabelaConvertida.outerHTML.toString().replace('<tr></tr>', '');
             return tabelaConvertida
         },
 
@@ -1626,7 +1694,7 @@ function mixWrapper() {
             for (i = 1; i <= leggeraVariables.colapList.length; i++) {
                 let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
                 if (saveBtn.classList.contains('no-display') == false) {
-                    alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
+                    alert(`Não é possível retornar à vista principal, enquanto existirem alterações pendentes.`); return
                 }
             }
 

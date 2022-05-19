@@ -60,30 +60,7 @@ body {
     color:var(--primary-title-color)!important;
 }
 
-/* Cursor laranja */
-#pulse {
-    font-size: 30px;
-    color: rgb(0, 110, 255);
-    animation-name: periodicfading;
-    animation-duration: 1.3s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    animation-delay: 0s;
-}
 
-@keyframes periodicfading {
-    0% {
-        opacity: 0.1;
-    }
-
-    50% {
-        opacity: 1.0;
-    }
-
-    100% {
-        opacity: 0.1;
-    }
-}
 
 /*###########    Landing     ###########*/
 

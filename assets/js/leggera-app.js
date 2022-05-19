@@ -150,16 +150,16 @@ function mixWrapper() {
     // ################ funções várias da aplicação
     const leggeraMethods = {
         // document.createElement, mais turbinada para reduzir umas quantas linhas de código
-        mambo: function (ele, id='', cla='', inn='', type='', href='', dt='', tar='') {
-            const elementGenerated = document.createElement(`${ele}`);
-            if (id !== '') { elementGenerated.id = `${id}` }
-            if (cla !== '') { elementGenerated.classList = `${cla}` }
-            if (inn !== '') { elementGenerated.innerHTML = `${inn}` }
-            if (type !== '') { elementGenerated.type=`${type}` }
-            if (href !== '') { elementGenerated.setAttribute('href',`${href}`)}
-            if (dt !== '') { elementGenerated.setAttribute('data-toggle',`${dt}`)}
-            if (tar !== '') { elementGenerated.setAttribute('target',`${tar}`)}
-            return elementGenerated
+        mambo: function (ele, id = '', cla = '', inn = '', type = '', href = '', dt = '', tar = '') {
+            const mambito = document.createElement(`${ele}`);
+            if (id !== '') { mambito.id = `${id}` }
+            if (cla !== '') { mambito.classList = `${cla}` }
+            if (inn !== '') { mambito.innerHTML = `${inn}` }
+            if (type !== '') { mambito.type = `${type}` }
+            if (href !== '') { mambito.setAttribute('href', `${href}`) }
+            if (dt !== '') { mambito.setAttribute('data-toggle', `${dt}`) }
+            if (tar !== '') { mambito.setAttribute('target', `${tar}`) }
+            return mambito
         },
         // obtem as estatísticas e preferências do utilizador
         getUserInfo: function () {
@@ -256,7 +256,7 @@ function mixWrapper() {
         }, 500),
         // atualiza o tipo de código selecionado (Hilite.me API)
         updateCodeType: function (e) {
-            leggeraVariables.codeType=e.target.id
+            leggeraVariables.codeType = e.target.id
         },
         // atualiza o tipo de tabela selecionado
         updateTableType: function (e) {
@@ -264,6 +264,8 @@ function mixWrapper() {
         },
         // guarda o tópico num segundo slot da chache
         quickSave: function () {
+            // babyproof
+            if (leggeraVariables.textarea.value == '' || leggeraVariables.textarea.value == ' ') { return }
             const textarea2JSON = JSON.stringify(leggeraVariables.textarea.value);
             localStorage.setItem('quickSave', textarea2JSON);
             leggeraVariables.textarea.value = '';
@@ -394,26 +396,26 @@ function mixWrapper() {
         // mostrar o painel de estatísticas do utilizador
         displayUserStats: function (action = 'no-change') {
             // user-stats
-            const userPanelWrapper = leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('div', id='user-panel-container', cla='', inn=`${leggeraVariables.userInfo}`));
-           
+            const userPanelWrapper = leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('div', id = 'user-panel-container', cla = '', inn = `${leggeraVariables.userInfo}`));
+
             // user-options
-            const userOptions = userPanelWrapper.appendChild(leggeraMethods.mambo('div', id='user-options', cla='', inn='Alerta conteúdos antigos&nbsp;&nbsp;&nbsp;&nbsp;'));
-           
+            const userOptions = userPanelWrapper.appendChild(leggeraMethods.mambo('div', id = 'user-options', cla = '', inn = 'Alerta conteúdos antigos&nbsp;&nbsp;&nbsp;&nbsp;'));
+
             // ### Alerta conteúdos antigos
-            const alertToggle = userOptions.appendChild(leggeraMethods.mambo('span', id='alerts-toggle', cla=`mix-toggle-${userWantAlerts}`));
-            const wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', id='wantalerts-radio-option', cla='material-icons'));
-            const wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', id='wantalerts-radio-option-bg'));
+            const alertToggle = userOptions.appendChild(leggeraMethods.mambo('span', id = 'alerts-toggle', cla = `mix-toggle-${userWantAlerts}`));
+            const wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', id = 'wantalerts-radio-option', cla = 'material-icons'));
+            const wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', id = 'wantalerts-radio-option-bg'));
             alertToggle.addEventListener('click', leggeraMethods.updateWantAlerts)
-            
+
             // ### darktheme
             let lightThemeFix;
             if (Number(lightTheme) === 1) { lightThemeFix = '0' } else { lightThemeFix = '1' }
-            const userOptions2 = userPanelWrapper.appendChild(leggeraMethods.mambo('div', id='user-options-2', cla='', inn='Tema escuro&nbsp;&nbsp;&nbsp;&nbsp;'));
-            const themeToggle = userOptions2.appendChild(leggeraMethods.mambo('span', id='darktheme-toggle', cla=`mix-toggle-${lightThemeFix}`));
-            const changeThemeOption = themeToggle.appendChild(leggeraMethods.mambo('span', id='wantalerts-radio-option-2', cla='material-icons'));
-            const changeThemeOptionBG = themeToggle.appendChild(leggeraMethods.mambo('span', id='wantalerts-radio-option-bg-2'));
+            const userOptions2 = userPanelWrapper.appendChild(leggeraMethods.mambo('div', id = 'user-options-2', cla = '', inn = 'Tema escuro&nbsp;&nbsp;&nbsp;&nbsp;'));
+            const themeToggle = userOptions2.appendChild(leggeraMethods.mambo('span', id = 'darktheme-toggle', cla = `mix-toggle-${lightThemeFix}`));
+            const changeThemeOption = themeToggle.appendChild(leggeraMethods.mambo('span', id = 'wantalerts-radio-option-2', cla = 'material-icons'));
+            const changeThemeOptionBG = themeToggle.appendChild(leggeraMethods.mambo('span', id = 'wantalerts-radio-option-bg-2'));
             themeToggle.addEventListener('click', leggeraMethods.changeLeggeraTheme)
-            
+
             function toogleStatus(toogle, status) {
                 switch (status) {
                     case 'true':
@@ -604,7 +606,7 @@ function mixWrapper() {
                         }
                     }
                 }
-            // para procura normal
+                // para procura normal
             } else {
                 for (i = 1; i <= numManuais; i++) {
                     for (x = 0; x < keyword.length; x++) {
@@ -627,35 +629,35 @@ function mixWrapper() {
                 if (!sectionsArray[i].classList.contains('no-display')) { sectionsArray[i].classList.add('no-display') }
             }
             // cabeçalho
-            const myManualsModal = document.querySelector('body').appendChild(leggeraMethods.mambo('div', id='manuals-modal', cla='', inn= leggeraTemplates.myManualsHeader ));
+            const myManualsModal = document.querySelector('body').appendChild(leggeraMethods.mambo('div', id = 'manuals-modal', cla = '', inn = leggeraTemplates.myManualsHeader));
             document.querySelector('#save-manual-input').addEventListener('keyup', leggeraManuais.myManualsFilterResults);
             document.querySelector('#save-manual-btn').addEventListener('click', leggeraManuais.saveManual);
             document.querySelector('#back-home-btn').addEventListener('click', leggeraManuais.backHome);
             // secção com os manuais    
-            const manualsWrapper = myManualsModal.appendChild(leggeraMethods.mambo('div', id='my-manuals-wrapper'));
+            const manualsWrapper = myManualsModal.appendChild(leggeraMethods.mambo('div', id = 'my-manuals-wrapper'));
             // tabela para manuais
-            const modalTable = manualsWrapper.appendChild(leggeraMethods.mambo('table', id='modal-container'));
+            const modalTable = manualsWrapper.appendChild(leggeraMethods.mambo('table', id = 'modal-container'));
             const modalHeader = modalTable.appendChild(leggeraMethods.mambo('thead'));
-            modalHeader.appendChild(leggeraMethods.mambo('th', id='', cla='', inn='Título do Manual'))
-            modalHeader.appendChild(leggeraMethods.mambo('th', id='', cla='text-right', inn='Última atualização'))
+            modalHeader.appendChild(leggeraMethods.mambo('th', id = '', cla = '', inn = 'Título do Manual'))
+            modalHeader.appendChild(leggeraMethods.mambo('th', id = '', cla = 'text-right', inn = 'Última atualização'))
             modalHeader.appendChild(leggeraMethods.mambo('th')) // para o save btn
             modalHeader.appendChild(leggeraMethods.mambo('th')) // para o delete btn
             const modalBody = modalTable.appendChild(leggeraMethods.mambo('tbody'));
             // loop para manuais
             for (i = 0; i < rsp.length; i++) {
-                let modalRow = modalBody.appendChild(leggeraMethods.mambo('tr', id=`manual-${i + 1}`, cla=`animate__animated animate__fadeInUp`))
+                let modalRow = modalBody.appendChild(leggeraMethods.mambo('tr', id = `manual-${i + 1}`, cla = `animate__animated animate__fadeInUp`))
                 if (i % 2 === 0) { modalRow.classList.add('manual-impar') } else { modalRow.classList.add('manual-par') }
                 // nome do manual
-                modalRow.appendChild(leggeraMethods.mambo('td', id='', cla='', inn=rsp[i].title))
-                modalRow.lastChild.addEventListener('click', function (e) {leggeraManuais.getManualCode(e, rsp);});
+                modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = rsp[i].title))
+                modalRow.lastChild.addEventListener('click', function (e) { leggeraManuais.getManualCode(e, rsp); });
                 // timestamp
                 let data = new Date(Number(rsp[i].timestamp));
-                modalRow.appendChild(leggeraMethods.mambo('td', id='', cla='', inn=`${data.toLocaleDateString('pt-PT', { dateStyle: 'short' })} @ ${data.toLocaleTimeString('pt-PT', { timeStyle: 'short' })}`))
+                modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = `${data.toLocaleDateString('pt-PT', { dateStyle: 'short' })} @ ${data.toLocaleTimeString('pt-PT', { timeStyle: 'short' })}`))
                 // save btn
-                modalRow.appendChild(leggeraMethods.mambo('td', id='', cla='', inn= `<i class="lni lni-save"></i>`))
+                modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = `<i class="lni lni-save"></i>`))
                 modalRow.lastChild.addEventListener('click', leggeraManuais.saveManual);
                 // delete btn
-                modalRow.appendChild(leggeraMethods.mambo('td', id='', cla='', inn= `<i class="lni lni-eraser"></i>`))
+                modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = `<i class="lni lni-eraser"></i>`))
                 modalRow.lastChild.addEventListener('click', leggeraManuais.deleteManual);
             }
         },
@@ -836,7 +838,7 @@ function mixWrapper() {
                 leggeraMethods.displayUserStats();
             } else {
                 leggeraVariables.hcPreview.innerHTML = '';
-                leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('span', id='', cla='', inn='Encontrei um tópico em cache. A carregar...'));
+                leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('span', id = '', cla = '', inn = 'Encontrei um tópico em cache. A carregar...'));
                 setTimeout(function () {
                     leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
                     leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
@@ -851,10 +853,10 @@ function mixWrapper() {
             // limpa o appControls + inicia paginador
             leggeraVariables.appControls.innerHTML = '';
             // anexar o wrapper ao appControls 
-            const textboxControls = leggeraVariables.appControls.appendChild(leggeraMethods.mambo('div', id='textbox-wrapper', cla=`row`));
+            const textboxControls = leggeraVariables.appControls.appendChild(leggeraMethods.mambo('div', id = 'textbox-wrapper', cla = `row`));
             // anexa as textboxes ao wrapper
             for (i = 1; i <= leggeraGOAssets.textboxesFromDB.length; i++) {
-                textboxControls.appendChild(leggeraMethods.mambo('div', id=`textbox-${i}`, cla='col-sm-4 helpcenter-textbox', inn=leggeraGOAssets.textboxesFromDB[i - 1]));
+                textboxControls.appendChild(leggeraMethods.mambo('div', id = `textbox-${i}`, cla = 'col-sm-4 helpcenter-textbox', inn = leggeraGOAssets.textboxesFromDB[i - 1]));
                 textboxControls.lastChild.addEventListener('click', leggeraTextboxes.write)
             }
         },
@@ -905,40 +907,40 @@ function mixWrapper() {
             let nWrapper = 1;
             let nSubWrapper = 1;
             // Anexar ao appControls o wrapper de icons principal
-            const appControlsIcons = leggeraVariables.appControls.appendChild(leggeraMethods.mambo('div', id='', cla=`row`));
+            const appControlsIcons = leggeraVariables.appControls.appendChild(leggeraMethods.mambo('div', id = '', cla = `row`));
             // Anexar o wrapper de icons (row 24 icons) ao wrapper principal
-            let appControlsIconsMainWrapper = appControlsIcons.appendChild(leggeraMethods.mambo('div', id='', cla=`row icon-row-wrapper icon-row-${nWrapper}`));
+            let appControlsIconsMainWrapper = appControlsIcons.appendChild(leggeraMethods.mambo('div', id = '', cla = `row icon-row-wrapper icon-row-${nWrapper}`));
             // Anexar um sub-wrapper de icons (col 12 icons)
-            let appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(leggeraMethods.mambo('div', id='', cla=`col-sm-6 icon-sub-row-${nSubWrapper}`));
+            let appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(leggeraMethods.mambo('div', id = '', cla = `col-sm-6 icon-sub-row-${nSubWrapper}`));
             for (i = 1; i <= leggeraGOAssets.iconsFromDB.length; i++) {
                 // A cada 24 interações, cria uma nova row de 24 icons
                 if ((i % 24) === 0) {
-                    appControlsIconsSubWrapper.appendChild(leggeraMethods.mambo('div', id=`icon-${i}`, cla='col-sm-1 phcgo-icon', inn=leggeraGOAssets.iconsFromDB[i - 1]));
+                    appControlsIconsSubWrapper.appendChild(leggeraMethods.mambo('div', id = `icon-${i}`, cla = 'col-sm-1 phcgo-icon', inn = leggeraGOAssets.iconsFromDB[i - 1]));
                     appControlsIconsSubWrapper.lastChild.addEventListener('click', leggeraIcons.writeIcon);
                     nSubWrapper = 1;
                     nWrapper++;
-                    appControlsIconsMainWrapper = appControlsIcons.appendChild(leggeraMethods.mambo('div', id='', cla=`row icon-row-wrapper icon-row-${nWrapper}`));
-                    appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(leggeraMethods.mambo('div', id='', cla=`col-sm-6 icon-sub-row-${nSubWrapper}`));
+                    appControlsIconsMainWrapper = appControlsIcons.appendChild(leggeraMethods.mambo('div', id = '', cla = `row icon-row-wrapper icon-row-${nWrapper}`));
+                    appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(leggeraMethods.mambo('div', id = '', cla = `col-sm-6 icon-sub-row-${nSubWrapper}`));
                 }
                 // A cada 12 interações, cria um novo row de 12 icons
                 else if ((i % 12) === 0) {
-                    appControlsIconsSubWrapper.appendChild(leggeraMethods.mambo('div', id=`icon-${i}`, cla='col-sm-1 phcgo-icon', inn=leggeraGOAssets.iconsFromDB[i - 1]));
+                    appControlsIconsSubWrapper.appendChild(leggeraMethods.mambo('div', id = `icon-${i}`, cla = 'col-sm-1 phcgo-icon', inn = leggeraGOAssets.iconsFromDB[i - 1]));
                     appControlsIconsSubWrapper.lastChild.addEventListener('click', leggeraIcons.writeIcon);
                     nSubWrapper++;
-                    appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(leggeraMethods.mambo('div', id='', cla=`col-sm-6 icon-sub-row-${nSubWrapper}`));
+                    appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(leggeraMethods.mambo('div', id = '', cla = `col-sm-6 icon-sub-row-${nSubWrapper}`));
                 }
                 else {
-                    appControlsIconsSubWrapper.appendChild(leggeraMethods.mambo('div', id=`icon-${i}`, cla='col-sm-1 phcgo-icon', inn=leggeraGOAssets.iconsFromDB[i - 1]));
+                    appControlsIconsSubWrapper.appendChild(leggeraMethods.mambo('div', id = `icon-${i}`, cla = 'col-sm-1 phcgo-icon', inn = leggeraGOAssets.iconsFromDB[i - 1]));
                     appControlsIconsSubWrapper.lastChild.addEventListener('click', leggeraIcons.writeIcon);
                 }
             }
-            const colorPickerRow = appControlsIcons.appendChild(leggeraMethods.mambo('div', id='color-picker'));
+            const colorPickerRow = appControlsIcons.appendChild(leggeraMethods.mambo('div', id = 'color-picker'));
             const colorTable = ['#000000', '#e0e0e0', '#1a237e', '#b70505', '#ff8f00', '#004d40']
             for (i = 1; i <= colorTable.length; i++) {
                 if (i === 1) {
-                    colorPickerRow.appendChild(leggeraMethods.mambo('div', id=`icon-color-${i}`, cla='color-pick selected-color', inn='<i class="lni lni-checkmark unselected-i"></i>'))
+                    colorPickerRow.appendChild(leggeraMethods.mambo('div', id = `icon-color-${i}`, cla = 'color-pick selected-color', inn = '<i class="lni lni-checkmark unselected-i"></i>'))
                 } else {
-                    colorPickerRow.appendChild(leggeraMethods.mambo('div', id=`icon-color-${i}`, cla='color-pick', inn='<i class="lni lni-checkmark unselected-i"></i>'))
+                    colorPickerRow.appendChild(leggeraMethods.mambo('div', id = `icon-color-${i}`, cla = 'color-pick', inn = '<i class="lni lni-checkmark unselected-i"></i>'))
                 }
                 colorPickerRow.lastChild.value = colorTable[i - 1];
                 colorPickerRow.lastChild.addEventListener('click', leggeraIcons.changeCurrentColor);
@@ -981,13 +983,13 @@ function mixWrapper() {
             // Limpa o appControls + inicia paginador
             leggeraMethods.appControlsChange();
             // Anexar ao appControls o wrapper principal
-            let appControlsButton = leggeraVariables.appControls.appendChild(leggeraMethods.mambo('div', id='', cla=`row page-1`));
+            let appControlsButton = leggeraVariables.appControls.appendChild(leggeraMethods.mambo('div', id = '', cla = `row page-1`));
             // Anexar ao wrapper principal uma linha de 4 buttons
-            let appControlsButtonWrapper = appControlsButton.appendChild(leggeraMethods.mambo('div', id='', cla='row phc-buttons'));
+            let appControlsButtonWrapper = appControlsButton.appendChild(leggeraMethods.mambo('div', id = '', cla = 'row phc-buttons'));
             for (i = 1; i <= 15; i++) {
                 // A cada 5buttons, cria uma nova linha
                 if (i % 5 === 0) {
-                    appControlsButtonWrapper.appendChild(leggeraMethods.mambo('div', id=`botao-${leggeraVariables.currentTheme}-${i}`, cla='botao col-sm-2', inn=leggeraGOAssets.buttonsFromDB[control - 1][i - 1]));
+                    appControlsButtonWrapper.appendChild(leggeraMethods.mambo('div', id = `botao-${leggeraVariables.currentTheme}-${i}`, cla = 'botao col-sm-2', inn = leggeraGOAssets.buttonsFromDB[control - 1][i - 1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
                     //regras de contraste no beat
                     if (Number(lightTheme) !== 0) {
@@ -998,9 +1000,9 @@ function mixWrapper() {
                         if (control == 3 && (i >= 5 && i <= 10)) { appControlsButtonWrapper.lastChild.lastChild.style.borderColor = 'hsla(0,0%,0%,.12)' }
                         if (control == 3 && (i === 7 || i === 10)) { appControlsButtonWrapper.lastChild.lastChild.style.color = 'hsla(0,0%,0%,.26)' }
                     }
-                    appControlsButtonWrapper = appControlsButton.appendChild(leggeraMethods.mambo('div', id='', cla='row phc-buttons'));
+                    appControlsButtonWrapper = appControlsButton.appendChild(leggeraMethods.mambo('div', id = '', cla = 'row phc-buttons'));
                 } else {
-                    appControlsButtonWrapper.appendChild(leggeraMethods.mambo('div', id=`botao-${leggeraVariables.currentTheme}-${i}`, cla='botao col-sm-2', inn=leggeraGOAssets.buttonsFromDB[control - 1][i - 1]));
+                    appControlsButtonWrapper.appendChild(leggeraMethods.mambo('div', id = `botao-${leggeraVariables.currentTheme}-${i}`, cla = 'botao col-sm-2', inn = leggeraGOAssets.buttonsFromDB[control - 1][i - 1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
                     if (Number(lightTheme) !== 0) {
                         //regras de contraste no beat
@@ -1013,14 +1015,14 @@ function mixWrapper() {
                     }
                 }
             }
-            const themePickerRow = leggeraVariables.appControls.firstChild.appendChild(leggeraMethods.mambo('div', id='theme-picker', cla='row'));
+            const themePickerRow = leggeraVariables.appControls.firstChild.appendChild(leggeraMethods.mambo('div', id = 'theme-picker', cla = 'row'));
             const themeTable = ['horizon', 'forest', 'dark', 'light']
             for (i = 1; i <= 4; i++) {
                 if (i === control) {
-                    themePickerRow.appendChild(leggeraMethods.mambo('div', id=`theme-${i}`, cla='theme-pick selected-theme', inn=`<i class="lni lni-checkmark unselected-i"></i>`))
+                    themePickerRow.appendChild(leggeraMethods.mambo('div', id = `theme-${i}`, cla = 'theme-pick selected-theme', inn = `<i class="lni lni-checkmark unselected-i"></i>`))
                 }
                 else {
-                    themePickerRow.appendChild(leggeraMethods.mambo('div', id=`theme-${i}`, cla='theme-pick', inn=`<i class="lni lni-checkmark unselected-i"></i>`))
+                    themePickerRow.appendChild(leggeraMethods.mambo('div', id = `theme-${i}`, cla = 'theme-pick', inn = `<i class="lni lni-checkmark unselected-i"></i>`))
                 }
                 themePickerRow.lastChild.addEventListener('click', leggeraButtons.changeCurrentTheme)
                 themePickerRow.lastChild.value = themeTable[i - 1];
@@ -1054,7 +1056,7 @@ function mixWrapper() {
             // ########## Separador Horizontal ##########
             document.querySelector('#nova-quebra-btn').addEventListener('click', leggeraListsAndTables.writeHR);
             // ########## Tabelas ##########
-            leggeraVariables.tabletype='normal-table'
+            leggeraVariables.tabletype = 'normal-table'
             document.querySelector('#import-table-btn').addEventListener('click', leggeraListsAndTables.convertTable);
             for (radio of document.querySelectorAll('#cria-tabela-checkbox-wrapper input')) { radio.addEventListener('click', leggeraMethods.updateTableType) }
             document.querySelector('#add-table').addEventListener('click', leggeraListsAndTables.writeTable);
@@ -1067,26 +1069,26 @@ function mixWrapper() {
             switch (valorTipoLista) {
                 case 'ul':
                     previewWrapper.innerHTML = '';
-                    novaListaPreview = previewWrapper.appendChild(leggeraMethods.mambo('ul', id='', cla='preview-list'));
+                    novaListaPreview = previewWrapper.appendChild(leggeraMethods.mambo('ul', id = '', cla = 'preview-list'));
                     novaListaPreview.style.listStylePosition = "inside";
                     for (i = 1; i <= 3; i++) {
-                        novoItemPreview = novaListaPreview.appendChild(leggeraMethods.mambo('li', id='', cla='preview-item', inn=`<b>Item ${i}:</b> Lorem Ipsum`));
+                        novoItemPreview = novaListaPreview.appendChild(leggeraMethods.mambo('li', id = '', cla = 'preview-item', inn = `<b>Item ${i}:</b> Lorem Ipsum`));
                     }
                     break
                 case 'ol-1':
                     previewWrapper.innerHTML = '';
-                    novaListaPreview = previewWrapper.appendChild(leggeraMethods.mambo('ol', id='', cla='preview-list', inn='', type='1'));
+                    novaListaPreview = previewWrapper.appendChild(leggeraMethods.mambo('ol', id = '', cla = 'preview-list', inn = '', type = '1'));
                     novaListaPreview.style.listStylePosition = "inside";
                     for (i = 1; i <= 3; i++) {
-                        novoItemPreview = novaListaPreview.appendChild(leggeraMethods.mambo('li', id='', cla='preview-item', inn=`<b>Item ${i}:</b> Lorem Ipsum`));
+                        novoItemPreview = novaListaPreview.appendChild(leggeraMethods.mambo('li', id = '', cla = 'preview-item', inn = `<b>Item ${i}:</b> Lorem Ipsum`));
                     }
                     break
                 case 'ol-a':
                     previewWrapper.innerHTML = '';
-                    novaListaPreview = previewWrapper.appendChild(leggeraMethods.mambo('ol', id='', cla='preview-list', inn='', type='a'));
+                    novaListaPreview = previewWrapper.appendChild(leggeraMethods.mambo('ol', id = '', cla = 'preview-list', inn = '', type = 'a'));
                     novaListaPreview.style.listStylePosition = "inside";
                     for (i = 1; i <= 3; i++) {
-                        novoItemPreview = novaListaPreview.appendChild(leggeraMethods.mambo('li', id='', cla='preview-item', inn=`<b>Item ${i}:</b> Lorem Ipsum`));
+                        novoItemPreview = novaListaPreview.appendChild(leggeraMethods.mambo('li', id = '', cla = 'preview-item', inn = `<b>Item ${i}:</b> Lorem Ipsum`));
                     }
                     break
             }
@@ -1107,29 +1109,29 @@ function mixWrapper() {
                     novaLista = leggeraMethods.mambo('ul');
                     novaLista.style.listStylePosition = 'inside';
                     for (i = 1; i <= n; i++) {
-                        if (wantLinks) { novaLista.appendChild(leggeraMethods.mambo('li', id='', cla='', inn=`<a href="#" class="manuais" target="_blank">Item ${i} da lista com links</a>`)) } else
-                            novaLista.appendChild(leggeraMethods.mambo('li', id='', cla='', inn=`<b>Item ${i}:</b> Lorem ipsum`));
+                        if (wantLinks) { novaLista.appendChild(leggeraMethods.mambo('li', id = '', cla = '', inn = `<a href="#" class="manuais" target="_blank">Item ${i} da lista com links</a>`)) } else
+                            novaLista.appendChild(leggeraMethods.mambo('li', id = '', cla = '', inn = `<b>Item ${i}:</b> Lorem ipsum`));
                     }
                     // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
                     novaLista = (novaLista.outerHTML.toString().replaceAll('<li>', "\n" + '<li>'));
                     leggeraMethods.escreveNaTextarea(novaLista);
                     break;
                 case 'ol-1':
-                    novaLista = leggeraMethods.mambo('ol', id='', cla='', inn='', type='1');
+                    novaLista = leggeraMethods.mambo('ol', id = '', cla = '', inn = '', type = '1');
                     novaLista.style.listStylePosition = "inside";
                     for (i = 1; i <= n; i++) {
-                        if (wantLinks) { novaLista.appendChild(leggeraMethods.mambo('li', id='', cla='', inn=`<a href="#" class="manuais" target="_blank">Item ${i} da lista com links</a>`)) } else
-                            novaLista.appendChild(leggeraMethods.mambo('li', id='', cla='', inn=`<b>Item ${i}:</b> Lorem ipsum`));
+                        if (wantLinks) { novaLista.appendChild(leggeraMethods.mambo('li', id = '', cla = '', inn = `<a href="#" class="manuais" target="_blank">Item ${i} da lista com links</a>`)) } else
+                            novaLista.appendChild(leggeraMethods.mambo('li', id = '', cla = '', inn = `<b>Item ${i}:</b> Lorem ipsum`));
                     }
                     novaLista = (novaLista.outerHTML.toString().replaceAll('<li>', "\n" + '<li>'));
                     leggeraMethods.escreveNaTextarea(novaLista);
                     break;
                 case 'ol-a':
-                    novaLista = leggeraMethods.mambo('ol', id='', cla='', inn='', type='a');
+                    novaLista = leggeraMethods.mambo('ol', id = '', cla = '', inn = '', type = 'a');
                     novaLista.style.listStylePosition = 'inside';
                     for (i = 1; i <= n; i++) {
-                        if (wantLinks) { novaLista.appendChild(leggeraMethods.mambo('li', id='', cla='', inn=`<a href="#" class="manuais" target="_blank">Item ${i} da lista com links</a>`)) } else
-                            novaLista.appendChild(leggeraMethods.mambo('li', id='', cla='', inn=`<b>Item ${i}:</b> Lorem ipsum`));
+                        if (wantLinks) { novaLista.appendChild(leggeraMethods.mambo('li', id = '', cla = '', inn = `<a href="#" class="manuais" target="_blank">Item ${i} da lista com links</a>`)) } else
+                            novaLista.appendChild(leggeraMethods.mambo('li', id = '', cla = '', inn = `<b>Item ${i}:</b> Lorem ipsum`));
                     }
                     novaLista = (novaLista.outerHTML.toString().replaceAll('<li>', "\n" + '<li>'));
                     leggeraMethods.escreveNaTextarea(novaLista);
@@ -1170,23 +1172,23 @@ function mixWrapper() {
 
             let novaTabela;
             switch (leggeraVariables.tableType) {
-                case 'normal-table': novaTabela = leggeraMethods.mambo('table', id=leggeraVariables.tableID, cla='phcgo-old-table'); break
-                case 'modern-table': novaTabela = leggeraMethods.mambo('table', id=leggeraVariables.tableID, cla='phcgo-new-table'); break
-                case 'modern-table-blue': novaTabela = leggeraMethods.mambo('table', id=leggeraVariables.tableID, cla='phcgo-new-table-blue'); break
+                case 'normal-table': novaTabela = leggeraMethods.mambo('table', id = leggeraVariables.tableID, cla = 'phcgo-old-table'); break
+                case 'modern-table': novaTabela = leggeraMethods.mambo('table', id = leggeraVariables.tableID, cla = 'phcgo-new-table'); break
+                case 'modern-table-blue': novaTabela = leggeraMethods.mambo('table', id = leggeraVariables.tableID, cla = 'phcgo-new-table-blue'); break
             }
             novaTabela.style.display = 'flex';
             novaTabela.style.justifyContent = 'center';
             const tBody = novaTabela.appendChild(leggeraMethods.mambo('tbody'));
             const novoCabecalho = leggeraMethods.mambo('tr');
             for (i = 1; i <= numColunas; i++) {
-                let novaColuna = novoCabecalho.appendChild(leggeraMethods.mambo('td', id='', cla='', inn=`Cabeçalho ${i}`));
+                let novaColuna = novoCabecalho.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = `Cabeçalho ${i}`));
             }
             tBody.appendChild(novoCabecalho);
             // adiciona as restantes linhas á tabela
             for (iLinhas = 1; iLinhas <= numLinhas; iLinhas++) {
                 const novaLinha = leggeraMethods.mambo('tr');
                 for (iColunas = 1; iColunas <= numColunas; iColunas++) {
-                    let novaColuna = novaLinha.appendChild(leggeraMethods.mambo('td', id='', cla='', inn=`Linha ${iLinhas} Coluna ${iColunas}`));
+                    let novaColuna = novaLinha.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = `Linha ${iLinhas} Coluna ${iColunas}`));
                 }
                 tBody.appendChild(novaLinha);
             }
@@ -1196,7 +1198,7 @@ function mixWrapper() {
             novaTabela.replaceAll('</tbody>', "\n" + '</tbody>');
             // gerador estilos para redimensionar larguras 
             function tableWidthLegoo(cla) {
-                let tablewidth = prompt(`Introduz as larguras das colunas ( ${numColunas} ), separadas por vírgua (20px, 400px).\n\nCaso vazio, estas terão o seu tamanho definido automaticamente.`);
+                let tablewidth = prompt(`Introduz as larguras das colunas ( número de colunas selecionado: ${numColunas} ), separadas por vírgula (20px, 400px).\n\nCaso vazio, estas terão o seu tamanho definido automaticamente.`);
                 if (tablewidth === null || tablewidth === '') { return }
                 else {
                     //transforma as medidas recebidas em  em array 
@@ -1240,12 +1242,12 @@ function mixWrapper() {
             if (tablecode === null || tablecode === '') { return }
             if (leggeraVariables.activeTextarea === '') { alert('Coloca o cursor numa área de texto antes de adicionar conteúdos.'); return }
             // tabela temporária
-            leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('div', id='tempTable', cla='', inn=tablecode).outerHTML);
+            leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('div', id = 'tempTable', cla = '', inn = tablecode).outerHTML);
             let novaTabela;
             switch (leggeraVariables.tableType) {
-                case 'normal-table': novaTabela = leggeraMethods.mambo('table', id=leggeraVariables.tableID, cla='phcgo-old-table'); break
-                case 'modern-table': novaTabela = leggeraMethods.mambo('table', id=leggeraVariables.tableID, cla='phcgo-new-table'); break
-                case 'modern-table-blue': novaTabela = leggeraMethods.mambo('table', id=leggeraVariables.tableID, cla='phcgo-new-table-blue'); break
+                case 'normal-table': novaTabela = leggeraMethods.mambo('table', id = leggeraVariables.tableID, cla = 'phcgo-old-table'); break
+                case 'modern-table': novaTabela = leggeraMethods.mambo('table', id = leggeraVariables.tableID, cla = 'phcgo-new-table'); break
+                case 'modern-table-blue': novaTabela = leggeraMethods.mambo('table', id = leggeraVariables.tableID, cla = 'phcgo-new-table-blue'); break
             }
             novaTabela.style.display = 'flex';
             novaTabela.style.justifyContent = 'center';
@@ -1256,7 +1258,7 @@ function mixWrapper() {
             novaTabela = (novaTabela.toString().replaceAll('</tbody>', "\n" + '</tbody>'));
             // gerador estilos para redimensionar larguras 
             function tableWidthLegoo(cla) {
-                let tablewidth = prompt(`Introduz as larguras das colunas ( ${leggeraListsAndTables.colunas} ), separadas por vírgua (20px, 400px).\n\nCaso vazio, estas terão o seu tamanho definido automaticamente.`);
+                let tablewidth = prompt(`Introduz as larguras das colunas ( número de colunas importado: ${leggeraListsAndTables.colunas} ), separadas por vírgula (20px, 400px).\n\nCaso vazio, estas terão o seu tamanho definido automaticamente.`);
                 if (tablewidth === null || tablewidth === '') { return }
                 else {
                     //transforma as medidas recebidas em  em array 
@@ -1301,7 +1303,7 @@ function mixWrapper() {
             for (i = 0; i <= numLinhas; i++) {
                 tabelaConvertida.appendChild(leggeraMethods.mambo('tr'));
                 for (x = 0; x < itemsParaConverter[i].length; x++) {
-                    tabelaConvertida.lastChild.appendChild(leggeraMethods.mambo('td', id='', cla='', inn=itemsParaConverter[i][x].innerText))
+                    tabelaConvertida.lastChild.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = itemsParaConverter[i][x].innerText))
                     let colspan = itemsParaConverter[i][x].attributes.colspan;
                     try { tabelaConvertida.lastChild.lastChild.setAttribute('colspan', colspan.value) }
                     catch { }
@@ -1369,22 +1371,22 @@ function mixWrapper() {
             switch (dropdownTitulos.value) {
                 // Opção 1
                 case 'default1':
-                    titulosPreview.appendChild(leggeraMethods.mambo('h1', id='', cla='manuais', inn='Título/Heading 1'))
+                    titulosPreview.appendChild(leggeraMethods.mambo('h1', id = '', cla = 'manuais', inn = 'Título/Heading 1'))
                     break;
                 case 'default2':
-                    titulosPreview.appendChild(leggeraMethods.mambo('h2', id='', cla='manuais', inn='Título/Heading 2'))
+                    titulosPreview.appendChild(leggeraMethods.mambo('h2', id = '', cla = 'manuais', inn = 'Título/Heading 2'))
                     break;
                 case 'default3':
-                    titulosPreview.appendChild(leggeraMethods.mambo('h3', id='', cla='manuais', inn='Título/Heading 3'))
+                    titulosPreview.appendChild(leggeraMethods.mambo('h3', id = '', cla = 'manuais', inn = 'Título/Heading 3'))
                     break;
                 case 'old1':
-                    titulosPreview.appendChild(leggeraMethods.mambo('h1', id='', cla='', inn='Título/Heading 1'));
+                    titulosPreview.appendChild(leggeraMethods.mambo('h1', id = '', cla = '', inn = 'Título/Heading 1'));
                     break;
                 case 'old2':
-                    titulosPreview.appendChild(leggeraMethods.mambo('h2', id='', cla='', inn='Título/Heading 2'))
+                    titulosPreview.appendChild(leggeraMethods.mambo('h2', id = '', cla = '', inn = 'Título/Heading 2'))
                     break;
                 case 'old3':
-                    titulosPreview.appendChild(leggeraMethods.mambo('h3', id='', cla='', inn='Título/Heading 3'))
+                    titulosPreview.appendChild(leggeraMethods.mambo('h3', id = '', cla = '', inn = 'Título/Heading 3'))
                     break;
             }
         },
@@ -1394,22 +1396,22 @@ function mixWrapper() {
             switch (dropdownTitulos.value) {
                 // Opção 1
                 case 'default1':
-                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h1', id='', cla='manuais', inn='Título/Heading 1').outerHTML)
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h1', id = '', cla = 'manuais', inn = 'Título/Heading 1').outerHTML)
                     break;
                 case 'default2':
-                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h2', id='', cla='manuais', inn='Título/Heading 2').outerHTML)
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h2', id = '', cla = 'manuais', inn = 'Título/Heading 2').outerHTML)
                     break;
                 case 'default3':
-                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h3', id='', cla='manuais', inn='Título/Heading 3').outerHTML)
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h3', id = '', cla = 'manuais', inn = 'Título/Heading 3').outerHTML)
                     break;
                 case 'old1':
-                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h1', id='', cla='', inn='Título/Heading 1').outerHTML)
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h1', id = '', cla = '', inn = 'Título/Heading 1').outerHTML)
                     break;
                 case 'old2':
-                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h2', id='', cla='', inn='Título/Heading 2').outerHTML)
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h2', id = '', cla = '', inn = 'Título/Heading 2').outerHTML)
                     break;
                 case 'old3':
-                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h3', id='', cla='', inn='Título/Heading 3').outerHTML)
+                    leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('h3', id = '', cla = '', inn = 'Título/Heading 3').outerHTML)
                     break;
             }
         },
@@ -1426,7 +1428,7 @@ function mixWrapper() {
                     return
                 }
             }
-            let novaLigacao = leggeraMethods.mambo('a', id='', cla='manuais', inn=nome, type='', href=link, dt='', tar='_blank');
+            let novaLigacao = leggeraMethods.mambo('a', id = '', cla = 'manuais', inn = nome, type = '', href = link, dt = '', tar = '_blank');
             novaLigacao = novaLigacao.outerHTML
             leggeraMethods.escreveNaTextarea(novaLigacao);
         }
@@ -1452,7 +1454,7 @@ function mixWrapper() {
                         alert(`Não é possível retornar à vista principal, enquanto existirem alterações pendentes.`); return
                     }
                 }
-                leggeraVariables.botaoVistaColap.classList.replace('btn-info', 'btn-light');        
+                leggeraVariables.botaoVistaColap.classList.replace('btn-info', 'btn-light');
                 leggeraVariables.colapHCPreview.classList.add('no-display');
                 helpcenterPreviewWrapper.classList.remove('no-display');
                 leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.hcPreview.innerHTML);
@@ -1471,24 +1473,24 @@ function mixWrapper() {
             // Limpa a appControls
             leggeraVariables.colapHCPreview.innerHTML = '';
             // Wrapper (row)
-            let colapWrapper = leggeraVariables.colapHCPreview.appendChild(leggeraMethods.mambo('div', id='', cla=`page-1`));
+            let colapWrapper = leggeraVariables.colapHCPreview.appendChild(leggeraMethods.mambo('div', id = '', cla = `page-1`));
             if (leggeraVariables.colapList.length !== 0) {
                 // Loop para cada item do Array
                 for (i = 1; i <= leggeraVariables.colapList.length; i++) {
                     // Row 1
-                    let row = colapWrapper.appendChild(leggeraMethods.mambo('div', id='', cla='row'));
+                    let row = colapWrapper.appendChild(leggeraMethods.mambo('div', id = '', cla = 'row'));
                     (i % 2 === 0) ? row.classList.add('par') : row.classList.add('impar');
-                    let wrapperLeft = row.appendChild(leggeraMethods.mambo('div', id=`inputs-${i}`, cla='col-sm-5 inputs-wrapper'));
-                    let wrapperRight = row.appendChild(leggeraMethods.mambo('div', id='', cla='col-sm-7'));
+                    let wrapperLeft = row.appendChild(leggeraMethods.mambo('div', id = `inputs-${i}`, cla = 'col-sm-5 inputs-wrapper'));
+                    let wrapperRight = row.appendChild(leggeraMethods.mambo('div', id = '', cla = 'col-sm-7'));
                     // Col 1 (inputs)
                     // Input 1
-                    wrapperLeft.appendChild(leggeraMethods.mambo('span', id='', cla='colap-id', inn='ID do colapsável (minúsculas, sem acentuação, sem espaçamento)'));
-                    let idInput = wrapperLeft.appendChild(leggeraMethods.mambo('input', id='', cla=`colap-input-id-${i}`));
+                    wrapperLeft.appendChild(leggeraMethods.mambo('span', id = '', cla = 'colap-id', inn = 'ID do colapsável (minúsculas, sem acentuação, sem espaçamento)'));
+                    let idInput = wrapperLeft.appendChild(leggeraMethods.mambo('input', id = '', cla = `colap-input-id-${i}`));
                     idInput.value = leggeraVariables.colapList[i - 1].nextElementSibling.id;
                     idInput.addEventListener('keyup', leggeraCollapsables.updateColapPreviewByID)
                     // Input 2
-                    wrapperLeft.appendChild(leggeraMethods.mambo('span', id='', cla='colap-h2', inn='Título do colapsável'));
-                    let h2Input = wrapperLeft.appendChild(leggeraMethods.mambo('input', id='', cla=`colap-input-h2-${i}`));
+                    wrapperLeft.appendChild(leggeraMethods.mambo('span', id = '', cla = 'colap-h2', inn = 'Título do colapsável'));
+                    let h2Input = wrapperLeft.appendChild(leggeraMethods.mambo('input', id = '', cla = `colap-input-h2-${i}`));
                     let h2Trim = leggeraVariables.colapList[i - 1].innerText.trim().split('	');     // trim para ficar direitinho
                     h2Input.value = h2Trim[0];
                     h2Input.addEventListener('keyup', leggeraCollapsables.updateColapHeading)
@@ -1499,23 +1501,23 @@ function mixWrapper() {
                     while (h2Input.value.includes('Mostrar/Ocultar'))
                         h2Input.value = h2Input.value.replace('Mostrar/Ocultar', '');
                     // Input 3
-                    wrapperLeft.appendChild(leggeraMethods.mambo('span', id='', cla='colap-body', 'Corpo do colapsável'));
-                    let bodyInput = wrapperLeft.appendChild(leggeraMethods.mambo('textarea', id='', cla=`colap-input-body-${i}`));
+                    wrapperLeft.appendChild(leggeraMethods.mambo('span', id = '', cla = 'colap-body', 'Corpo do colapsável'));
+                    let bodyInput = wrapperLeft.appendChild(leggeraMethods.mambo('textarea', id = '', cla = `colap-input-body-${i}`));
                     bodyInput.addEventListener('keyup', leggeraCollapsables.colapTextAreaEventsSlim)
                     bodyInput.addEventListener('click', leggeraCollapsables.colapTextAreaEvents)
                     let bodyTempInput = leggeraVariables.colapList[i - 1].nextElementSibling.innerHTML;
                     // Remove o cursor laranja ao passar para os collaps
                     bodyInput.value = String(bodyTempInput).replace('<span id="pulse">|</span>', '');
                     // Guardar alterações Button
-                    let updateCollaps = wrapperLeft.appendChild(leggeraMethods.mambo('button', id=`colap-save-btn-${i}`, cla='btn btn-success no-display', inn=`<i class="lni lni-save"></i> Guardar alterações`));
+                    let updateCollaps = wrapperLeft.appendChild(leggeraMethods.mambo('button', id = `colap-save-btn-${i}`, cla = 'btn btn-success no-display', inn = `<i class="lni lni-save"></i> Guardar alterações`));
                     updateCollaps.addEventListener('click', leggeraCollapsables.gerarColapsaveis)
                     // Rejeitar alterações Button
-                    let dropCollaps = wrapperLeft.appendChild(leggeraMethods.mambo('button', id=`colap-drop-btn-${i}`, cla='btn btn-danger no-display', inn=`<i class="lni lni-cross-circle"></i> Descartar alterações`));
+                    let dropCollaps = wrapperLeft.appendChild(leggeraMethods.mambo('button', id = `colap-drop-btn-${i}`, cla = 'btn btn-danger no-display', inn = `<i class="lni lni-cross-circle"></i> Descartar alterações`));
                     dropCollaps.addEventListener('click', leggeraCollapsables.appControlsColap)
                     // filler div para padding
-                    wrapperLeft.appendChild(leggeraMethods.mambo('div', id='', cla='save-padding'));
+                    wrapperLeft.appendChild(leggeraMethods.mambo('div', id = '', cla = 'save-padding'));
                     // Col 2 (display)
-                    wrapperRight.appendChild(leggeraMethods.mambo('div', id='', cla=`colap-display-h2-${i}`, inn=h2Trim[0]));
+                    wrapperRight.appendChild(leggeraMethods.mambo('div', id = '', cla = `colap-display-h2-${i}`, inn = h2Trim[0]));
                     // wrapperRight.lastChild.innerText = h2Trim[0];
                     //hotfix, estava a aparecer "Abrir/Fechar" várias vezes nos preview
                     while (wrapperRight.lastChild.innerText.includes('Abrir/Fechar')) {
@@ -1524,21 +1526,21 @@ function mixWrapper() {
                     while (wrapperRight.lastChild.innerText.includes('Mostrar/Ocultar')) {
                         wrapperRight.lastChild.innerText = wrapperRight.lastChild.innerText.replace('Mostrar/Ocultar', '');
                     }
-                    wrapperRight.appendChild(leggeraMethods.mambo('div', id='', cla=`colap-display-body-${i}`, inn=leggeraVariables.colapList[i - 1].nextElementSibling.innerHTML));
+                    wrapperRight.appendChild(leggeraMethods.mambo('div', id = '', cla = `colap-display-body-${i}`, inn = leggeraVariables.colapList[i - 1].nextElementSibling.innerHTML));
                 }
                 // adicionar novo collap
-                row = colapWrapper.appendChild(leggeraMethods.mambo('div', id='', cla='row'));
-                col = row.appendChild(leggeraMethods.mambo('div', id='add-new-collap'));
-                const newCollapBtn = col.appendChild(leggeraMethods.mambo('button', id='', cla="btn btn-info", inn='<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
+                row = colapWrapper.appendChild(leggeraMethods.mambo('div', id = '', cla = 'row'));
+                col = row.appendChild(leggeraMethods.mambo('div', id = 'add-new-collap'));
+                const newCollapBtn = col.appendChild(leggeraMethods.mambo('button', id = '', cla = "btn btn-info", inn = '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
                 newCollapBtn.addEventListener('click', leggeraCollapsables.novoColapsavel)
-                const scrollToTop = col.appendChild(leggeraMethods.mambo('button', id='', cla="btn btn-info", inn='<i class="lni lni-arrow-up-circle"></i>&nbsp;&nbsp;Voltar ao início'));
+                const scrollToTop = col.appendChild(leggeraMethods.mambo('button', id = '', cla = "btn btn-info", inn = '<i class="lni lni-arrow-up-circle"></i>&nbsp;&nbsp;Voltar ao início'));
                 scrollToTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); })
             } else {
-                let geradorColapWrapper = leggeraVariables.colapHCPreview.appendChild(leggeraMethods.mambo('div', id='gerador-colaps-wrapper', cla='row'));
-                let col = geradorColapWrapper.appendChild(leggeraMethods.mambo('div', id='', cla='gerador-colaps-1'));
-                col.appendChild(leggeraMethods.mambo('span', id='', cla='no-colaps-span', inn='Não foi encontrado nenhum colapsável.'));
-                geradorColapWrapper.appendChild(leggeraMethods.mambo('div', id='', cla='flex-br'));
-                let geradornewCollapBtn = geradorColapWrapper.appendChild(leggeraMethods.mambo('button', id='', cla="btn btn-info", inn='<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
+                let geradorColapWrapper = leggeraVariables.colapHCPreview.appendChild(leggeraMethods.mambo('div', id = 'gerador-colaps-wrapper', cla = 'row'));
+                let col = geradorColapWrapper.appendChild(leggeraMethods.mambo('div', id = '', cla = 'gerador-colaps-1'));
+                col.appendChild(leggeraMethods.mambo('span', id = '', cla = 'no-colaps-span', inn = 'Não foi encontrado nenhum colapsável.'));
+                geradorColapWrapper.appendChild(leggeraMethods.mambo('div', id = '', cla = 'flex-br'));
+                let geradornewCollapBtn = geradorColapWrapper.appendChild(leggeraMethods.mambo('button', id = '', cla = "btn btn-info", inn = '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'));
                 geradornewCollapBtn.addEventListener('click', leggeraCollapsables.novoColapsavel)
                 col.appendChild(leggeraMethods.mambo('div'));
             }
@@ -1650,21 +1652,21 @@ function mixWrapper() {
                 newCollapseArray[1][i - 1] = document.querySelector(`.colap-input-h2-${i}`).value;
                 newCollapseArray[2][i - 1] = document.querySelector(`.colap-input-body-${i}`).value;
                 // wrapper do collapsavel
-                let newCollap = leggeraMethods.mambo('div', id='', cla='row seccao-phcgo');
+                let newCollap = leggeraMethods.mambo('div', id = '', cla = 'row seccao-phcgo');
                 // título
-                let newCollapColTitulo = newCollap.appendChild(leggeraMethods.mambo('div', id='', cla='col-xs-8'));
+                let newCollapColTitulo = newCollap.appendChild(leggeraMethods.mambo('div', id = '', cla = 'col-xs-8'));
                 //link do h2
-                let h2Link = newCollapColTitulo.appendChild(leggeraMethods.mambo('a', id='', cla='', inn='', type='', href=`#${newCollapseArray[0][i - 1]}`, dt='collapse'));
+                let h2Link = newCollapColTitulo.appendChild(leggeraMethods.mambo('a', id = '', cla = '', inn = '', type = '', href = `#${newCollapseArray[0][i - 1]}`, dt = 'collapse'));
                 //h2
-                let newtituloH2 = h2Link.appendChild(leggeraMethods.mambo('h2', id='', cla='manuais', inn=newCollapseArray[1][i - 1]))
+                let newtituloH2 = h2Link.appendChild(leggeraMethods.mambo('h2', id = '', cla = 'manuais', inn = newCollapseArray[1][i - 1]))
                 newtituloH2.style.fontWeight = 'normal';
                 //abrir/fechar
-                let newCollapCol1 = newCollap.appendChild(leggeraMethods.mambo('div', id='', cla='col-xs-4 text-right'))
+                let newCollapCol1 = newCollap.appendChild(leggeraMethods.mambo('div', id = '', cla = 'col-xs-4 text-right'))
                 //link do abrir/fechar
-                let link = newCollapCol1.appendChild(leggeraMethods.mambo('a', id='', cla='', inn='Abrir/Fechar', type='', href=`#${newCollapseArray[0][i - 1]}`, dt='collapse'));
+                let link = newCollapCol1.appendChild(leggeraMethods.mambo('a', id = '', cla = '', inn = 'Abrir/Fechar', type = '', href = `#${newCollapseArray[0][i - 1]}`, dt = 'collapse'));
                 link.style.display = 'block'
                 // wrapper do conteudo
-                let newCollapConteudo = leggeraMethods.mambo('div', id=newCollapseArray[0][i - 1], cla='collapse multi-collapse', inn=newCollapseArray[2][i - 1]);
+                let newCollapConteudo = leggeraMethods.mambo('div', id = newCollapseArray[0][i - 1], cla = 'collapse multi-collapse', inn = newCollapseArray[2][i - 1]);
                 newCollapFinal = newCollapFinal + `<!-- Início do Colapsável #${i} -->` + "\n" + (newCollap.outerHTML.toString() + "\n\n" + newCollapConteudo.outerHTML.toString() + "\n" + `<!-- Fim do Colapsável #${i} -->` + "\n")
             }
             // função para obter o texto antes do primeiro collap
@@ -1687,19 +1689,19 @@ function mixWrapper() {
         },
         singleColapsavel: function () {
             // wrapper do collapsavel
-            let newCollap = leggeraMethods.mambo('div', id='', cla='row seccao-phcgo');
+            let newCollap = leggeraMethods.mambo('div', id = '', cla = 'row seccao-phcgo');
             // título
-            let newCollapColTitulo = newCollap.appendChild(leggeraMethods.mambo('div', id='', cla='col-xs-8'))
+            let newCollapColTitulo = newCollap.appendChild(leggeraMethods.mambo('div', id = '', cla = 'col-xs-8'))
             //link do h2
-            let h2Link = newCollapColTitulo.appendChild(leggeraMethods.mambo('a', id='', cla='', inn='', type='', href='#novo-colapsavel', dt='collapse'));
+            let h2Link = newCollapColTitulo.appendChild(leggeraMethods.mambo('a', id = '', cla = '', inn = '', type = '', href = '#novo-colapsavel', dt = 'collapse'));
             //h2
-            let newtituloH2 = h2Link.appendChild(leggeraMethods.mambo('h2', id='', cla='manuais', inn='Novo colapsável'))
+            let newtituloH2 = h2Link.appendChild(leggeraMethods.mambo('h2', id = '', cla = 'manuais', inn = 'Novo colapsável'))
             //abrir/fechar
-            let newCollapCol1 = newCollap.appendChild(leggeraMethods.mambo('div', id='', cla='col-xs-4 text-right'))
+            let newCollapCol1 = newCollap.appendChild(leggeraMethods.mambo('div', id = '', cla = 'col-xs-4 text-right'))
             //link do abrir/fechar
-            let link = newCollapCol1.appendChild(leggeraMethods.mambo('a', id='', cla='', inn='Abrir/Fechar', type='', href='#novo-colapsavel', dt='collapse'));
+            let link = newCollapCol1.appendChild(leggeraMethods.mambo('a', id = '', cla = '', inn = 'Abrir/Fechar', type = '', href = '#novo-colapsavel', dt = 'collapse'));
             // wrapper do conteudo
-            let newCollapConteudo = leggeraMethods.mambo('div', id='novo-colapsavel', cla='collapse multi-collapse', inn='Conteúdo do novo colapsável aqui!');
+            let newCollapConteudo = leggeraMethods.mambo('div', id = 'novo-colapsavel', cla = 'collapse multi-collapse', inn = 'Conteúdo do novo colapsável aqui!');
             newCollapFinal = newCollap.outerHTML + newCollapConteudo.outerHTML
             return newCollapFinal
         },

@@ -50,7 +50,7 @@ switch ($action) {
                     <div style='width:100%;font-size:35px;font-weight: bold;'>" . $nome . "</div>
                     <div style='width:100%;font-size:15px;font-weight: bold;'>" . $alias . "</div>
                     <div style='width:100%;font-size:20px'><span class='material-icons' style='vertical-align:sub;font-size:22px'>contact_mail</span>&nbsp;&nbsp;&nbsp;" . $email . "</div>
-                    <div style='width:100%;padding-top:5px;'><span class='material-icons' style='vertical-align:top;font-size:22px'>cookie</span>&nbsp;&nbsp;&nbsp;&nbsp;" . $cookie . "</div>
+                    <!--<div style='width:100%;padding-top:5px;'><span class='material-icons' style='vertical-align:top;font-size:22px'>cookie</span>&nbsp;&nbsp;&nbsp;&nbsp;" . $cookie . "</div>-->
                 </div>
                 <div id='user-stats' style='display: flex;text-align: center; padding-top: 2%;font-size: 20px;'>
                     <div style='width:35%;'>Número de logins<br>

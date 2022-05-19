@@ -7,6 +7,7 @@
 function mixWrapper() {
 
     // Variáveis globais
+    const modernTableStyle = '<style>.cabecalho-table-modern{border-radius:20px;border:solid 2px #fff;background-color:#3fa8f6;color:#fff;padding:4px 20px;font-size:20px}.td-table-modern{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}</style>'
 
     // textarea cabeçalho
     const textarea = document.querySelector('textarea');
@@ -31,6 +32,7 @@ function mixWrapper() {
 
     // variável com o valor da última checkbox (hilite.me) selecionada
     let codetype = 'vbnet'
+    let tipoTabela = 'normal-table'
 
     // Variáveis globais [preciso de aprender async(?) para guardar nas globais o valor dos length dos json]   
     const numeroImagens = 70;
@@ -126,7 +128,7 @@ function mixWrapper() {
 
                 // Button
                 let updateCollaps = wrapperLeft.appendChild(document.createElement('button'));
-                updateCollaps.id = `colap-save-btn-${1}`;
+                updateCollaps.id = `colap-save-btn-${i}`;
                 updateCollaps.innerHTML = `<i class="lni lni-save"></i> Guardar alterações`
                 updateCollaps.classList = 'btn btn-success no-display'
                 updateCollaps.addEventListener('click', gerarColapsaveis)
@@ -186,7 +188,6 @@ function mixWrapper() {
     // Função para mostrar o savebutton ao atualizar o ID dos colapsáveis
     function updateColapPreviewByID(e) {
         // Mostra o save button
-        console.log(e.target)
         const saveButton = e.target.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling
         saveButton.classList.remove('no-display');
     }
@@ -562,9 +563,32 @@ function mixWrapper() {
         row = novaTabelaWrapper.appendChild(document.createElement('div'));
         row.classList.add('row')
 
-        // Col 1
+        // Col 2
         col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-12')
+        col.classList.add('col-md-6')
+        col.id = 'cria-tabela-checkbox-wrapper'
+
+        // Span 'Cabeçalho?'
+        let checkboxLabel1 = col.appendChild(document.createElement('span'));
+        checkboxLabel1.innerText = 'Normal';
+
+        const checkbox1 = col.appendChild(document.createElement('input'));
+        checkbox1.setAttribute('type', 'checkbox');
+        checkbox1.setAttribute('checked', 'true'); // Ativa a checkbox por omissão
+        checkbox1.id = 'normal-table'
+        checkbox1.addEventListener('click',updateTableType)
+
+        let checkboxLabel2 = col.appendChild(document.createElement('span'));
+        checkboxLabel2.innerText = 'Morderna';
+
+        const checkbox2 = col.appendChild(document.createElement('input'));
+        checkbox2.setAttribute('type', 'checkbox');
+        checkbox2.id = 'modern-table'
+        checkbox2.addEventListener('click',updateTableType)
+
+        // Col 2
+        col = row.appendChild(document.createElement('div'));
+        col.classList.add('col-md-6')
         col.id = 'cria-tabela-btn-div'
 
         // Button 'Criar tabela'
@@ -671,30 +695,61 @@ function mixWrapper() {
         // <tbody>
         const tBody = novaTabela.appendChild(document.createElement('tbody'));
 
-        // Se a checkbox estiver a true, é também adicionado um cabeçalho à tabela
-        if (cabecalho === true) {
-            const novoCabecalho = document.createElement('tr');
-            for (i = 1; i <= numColunas; i++) {
-                let novaColuna = novoCabecalho.appendChild(document.createElement('td'));
-                novaColuna.classList.add('td-cabecalho');
-                novaColuna.innerText = `Cabeçalho ${i}`;
-            }
-            tBody.appendChild(novoCabecalho);
+        switch (tipoTabela) {
+            case 'normal-table':
+
+                // Se a checkbox estiver a true, é também adicionado um cabeçalho à tabela
+                if (cabecalho === true) {
+                    const novoCabecalho = document.createElement('tr');
+                    for (i = 1; i <= numColunas; i++) {
+                        let novaColuna = novoCabecalho.appendChild(document.createElement('td'));
+                        novaColuna.classList.add('td-cabecalho');
+                        novaColuna.innerText = `Cabeçalho ${i}`;
+                    }
+                    tBody.appendChild(novoCabecalho);
+                }
+
+                // adiciona as restantes linhas á tabela
+                for (iLinhas = 1; iLinhas <= numLinhas; iLinhas++) {
+                    const novaLinha = document.createElement('tr');
+                    for (iColunas = 1; iColunas <= numColunas; iColunas++) {
+                        let novaColuna = novaLinha.appendChild(document.createElement('td'));
+                        novaColuna.innerText = `Linha ${iLinhas} Coluna ${iColunas}`;
+                    }
+                    tBody.appendChild(novaLinha);
+                }
+            break
+            case 'modern-table':
+
+                // Se a checkbox estiver a true, é também adicionado um cabeçalho à tabela
+                if (cabecalho === true) {
+                    const novoCabecalho = document.createElement('tr');
+                    for (i = 1; i <= numColunas; i++) {
+                        let novaColuna = novoCabecalho.appendChild(document.createElement('td'));
+                        novaColuna.classList.add('cabecalho-table-modern')
+                        novaColuna.innerText = `Cabeçalho ${i}`;
+                    }
+                    tBody.appendChild(novoCabecalho);
+                }
+
+                // adiciona as restantes linhas á tabela
+                for (iLinhas = 1; iLinhas <= numLinhas; iLinhas++) {
+                    const novaLinha = document.createElement('tr');
+                    for (iColunas = 1; iColunas <= numColunas; iColunas++) {
+                        let novaColuna = novaLinha.appendChild(document.createElement('td'));
+                        novaColuna.classList.add('td-table-modern')
+                        novaColuna.innerText = `Linha ${iLinhas} Coluna ${iColunas}`;
+                    }
+                    tBody.appendChild(novaLinha);
+                }
+                break
         }
 
-        // adiciona as restantes linhas á tabela
-        for (iLinhas = 1; iLinhas <= numLinhas; iLinhas++) {
-            const novaLinha = document.createElement('tr');
-            for (iColunas = 1; iColunas <= numColunas; iColunas++) {
-                let novaColuna = novaLinha.appendChild(document.createElement('td'));
-                novaColuna.innerText = `Linha ${iLinhas} Coluna ${iColunas}`;
-            }
-            tBody.appendChild(novaLinha);
-        }
         // para tornar o código gerado mais clean
         novaTabela = (novaTabela.outerHTML.toString().replaceAll('<tr>', "\n" + '<tr>'));
         novaTabela = (novaTabela.toString().replaceAll('</td><td>', '</td>' + "\n" + '<td>'));
         novaTabela.replaceAll('</tbody>', "\n" + '</tbody>');
+        novaTabela = ('<!-- Estilos necessários para a tabela moderna -->'+"\n"+modernTableStyle+"\n"+novaTabela)
         escreveNaTextareaGeradores(novaTabela);
     }
 
@@ -910,7 +965,7 @@ function mixWrapper() {
         miniWrapper2.lastChild.innerHTML = 'TypeScript&nbsp;&nbsp;'
         miniWrapper2.appendChild(document.createElement('input'));
         miniWrapper2.lastChild.type = 'checkbox'
-        miniWrapper2.lastChild.id = 'typescript'
+        miniWrapper2.lastChild.id = 'ts'
         miniWrapper2.addEventListener('change', updateCodeType)
 
         const novaHiliteBtn = hiliteWrapper.appendChild(document.createElement('button'));
@@ -1085,7 +1140,7 @@ function mixWrapper() {
 
     function grabJSONIcons() {
 
-        fetch('assets/js/imagens2.json')
+        fetch('assets/js/imagens.json')
             .then(function (response) { return response.json(); })
             .then(function (data) { appendData(data); })
             .catch(function (err) { })
@@ -1495,6 +1550,17 @@ function mixWrapper() {
             maindiv.innerHTML = textarea.value;
             modalColap();
         } else {
+
+            // babyproof, não deixa adicionar colapsável sem gravar alterações
+            for (i = 1; i <= collapsablesArray.length; i++) {
+                let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
+                console.log(saveBtn.classList)
+                console.log(saveBtn.classList.contains('no-display'))
+                if (saveBtn.classList.contains('no-display') == false) {
+                    alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
+                }
+            }
+
             textarea.value = textarea.value + "\n" + '<!-- Início do Colapsável #' + (collapsablesArray.length + 1) + ' -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #' + (collapsablesArray.length + 1) + ' -->');
             textarea.value = textarea.value.replaceAll('><div class="collapse', '>' + "\n" + "\n" + '<div class="collapse ')
             maindiv.innerHTML = textarea.value;
@@ -1626,10 +1692,17 @@ function mixWrapper() {
     }
 
     function updateCodeType(e) {
-        document.querySelector('#typescript').checked = false
+        document.querySelector('#ts').checked = false
         document.querySelector('#vbnet').checked = false
         e.target.checked = true
         codetype = e.target.id
+    }
+
+    function updateTableType(e) {
+        document.querySelector('#normal-table').checked = false
+        document.querySelector('#modern-table').checked = false
+        e.target.checked = true
+        tipoTabela = e.target.id
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

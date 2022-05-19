@@ -7,6 +7,7 @@ function mixWrapper() {
     const modaldiv = document.querySelector('#modal');
     const maindiv = document.querySelector('#main-div');
     const ancoraBtn = document.querySelector('#ancora-btn');
+    const tabelasBtn = document.querySelector('#table-btn');
     const colapBtn = document.querySelector('#colap-btn');
     const colapModal = document.querySelector('#colapsables-modal');
     const hcPreview = document.querySelector('.hc-preview');
@@ -38,7 +39,7 @@ function mixWrapper() {
     }
 
     function iconTopicRelacionado(fixedText) {                                  // converter o caminho do icon dos tópicos relacionados para ser visível no preview
-        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"');
+        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"');
         maindiv.innerHTML = fixedText2;
     }
 
@@ -97,7 +98,7 @@ function mixWrapper() {
     function selectIcon(eTarget) {                              // função para adicionar o icon / caixa texto / botão PHC GO ao preview, e à textarea 
         let fixedText = `${cursorPosInfo[1]}${eTarget.outerHTML}${cursorPosInfo[2]}`;
         textarea.value = fixedText;
-        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"'); // o texto corrigido
+        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"'); // o texto corrigido
         maindiv.innerHTML = fixedText2;
         getCollapsables();
     }
@@ -218,10 +219,10 @@ function mixWrapper() {
             if (i % 4 === 0) {
                 modaldivLastRow.appendChild(newMediumItem(i));
                 rowPagi.appendChild(newButtonRow());
-                modaldivLastRow = rowPagi.lastChild;                   
+                modaldivLastRow = rowPagi.lastChild;
             } else {
                 modaldivLastRow.appendChild(newMediumItem(i));
-            }     
+            }
         }
         // modaldiv.appendChild(newPagiRow());
         // let pagiRow = document.querySelector('.pagi');
@@ -231,27 +232,27 @@ function mixWrapper() {
         grabJSONButtons();
     }
 
-    function newButtonRow () {
+    function newButtonRow() {
         const newButtonRow = document.createElement('div');
         newButtonRow.classList.add('row');
         newButtonRow.classList.add('phc-buttons');
         return newButtonRow;
     }
 
-    // function newPagiRow() {
-    //     const newPagiRow = document.createElement('div');
-    //     newPagiRow.classList.add('row');
-    //     newPagiRow.classList.add('pagi');
-    //     return newPagiRow
-    // }
+    function newPagiRow() {
+        const newPagiRow = document.createElement('div');
+        newPagiRow.classList.add('row');
+        newPagiRow.classList.add('pagi');
+        return newPagiRow
+    }
 
-    // function newPagiItem(pagi) {
-    //     const newPagiItem = document.createElement('div');
-    //     newPagiItem.classList.add('col');
-    //     newPagiItem.classList.add(`pagi-${pagi}`);
-    //     newPagiItem.innerHTML = `${pagi}`
-    //     return newPagiItem
-    // }
+    function newPagiItem(pagi) {
+        const newPagiItem = document.createElement('div');
+        newPagiItem.classList.add('col');
+        newPagiItem.classList.add(`pagi-${pagi}`);
+        newPagiItem.innerHTML = `${pagi}`
+        return newPagiItem
+    }
 
 
     // Event Listeners 
@@ -296,6 +297,9 @@ function mixWrapper() {
                         selectIcon(eTargetParent);
                     } else if (eTargetParentLenght !== 2) {
                         selectIcon(eTargetParent.parentElement);
+                    } else if (eTarget.classList.contains('col-md-3')) {
+                        selectIcon(eTarget.children[1]);
+
                     } else {
                         selectIcon(eTarget);
                     }
@@ -316,42 +320,43 @@ function mixWrapper() {
                     eTargetLenght = eTarget.classList.length;
                     eTargetParent = eTarget.parentElement;
                     eTargetParentLenght = eTargetParent.classList.length;
-                    selectIcon(eTarget);
+                    if (eTarget.classList.contains('col-md-3')) {
+                        selectIcon(eTarget.firstChild);
+                    } else {
+                        selectIcon(eTarget);
+                    }
                 });
             }
         })();
     });
-
-
 
     function toogleColapsablesModal() {
         let colapModalClasses = colapModal.classList;
         if (colapModalClasses.length === 2) {
             colapModal.classList.remove('no-display');
             hcPreview.classList.add('no-display');
+            getCollapsables();
+            oldColapsContent2JSON();
         } else {
+            oldColapsContent2JSON();
+            getCollapsables();
             colapModalClasses = colapModal.classList.add('no-display');
             hcPreview.classList.remove('no-display');
         }
-        getCollapsables();
     }
 
     function oldColapsContent2JSON() {
-        // let tarefas = tarefasList.querySelectorAll('li');                     // Estamos a obter um array com os textos dos vários <li>
-        // let arrayTarefas = [];
         let collapsablesArray = document.querySelectorAll('.row .seccao-phcgo');
-        let tempArray = [[],[],[]];
+        let tempArray = [[], [], []];
 
         for (i = 1; i <= collapsablesArray.length; i++) {
-            tempArray[0][i-1] = document.querySelector(`.colap-input-id-${i}`).value ;
-            tempArray[1][i-1] = document.querySelector(`.colap-input-h2-${i}`).value ;
-            tempArray[2][i-1] = document.querySelector(`.colap-input-body-${i}`).value ;
+            tempArray[0][i - 1] = document.querySelector(`.colap-input-id-${i}`).value;
+            tempArray[1][i - 1] = document.querySelector(`.colap-input-h2-${i}`).value;
+            tempArray[2][i - 1] = document.querySelector(`.colap-input-body-${i}`).value;
         }
 
-        console.log(tempArray);
         let colap2JSON = JSON.stringify(tempArray);
-        console.log(colap2JSON);
-        localStorage.setItem('old-text',colap2JSON);
+        localStorage.setItem('old-text', colap2JSON);
     };
 
     function getCollapsables() {
@@ -376,13 +381,16 @@ function mixWrapper() {
                 wrapperLeft.lastChild.value = h2Trim[0];
                 wrapperLeft.appendChild(newSpan('colap-body', 'Corpo do colapsável'));
                 wrapperLeft.appendChild(newColapBodyInput(i));
-                let bodyTemp1 = collapsablesArray[i - 1].nextElementSibling.innerHTML;
+                let isBlankValid = collapsablesArray[i - 1].nextElementSibling.innerHTML;
+                let bodyTemp1 = '';
+                if (isBlankValid[0] === '\n') {                                                             //tentativa do fix do body nao estár a dar replace
+                    bodyTemp1 = isBlankValid.slice(1, isBlankValid.length);
+                } else {
+                    bodyTemp1 = collapsablesArray[i - 1].nextElementSibling.innerHTML;
+                }
                 bodyTemp1 = String(bodyTemp1).replace('<span id="pulse">|</span>', '');
                 wrapperLeft.lastChild.value = bodyTemp1;
                 wrapperLeft.appendChild(newBtn(saveChanges, 'btn-success', 'Guardar Alterações', `save-btn-${i}`));
-                wrapperLeft.appendChild(newBtn(discardChanges, 'btn-danger', 'Descartar Alterações', `reject-btn-${i}`));
-                // wrapperRight.appendChild(newColapIDDisplay(i));
-                // wrapperRight.lastChild.innerText = collapsablesArray[i-1].nextElementSibling.id;
                 wrapperRight.appendChild(newColapH2Display(i));
                 wrapperRight.lastChild.innerText = h2Trim[0];
                 wrapperRight.appendChild(newColapBodyDisplay(i));
@@ -405,19 +413,50 @@ function mixWrapper() {
     }
 
     function saveChanges(i) {
-        console.log('save')
+        console.log('working on it')
+        /**  refazer cacheColaps()
+         * Ao gravar, devemos fazer um array com todos os inputs
+         * deve ser feito também um array com o material a ser reutilizado, nomeadamente
+         * O colapsável zero (tudo até ao primeiro colaps)
+         * Depois de função geradora, "criar um novo tópico de manual" (a estrutura escrevo eu via JS, o conteudo vai buscar aos inputs)
+         * E ao juntar tudo, enviar para o textarea, e depois, re-escrever o bit do que.
+         */
+        // oldColapsContent2JSON(); // a guardar na cache
+    }
+
+    function cacheColaps() {
+        const getColapsFromJSON = localStorage.getItem('old-text');                 // Obter o string do localstorage
+        const colapsJSON2Array = JSON.parse(getColapsFromJSON);                  // Converter a string JSON de volta para um array
+        let newInputsValues = [''];
+        let newDisplayValues = ['']
+        let updatedTextArea = '';
+        for (i = 1; i <= 1; i++) {
+            let getTextareaValue = textarea.value.toString();
+            newInputsValues[0] = document.querySelector(`.colap-input-id-${i}`);
+            updatedTextArea = getTextareaValue.replace('id="' + colapsJSON2Array[0][i - 1] + '">', 'id="' + newInputsValues[0].value + '">');
+            newInputsValues[1] = document.querySelector(`.colap-input-h2-${i}`);
+            updatedTextArea = updatedTextArea.replace(colapsJSON2Array[1][i - 1] + '</h2>', newInputsValues[1].value + '</h2>');
+            newDisplayValues[1] = document.querySelector(`.colap-display-h2-${i}`);
+            newDisplayValues[1].innerText = newInputsValues[1].value;
+            newInputsValues[2] = document.querySelector(`.colap-input-body-${i}`);
+            console.log(updatedTextArea); console.log(colapsJSON2Array[2][i - 1]); console.log(newInputsValues[2].value);
+            updatedTextArea = updatedTextArea.replace(colapsJSON2Array[2][i - 1], newInputsValues[2].value);// tenho de dar fix... há aqui alguma coisa que não tá muito fixe no find
+            newDisplayValues[2] = document.querySelector(`.colap-display-body-${i}`);
+            newDisplayValues[2].innerHTML = newInputsValues[2].value;
+            textarea.value = updatedTextArea;
+        }
     }
 
     function discardChanges() {
         console.log('discard')
     }
 
-    (function eventz() {
+    (function saveListeners() {
         let collapsablesArray = document.querySelectorAll('.row .seccao-phcgo');
         for (i = 1; i <= collapsablesArray.length; i++) {
-            let eventzArray = [];
-            eventzArray[i] = document.querySelector(`#save-btn-${i}`);
-            eventzArray[i].addEventListener('click', saveChanges);
+            let listenersArray = [];
+            listenersArray[i] = document.querySelector(`#save-btn-${i}`);
+            listenersArray[i].addEventListener('click', saveChanges.bind(null, i));
         }
     })();
 
@@ -433,22 +472,9 @@ function mixWrapper() {
         }
     };
 
-    // function displayAllOptions (y) {
-    //         let arrayOptions1 = document.querySelectorAll('.btn-success');
-    //         let arrayOptions2 = document.querySelectorAll('.btn-danger');         
-    //         for (i = 1 ; i < arrayOptions1.length; i++) {
-    //             arrayOptions1[i-1].classList.remove('no-display');
-    //             arrayOptions2[i-1].classList.remove('no-display');
-    //         }
-
-    // }
-
-
     function displayOptions(i) {
         let arrayOptions1 = document.querySelectorAll('.btn-success');
-        let arrayOptions2 = document.querySelectorAll('.btn-danger');
         arrayOptions1[i - 1].classList.remove('no-display');
-        arrayOptions2[i - 1].classList.remove('no-display');
     }
 
     function newColapRow() { // wrapper row
@@ -468,12 +494,6 @@ function mixWrapper() {
         newColapDisplay.classList.add('col-md-7');
         return newColapDisplay
     }
-
-    // function newColapIDDisplay (i) { // div para mostrar o atual ID do colap
-    //     const newColapIDDisplay = document.createElement('div');
-    //     newColapIDDisplay.classList.add(`colap-display-id-${i}`);
-    //     return newColapIDDisplay
-    // }
 
     function newColapIDInput(i) { // input para o cliente conseguir editar o ID colap
         const newColapIDInput = document.createElement('input');
@@ -512,8 +532,79 @@ function mixWrapper() {
         return newSpan
     }
 
-    colapBtn.addEventListener('click', toogleColapsablesModal);
+    // colapBtn.addEventListener('click', toogleColapsablesModal);
+
+    function tableGenerator(header, nRow, nCol) {
+        const newTable = document.createElement('table');
+        newTable.classList.add('phcgo-table');
+        newTable.appendChild(document.createElement('tbody'));
+        const tableBody = newTable.lastChild;
+        if (header === true) {
+            const newHeader = document.createElement('tr');
+            for (i = 1; i <= nCol; i++) {
+                newHeader.appendChild(document.createElement('td'));
+                newHeader.lastChild.classList.add('td-cabecalho');
+                newHeader.lastChild.innerText = `Cabeçalho ${i}`;
+
+            }
+            tableBody.appendChild(newHeader);
+        }
+        for (i2 = 1; i2 <= nRow; i2++) {
+            const newRow = document.createElement('tr');
+            for (i3 = 1; i3 <= nCol; i3++) {
+                newRow.appendChild(document.createElement('td'));
+                newRow.lastChild.innerText = `Linha ${i2} Coluna ${i3}`;
+            }
+            tableBody.appendChild(newRow);
+        }
+        return newTable;
+    }
+
+
+    // tabelasBtn.addEventListener('click', getTables);
+
+    function getTables() {                                    // função construtora <div> para todos os Icons
+        modaldiv.innerHTML = '';
+        let pag = 1;
+        modaldiv.appendChild(newRow(pag));
+        const tabelasInputWrapper = document.createElement('div');
+        tabelasInputWrapper.classList.add('col-md-12');
+        tabelasInputWrapper.id = 'tabelasInput';
+        tabelasInputWrapper.appendChild(document.createElement('span'));
+        tabelasInputWrapper.lastChild.innerText = 'Linhas';
+        tabelasInputWrapper.appendChild(document.createElement('input'));
+        tabelasInputWrapper.lastChild.id = 'row-input'
+        tabelasInputWrapper.appendChild(document.createElement('span'));
+        tabelasInputWrapper.lastChild.innerText = 'Colunas';
+        tabelasInputWrapper.appendChild(document.createElement('input'));
+        tabelasInputWrapper.lastChild.id = 'col-input';
+        tabelasInputWrapper.appendChild(document.createElement('span'));
+        tabelasInputWrapper.lastChild.innerText = 'Cabeçalho?';
+        tabelasInputWrapper.appendChild(document.createElement('input'));
+        tabelasInputWrapper.lastChild.setAttribute('type', 'checkbox');
+        tabelasInputWrapper.lastChild.setAttribute('checked', 'true');
+        tabelasInputWrapper.lastChild.id = 'header-input';
+        tabelasInputWrapper.appendChild(document.createElement('button'));
+        tabelasInputWrapper.lastChild.classList.add('btn');
+        tabelasInputWrapper.lastChild.classList.add('btn-success');
+        tabelasInputWrapper.lastChild.innerText = 'Dá-lhe gás';
+        tabelasInputWrapper.lastChild.addEventListener('click', writeTable);
+        modaldiv.lastChild.appendChild(tabelasInputWrapper);
+    }
+
+    function writeTable() {
+        let nRow = document.querySelector('#row-input').value;
+        let nCol = document.querySelector('#col-input').value;
+        let wantHeader = document.querySelector('#header-input').checked;
+        let newTable = tableGenerator(wantHeader, nRow, nCol);
+        // let newTable2String = String(newTable);
+        let fixedText = `${cursorPosInfo[1]}${newTable.outerHTML}${cursorPosInfo[2]}`;
+        textarea.value = fixedText;
+        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"'); // o texto corrigido
+        maindiv.innerHTML = fixedText2;
+        getCollapsables();
+    }
+
 
 }
-
 mixWrapper();

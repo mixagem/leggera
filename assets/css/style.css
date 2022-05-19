@@ -486,3 +486,17 @@ h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
 .gray-chip {background-color: #707070  !important;}
 .orange-chip {background-color: #ff8f00  !important;}
 .red-chip {background-color: #b70505 !important;}
+
+.phcgo-table > tbody > tr > td  {
+    text-align: left;
+    background-color: #fff;
+    padding: 20px 10px;
+    border: solid 1px #000;
+}
+
+.td-cabecalho {
+    background-color: rgb(255,225, 189)!important;
+    border: solid 1px #000!important;
+    font-size: 16px!important;
+    font-weight: bold;
+}

@@ -1,5 +1,5 @@
 function mixWrapper() {
-    
+
     const addTextBoxBtn = document.querySelector('#textbox-btn');
     const addIconBtn = document.querySelector('#logos-btn');
     const addButtonsBtn = document.querySelector('#botoes-btn');
@@ -7,6 +7,9 @@ function mixWrapper() {
     const modaldiv = document.querySelector('#modal');
     const maindiv = document.querySelector('#main-div');
     const ancoraBtn = document.querySelector('#ancora-btn');
+    const colapBtn = document.querySelector('#colap-btn');
+    const colapModal = document.querySelector('#colapsables-modal');
+    const hcPreview = document.querySelector('.hc-preview');
     const numeroImagens = 40;
     const numeroTextBoxes = 4;
     const numeroButoes = 8;
@@ -15,18 +18,88 @@ function mixWrapper() {
     const buttonsFromJSON = [];
     let cursorPosInfo = [];
 
-    ancoraBtn.addEventListener('click', stickyTop);
-    textarea.addEventListener('click', updateCursorPos);
 
-    function stickyTop() {
+
+    function stickyTop() {                                                      // função para ancorar o header do live editor
         const header = document.querySelector('.header');
         if (header.classList.length === 1) {
             header.classList.add('sticky-top');
-            ancoraBtn.classList.replace('btn-light','btn-success');
+            ancoraBtn.classList.replace('btn-light', 'btn-info');
         } else {
             header.classList.remove('sticky-top');
-            ancoraBtn.classList.replace('btn-success','btn-light');
+            ancoraBtn.classList.replace('btn-info', 'btn-light');
         }
+    }
+
+    function getCursorPos(e) {                                                  // função para obter a posição do cursor (utilizado para a textarea)
+        let eTarget = e.target;
+        let cursorPos = eTarget.selectionStart;
+        return cursorPos
+    }
+
+    function iconTopicRelacionado(fixedText) {                                  // converter o caminho do icon dos tópicos relacionados para ser visível no preview
+        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"');
+        maindiv.innerHTML = fixedText2;
+    }
+
+    function updateCursorPos(e) {                               // função para atualizar o preview com o cursor
+        let inputText = textarea.value;
+        let cursorPos = getCursorPos(e);
+        let inputTextString1 = inputText.slice(0, cursorPos);
+        let inputTextString2 = inputText.slice(cursorPos);
+        let fixedText = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
+        cursorPosInfo[1] = inputTextString1;
+        cursorPosInfo[2] = inputTextString2;
+        iconTopicRelacionado(fixedText);
+        getCollapsables();
+    }
+
+    function newRow(pag) {                                      // função geradora <div row> primeira página
+        const newRow = document.createElement('div');
+        newRow.classList.add('row');
+        newRow.classList.add(`page-${pag}`);
+        return newRow
+    }
+
+    function newHiddenRow(pag) {                                // função geradora <div row> páginas seguintes
+        const newHiddenRow = document.createElement('div');
+        newHiddenRow.classList.add('row');
+        newHiddenRow.classList.add('no-display');
+        newHiddenRow.classList.add(`page-${pag}`);
+        return newHiddenRow
+    }
+
+    function newItem(i) {
+        const newItem = document.createElement('div');          // Função geradora <div col> para Caixas de texto
+        newItem.classList.add('col-md-3');
+        newItem.classList.add(`item-${i}`);
+        newItem.innerHTML = `${i}`;
+        return newItem
+    }
+
+    function newMediumItem(i) {                                 // Função geradora <div col> para PHC Buttons
+        const newMediumItem = document.createElement('div');
+        newMediumItem.classList.add('col-md-4');
+        newMediumItem.classList.add(`item-${i}`);
+        newMediumItem.innerHTML = `${i}`;
+        return newMediumItem
+    }
+
+    function newMiniItem(i) {                                   // Função geradora <div col> para Logos e Icons
+        const newItem = document.createElement('div');
+        newItem.classList.add('col-md-1');
+        newItem.classList.add(`mini-item-${i}`);
+        newItem.classList.add(`mini-item`);
+        newItem.innerHTML = `${i}`;
+        return newItem
+    }
+
+    function selectIcon(eTarget) {                              // função para adicionar o icon / caixa texto / botão PHC GO ao preview, e à textarea 
+        let fixedText = `${cursorPosInfo[1]}${eTarget.outerHTML}${cursorPosInfo[2]}`;
+        textarea.value = fixedText;
+        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"'); // o texto corrigido
+        maindiv.innerHTML = fixedText2;
+        getCollapsables();
     }
 
     function grabJSONIcons() {
@@ -51,6 +124,29 @@ function mixWrapper() {
 
     }
 
+    function getIcons() {                                       // função construtora <div> para todos os Icons
+        modaldiv.innerHTML = '';
+        let pag = 1;
+        modaldiv.appendChild(newRow(pag));
+        for (i = 1; i <= numeroImagens; i++) {
+            if ((i % 24) === 0) {
+                let modaldivLastrow = modaldiv.lastChild;
+                modaldivLastrow.appendChild(newMiniItem(i));
+                pag++;
+                modaldiv.appendChild(newHiddenRow(pag));
+            } else {
+                let modaldivLastrow = modaldiv.lastChild;
+                modaldivLastrow.appendChild(newMiniItem(i));
+            }
+        }
+        // modaldiv.appendChild(newPagiRow());
+        // let pagiRow = document.querySelector('.pagi');
+        // for (let pagi = 1; pagi <= pag; pagi++) {
+        //     pagiRow.appendChild(newPagiItem(pagi));
+        // }
+        grabJSONIcons();
+    }
+
     function grabJSONTextBoxes() {
 
         fetch('assets/js/textbox.json')
@@ -71,6 +167,22 @@ function mixWrapper() {
             }
         }
 
+    }
+
+    function getTextBoxes() {                               // função construtora <div> para todas as textboxes
+        modaldiv.innerHTML = '';
+        let pag = 1;
+        modaldiv.appendChild(newRow(pag));
+        for (i = 1; i <= numeroTextBoxes; i++) {
+            let modaldivLastrow = modaldiv.lastChild;
+            modaldivLastrow.appendChild(newItem(i));
+        }
+        // modaldiv.appendChild(newPagiRow());
+        // let pagiRow = document.querySelector('.pagi');
+        // for (let pagi = 1; pagi <= pag; pagi++) {
+        //     pagiRow.appendChild(newPagiItem(pagi));
+        // }
+        grabJSONTextBoxes();
     }
 
     function grabJSONButtons() {
@@ -95,76 +207,20 @@ function mixWrapper() {
 
     }
 
-    function iconTopicRelacionado(fixedText) {
-        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"'); // o texto corrigido
-        maindiv.innerHTML = fixedText2; // publicar o texto
-    }
-
-    function getCursorPos(e) {
-        let eTarget = e.target;
-        let cursorPos = eTarget.selectionStart;
-        return cursorPos
-    }
-
-    function updateCursorPos(e) {
-        let inputText = textarea.value;
-        let cursorPos = getCursorPos(e);
-        let inputTextString1 = inputText.slice(0, cursorPos);
-        let inputTextString2 = inputText.slice(cursorPos);
-        let fixedText = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
-        cursorPosInfo[1] = inputTextString1;
-        cursorPosInfo[2] = inputTextString2;
-        iconTopicRelacionado(fixedText);
-    }
-
-    function selectIcon(eTarget) {
-        console.log(eTarget);
-        let fixedText = `${cursorPosInfo[1]}${eTarget.outerHTML}${cursorPosInfo[2]}`;
-        textarea.value = fixedText;
-        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"'); // o texto corrigido
-        maindiv.innerHTML = fixedText2;
-
-        
-    }
-
-    function newRow(pag) {
-        const newRow = document.createElement('div');
-        newRow.classList.add('row');
-        newRow.classList.add(`page-${pag}`);
-        return newRow
-    }
-
-    function newHiddenRow(pag) {
-        const newHiddenRow = document.createElement('div');
-        newHiddenRow.classList.add('row');
-        newHiddenRow.classList.add('no-display');
-        newHiddenRow.classList.add(`page-${pag}`);
-        return newHiddenRow
-    }
-
-    function newItem(i) {
-        const newItem = document.createElement('div');
-        newItem.classList.add('col-md-3');
-        newItem.classList.add(`item-${i}`);
-        newItem.innerHTML = `${i}`;
-        return newItem
-    }
-
-    function newMediumItem(i) {
-        const newMediumItem = document.createElement('div');
-        newMediumItem.classList.add('col-md-4');
-        newMediumItem.classList.add(`item-${i}`);
-        newMediumItem.innerHTML = `${i}`;
-        return newMediumItem
-    }
-
-    function newMiniItem(i) {
-        const newItem = document.createElement('div');
-        newItem.classList.add('col-md-1');
-        newItem.classList.add(`mini-item-${i}`);
-        newItem.classList.add(`mini-item`);
-        newItem.innerHTML = `${i}`;
-        return newItem
+    function getButtons() {                               // função construtora <div> para todos os PHC GO Buttons
+        modaldiv.innerHTML = '';
+        let pag = 1;
+        modaldiv.appendChild(newRow(pag));
+        for (i = 1; i <= numeroButoes; i++) {
+            let modaldivLastrow = modaldiv.lastChild;
+            modaldivLastrow.appendChild(newMediumItem(i));
+        }
+        // modaldiv.appendChild(newPagiRow());
+        // let pagiRow = document.querySelector('.pagi');
+        // for (let pagi = 1; pagi <= pag; pagi++) {
+        //     pagiRow.appendChild(newPagiItem(pagi));
+        // }
+        grabJSONButtons();
     }
 
     // function newPagiRow() {
@@ -182,60 +238,11 @@ function mixWrapper() {
     //     return newPagiItem
     // }
 
-    function getIcons() {
-        modaldiv.innerHTML = '';
-        let pag = 1;
-        modaldiv.appendChild(newRow(pag));
-        for (i = 1; i <= numeroImagens; i++) {
-            if ((i % 24) === 0) {
-                let modaldivLastrow = modaldiv.lastChild;
-                modaldivLastrow.appendChild(newMiniItem(i));
-                pag++;
-                modaldiv.appendChild(newHiddenRow(pag));
-            } else {
-                let modaldivLastrow = modaldiv.lastChild;
-                modaldivLastrow.appendChild(newMiniItem(i));
-            }
-        }
-        // modaldiv.appendChild(newPagiRow());
-        // let pagiRow = document.querySelector('.pagi');
-        // for (let pagi = 1; pagi <= pag; pagi++) {
-        //     pagiRow.appendChild(newPagiItem(pagi));
-        // }
-        grabJSONIcons();
-    }
 
-    function getTextBoxes() {
-        modaldiv.innerHTML = '';
-        let pag = 1;
-        modaldiv.appendChild(newRow(pag));
-        for (i = 1; i <= numeroTextBoxes; i++) {
-            let modaldivLastrow = modaldiv.lastChild;
-            modaldivLastrow.appendChild(newItem(i));
-        }
-        // modaldiv.appendChild(newPagiRow());
-        // let pagiRow = document.querySelector('.pagi');
-        // for (let pagi = 1; pagi <= pag; pagi++) {
-        //     pagiRow.appendChild(newPagiItem(pagi));
-        // }
-        grabJSONTextBoxes();
-    }
+    // Event Listeners 
 
-    function getButtons() {
-        modaldiv.innerHTML = '';
-        let pag = 1;
-        modaldiv.appendChild(newRow(pag));
-        for (i = 1; i <= numeroButoes; i++) {
-            let modaldivLastrow = modaldiv.lastChild;
-            modaldivLastrow.appendChild(newMediumItem(i));
-        }
-        // modaldiv.appendChild(newPagiRow());
-        // let pagiRow = document.querySelector('.pagi');
-        // for (let pagi = 1; pagi <= pag; pagi++) {
-        //     pagiRow.appendChild(newPagiItem(pagi));
-        // }
-        grabJSONButtons();
-    }
+    ancoraBtn.addEventListener('click', stickyTop);
+    textarea.addEventListener('click', updateCursorPos);
 
     addIconBtn.addEventListener('click', () => {
         getIcons();
@@ -245,17 +252,9 @@ function mixWrapper() {
             for (i = 1; i <= numeroImagens; i++) {
                 eventArray[i] = document.querySelector('.col-md-1' + `.mini-item-${i}` + '.mini-item');
                 eventArray[i].addEventListener('click', (e) => {
-                    console.log(e);
                     eTarget = e.target;
-                    console.log(eTarget);
                     eTargetLenght = eTarget.classList.length;
-                    console.log(eTargetLenght);
                     eTargetChild = eTarget.children[0];
-                    // if (eTargetLenght !== 2) {
-                    //     selectIcon(eTargetChild);
-                    // } else {
-                    //     selectIcon(eTarget);
-                    // }
                     if (eTargetLenght === 2 || eTargetLenght === 0) {
                         selectIcon(eTarget)
                     } else {
@@ -302,17 +301,186 @@ function mixWrapper() {
                     eTargetLenght = eTarget.classList.length;
                     eTargetParent = eTarget.parentElement;
                     eTargetParentLenght = eTargetParent.classList.length;
-                    // if (eTargetLenght !== 2) {
-                    //     selectIcon(eTargetParent);
-                    // } else if (eTargetParentLenght !== 2) {
-                    //     selectIcon(eTargetParent.parentElement);
-                    // } else {
-                        selectIcon(eTarget);
-                    // }
+                    selectIcon(eTarget);
                 });
             }
         })();
     });
+
+
+
+    function toogleColapsablesModal() {
+        let colapModalClasses = colapModal.classList;
+        if (colapModalClasses.length === 2) {
+            colapModal.classList.remove('no-display');
+            hcPreview.classList.add('no-display');
+        } else {
+            colapModalClasses = colapModal.classList.add('no-display');
+            hcPreview.classList.remove('no-display');
+        }
+        getCollapsables();
+    }
+
+
+    function getCollapsables() {
+        let collapsablesArray = document.querySelectorAll('.row .seccao-phcgo');
+        colapModal.innerHTML = '';
+        colapModal.appendChild(newRow(1));
+        let colapModalChild = colapModal.firstChild;
+        if (colapModal.classList.length === 1) {
+            for (i = 1; i <= collapsablesArray.length; i++) {
+                colapModalChild.appendChild(newColapRow());
+                let colapModalGranChild = colapModalChild.lastChild;
+                colapModalGranChild.appendChild(newColapInput(i));
+                colapModalGranChild.appendChild(newColapDisplay(i));
+                let wrapperLeft = colapModalGranChild.firstChild;
+                let wrapperRight = colapModalGranChild.lastChild;
+                wrapperLeft.appendChild(newSpan('colap-id', 'ID do colapsável (minúsculas, sem acentuação, sem espaçamento)'));
+                wrapperLeft.appendChild(newColapIDInput(i));
+                wrapperLeft.lastChild.value = collapsablesArray[i - 1].nextElementSibling.id;
+                wrapperLeft.appendChild(newSpan('colap-h2', 'Título do colapsável'));
+                wrapperLeft.appendChild(newColapH2Input(i));
+                let h2Trim = collapsablesArray[i - 1].innerText.trim().split('	');
+                wrapperLeft.lastChild.value = h2Trim[0];
+                wrapperLeft.appendChild(newSpan('colap-body', 'Corpo do colapsável'));
+                wrapperLeft.appendChild(newColapBodyInput(i));
+                let bodyTemp1 = collapsablesArray[i - 1].nextElementSibling.innerHTML;
+                bodyTemp1 = String(bodyTemp1).replace('<span id="pulse">|</span>', '');
+                wrapperLeft.lastChild.value = bodyTemp1;
+                wrapperLeft.appendChild(newBtn(saveChanges, 'btn-success', 'Guardar Alterações', `save-btn-${i}`));
+                wrapperLeft.appendChild(newBtn(discardChanges, 'btn-danger', 'Descartar Alterações', `reject-btn-${i}`));
+                // wrapperRight.appendChild(newColapIDDisplay(i));
+                // wrapperRight.lastChild.innerText = collapsablesArray[i-1].nextElementSibling.id;
+                wrapperRight.appendChild(newColapH2Display(i));
+                wrapperRight.lastChild.innerText = h2Trim[0];
+                wrapperRight.appendChild(newColapBodyDisplay(i));
+                wrapperRight.lastChild.innerHTML = collapsablesArray[i - 1].nextElementSibling.innerHTML;
+            }
+            showSave();
+        }
+    }
+
+    function newBtn(tipo, cla, texto, id) { // 
+        const newBtn = document.createElement('button');
+        newBtn.setAttribute('type', 'button');
+        newBtn.classList.add(cla);
+        newBtn.setAttribute('id', id);
+        newBtn.classList.add('btn');
+        newBtn.classList.add('no-display');
+        newBtn.innerText = texto;
+        newBtn.addEventListener('click', tipo);
+        return newBtn
+    }
+
+    function saveChanges(i) {
+        console.log('save')
+    }
+
+    function discardChanges() {
+        console.log('discard')
+    }
+
+    (function eventz() {
+        let collapsablesArray = document.querySelectorAll('.row .seccao-phcgo');
+        for (i = 1; i <= collapsablesArray.length; i++) {
+            let eventzArray = [];
+            eventzArray[i] = document.querySelector(`#save-btn-${i}`);
+            eventzArray[i].addEventListener('click', saveChanges);
+        }
+    })();
+
+    function showSave() {
+        let collapsablesArray = document.querySelectorAll('.row .seccao-phcgo');
+        for (i = 1; i <= collapsablesArray.length; i++) {
+            let tempSelected = document.querySelector(`.colap-input-id-${i}`);
+            tempSelected.addEventListener('change', displayOptions.bind(null, i));
+            let tempSelected2 = document.querySelector(`.colap-input-h2-${i}`);
+            tempSelected2.addEventListener('change', displayOptions.bind(null, i));
+            let tempSelected3 = document.querySelector(`.colap-input-body-${i}`);
+            tempSelected3.addEventListener('change', displayOptions.bind(null, i));
+        }
+    };
+
+    // function displayAllOptions (y) {
+    //         let arrayOptions1 = document.querySelectorAll('.btn-success');
+    //         let arrayOptions2 = document.querySelectorAll('.btn-danger');         
+    //         for (i = 1 ; i < arrayOptions1.length; i++) {
+    //             arrayOptions1[i-1].classList.remove('no-display');
+    //             arrayOptions2[i-1].classList.remove('no-display');
+    //         }
+
+    // }
+
+
+    function displayOptions(i) {
+        let arrayOptions1 = document.querySelectorAll('.btn-success');
+        let arrayOptions2 = document.querySelectorAll('.btn-danger');
+        arrayOptions1[i - 1].classList.remove('no-display');
+        arrayOptions2[i - 1].classList.remove('no-display');
+    }
+
+    function newColapRow() { // wrapper row
+        const newColapRow = document.createElement('div');
+        newColapRow.classList.add('row');
+        return newColapRow
+    }
+
+    function newColapInput() { // wrapper esquerdo
+        const newColapInput = document.createElement('div');
+        newColapInput.classList.add('col-md-5');
+        return newColapInput
+    }
+
+    function newColapDisplay() { // wrapper direito
+        const newColapDisplay = document.createElement('div');
+        newColapDisplay.classList.add('col-md-7');
+        return newColapDisplay
+    }
+
+    // function newColapIDDisplay (i) { // div para mostrar o atual ID do colap
+    //     const newColapIDDisplay = document.createElement('div');
+    //     newColapIDDisplay.classList.add(`colap-display-id-${i}`);
+    //     return newColapIDDisplay
+    // }
+
+    function newColapIDInput(i) { // input para o cliente conseguir editar o ID colap
+        const newColapIDInput = document.createElement('input');
+        newColapIDInput.classList.add(`colap-input-id-${i}`);
+        return newColapIDInput
+    }
+
+    function newColapH2Display(i) { // div para mostrar o atual h2 do colap
+        const newColapH2Display = document.createElement('div');
+        newColapH2Display.classList.add(`colap-display-h2-${i}`);
+        return newColapH2Display
+    }
+
+    function newColapH2Input(i) {    // input para o cliente conseguir editar o h2 do colap
+        const newColapH2Input = document.createElement('input');
+        newColapH2Input.classList.add(`colap-input-h2-${i}`);
+        return newColapH2Input
+    }
+
+    function newColapBodyDisplay(i) { // div para mostrar o atual body do colap
+        const newColapBodyDisplay = document.createElement('div');
+        newColapBodyDisplay.classList.add(`colap-display-body-${i}`);
+        return newColapBodyDisplay
+    }
+
+    function newColapBodyInput(i) {    // input para o cliente conseguir editar o body do colap
+        const newColapBodyInput = document.createElement('textarea');
+        newColapBodyInput.classList.add(`colap-input-body-${i}`);
+        return newColapBodyInput
+    }
+
+    function newSpan(cla, text) {    // input para o cliente conseguir editar o body do colap
+        const newSpan = document.createElement('span');
+        newSpan.classList.add(cla);
+        newSpan.innerText = `${text}`;
+        return newSpan
+    }
+
+    colapBtn.addEventListener('click', toogleColapsablesModal);
 
 }
 

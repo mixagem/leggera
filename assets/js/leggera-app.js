@@ -385,6 +385,8 @@ function mixWrapper() {
             saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('input', 'save-manual-input', '', ''));
             saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-success', 'Guardar Manual'));
             saveManualModal.lastChild.addEventListener('click', leggeraMyManualsDBConnect.saveManual)
+            saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-danger', 'Voltar ao editor'));
+            saveManualModal.lastChild.addEventListener('click', leggeraMyManualsDBConnect.backHome)
 
 
 
@@ -465,6 +467,14 @@ function mixWrapper() {
                     }
                 }
             })
+        },
+
+        backHome: function () {
+            const sectionsArray = document.querySelectorAll('section');
+                        for (i = 0; i < sectionsArray.length; i++) {
+                            sectionsArray[i].classList.remove('no-display')
+                        }
+                        document.querySelector('#manuals-modal').remove();
         },
 
         deleteManual: function (e) {

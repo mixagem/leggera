@@ -2,6 +2,7 @@
 // obtem os valores do formulário
 $cookie = trim($_POST['cookie']);
 
+if ($cookie !== '') {
 // ligação à BD
 $con = mysqli_connect('localhost', 'root', '', 'superliggera');
 
@@ -22,3 +23,4 @@ if (mysqli_num_rows($result) == 1) {
     echo "login-failed";
 }
 mysqli_close($con);
+}

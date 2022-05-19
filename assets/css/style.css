@@ -1,0 +1,236 @@
+/* @font-face {
+    font-family: 'Neutrif Pro Med';
+    src: local('Neutrif Pro Medium'), local('Neutrif-Pro-Medium'),
+        url('/assets/fonts/NeutrifPro-Medium.woff2') format('woff2'),
+        url('/assets/fonts/NeutrifPro-Medium.woff') format('woff'),
+        url('/assets/fonts/NeutrifPro-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+} */
+
+@font-face {
+    font-family: 'Neutrif Pro';
+    src: local('Neutrif Pro Regular'), local('Neutrif-Pro-Regular'),
+        url('/assets/fonts/NeutrifPro-Regular.woff2') format('woff2'),
+        url('/assets/fonts/NeutrifPro-Regular.woff') format('woff'),
+        url('/assets/fonts/NeutrifPro-Regular.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+body {
+    font-size:14.5px!important;
+    font-family:'Neutrif Pro'!important;
+    background:#111;
+    color: #000;
+    line-height:1.42857143;
+}
+
+.header {
+    padding-top:30px;
+    min-height:200px;
+    background:#111;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+textarea {
+    width:800px;
+    height:100px;
+}
+
+.header > .container-fluid > .row > div:first-child {
+    padding-left:30px;
+}
+
+
+.header-hc {
+    padding-top:20px;
+    background-color:#EB8475;
+    height:90px;
+}
+
+.header-hc img {
+    padding-left:16px;
+    margin-top:-2px;
+}
+
+.head-slogan {
+    font-size:13px;
+    color:#fff;
+    text-align: right;
+    padding-right:20px!important;
+    padding-top:30px;
+    letter-spacing: 0px;
+}
+
+.head-slogan span {
+    color:#F4CC91;
+}
+
+.text-body-hc {
+    min-height:80vh;
+}
+
+/* .text-body-hc > .container > .row > div:first-child,
+.text-body-hc > .container > .row > div:last-child {
+    background-color:red;
+} */
+
+.footer-hc {
+    background-color:#C3751B;
+    height:94px;
+}
+
+.footer-hc img{
+    padding-left:25px;
+    padding-top:20px;
+}
+
+.hc-preview {
+    background-color:#fff;
+    padding: 0 !important;
+    color:#000!important;
+}
+
+
+#main-div {
+    padding-top:40px;
+    padding-bottom:15px;
+}
+
+
+/** User.css hcenter **/
+
+
+
+.alerta {
+    width: 100%; 
+    background-color: rgb(224, 224, 224); 
+    line-height: 1.5; float: left; 
+    text-align: justify; 
+    border-radius: 5px;
+    margin: 30px 0px;}
+    
+    .alerta-titulo {
+    width: 59%; 
+    margin-left: 50px; 
+    margin-top: 20px; 
+    margin-right: 50px; 
+    font-size: 16px; float: left; 
+    font-style: italic;}
+    
+    .alerta-contido {
+    font-size: 14px; 
+    margin: 20px 50px 20px; 
+    float: left;}
+    
+    
+    .dica {
+    width: 100%; 
+    background-color: rgb(255, 225, 189); 
+    line-height: 1.5; 
+    float: left;  
+    border-radius: 5px;
+    margin: 30px 0px;}
+    
+    .dica-titulo {
+    width: 59%; 
+    margin-left: 50px; 
+    margin-top: 20px; 
+    margin-right: 50px; 
+    font-size: 16px; 
+    float: left; 
+    font-style: italic;}
+    
+    .dica-contido {
+    font-size: 14px; 
+    margin: 20px 50px 20px; 
+    float: left; }
+    
+    
+    a.glink{
+        color:#3934BE!important;
+        font-size:15px!important;
+    }
+    
+    a.manuais {
+        color:#3934BE!important;
+        font-size:15px!important;
+    }
+    
+    .novoalerta {
+        width: 100%; 
+        line-height: 1.5;
+        float: left;
+        border-radius: 5px;
+        margin: 30px 0px
+    }
+    
+    .novoalerta-titulo {
+        margin: 25px 50px 20px 50px;
+        font-size: 18px;
+        float: left;
+        font-weight:bold;
+        width: 100%;
+    }
+    
+    .novoalerta-contido {
+        font-size: 15px;
+        margin: 0px 35px 20px 35px;
+        float: left;
+        }
+    
+    .novoalerta-titulo > i {padding-right:10px;}
+    
+    .alerta-notas {background-color: rgb(255, 225, 189);}
+    .alerta-dicas {background-color: rgb(255, 248, 200);}
+    .alerta-info {background-color: rgb(232, 239, 249);}
+    .boas-praticas {background-color: rgb(210, 251, 200);}
+    .alerta-relaciona {background-color: rgb(245, 245, 245);}
+    
+    .seccao-phcgo {background-color: rgb(245, 245, 245);
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    margin-bottom:10px;}
+    
+    
+    h1.manuais {font-size:28px;text-transform:uppercase;font-weight:bold;}
+    h2.manuais {font-size:20px;font-weight: bold;margin:0;padding:10px;}
+    h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
+    
+    
+    #pulse {
+        font-size:30px; 
+        color:rgb(255, 145, 0);
+        animation-name: periodicfading;
+        animation-duration: 1.3s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-delay: 0s;
+    }
+    
+    @keyframes periodicfading {
+        0% {
+            opacity: 0.1;
+        }
+        50% {
+            opacity: 1.0;
+        }
+        100% {
+            opacity: 0.1;
+        } 
+    }
+
+#modal {
+    background-color:rgba(0, 0, 0, 0.685);
+    height:calc(100vh - 200px);
+    width:100vw;
+}
+
+.no-display {
+    display:none!important;
+}

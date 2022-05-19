@@ -3,8 +3,8 @@
 $un = trim($_POST['username']);
 $manual = trim($_POST['manual']);
 $action = trim($_POST['action']);
-$timestamp = trim($_POST['timestamp']);
-$code = trim($_POST['code']);
+
+
 $con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 switch ($action) {
@@ -27,6 +27,8 @@ switch ($action) {
         }
         break;
     case 'save':
+        $code = trim($_POST['code']);
+        $timestamp = trim($_POST['timestamp']);
         // buscar o manual escrito pelo utilizador 
         $query = "SELECT * from manuals WHERE (author = '$un' AND title = '$manual')";
         $result = mysqli_query($con, $query);

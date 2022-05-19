@@ -58,7 +58,7 @@ switch ($action) {
                 $novoNumtenta = $numtenta[0] + 1;
                 // se chegou ás 3 tentativas, inativa a conta
                 if ($novoNumtenta >= 3) {
-                    $query = "UPDATE users SET loginattempts = 3, active = 0 WHERE username = '$un'";
+                    $query = "UPDATE users SET loginattempts = 3, active = 0, session='' WHERE username = '$un'";
                     $result = mysqli_query($con, $query);
                 } else {
                     // se ainda não chegou ás 3 tentativas, atualiza o valor de tentativas

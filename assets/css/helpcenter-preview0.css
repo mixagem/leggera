@@ -318,3 +318,8 @@ a.manuais:hover {
     box-shadow: 2px 2px #111, 4px 4px rgb(255, 215, 0);
     border: 1px solid rgb(20, 20, 20);
 }
+
+#colapsables-wrapper a.manuais {
+    color: #3934BE !important;
+
+}

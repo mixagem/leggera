@@ -128,17 +128,19 @@ function mixWrapper() {
             // só faz as alterações ao tema 0 (lightTheme[0] = Editor claro, preview escuro || lightTheme[1] = Editor escuro, preview claro)
             if (Number(lightTheme) === 0) {
                 // black & white switcheroo
-                convertedPreview = convertedPreview.replaceAll('rgb(0, 0, 0);" class="material-icons">', 'rgb(TEMP, TEMP, TEMP);" class="material-icons">');
                 convertedPreview = convertedPreview.replaceAll('rgb(224, 224, 224);" class="material-icons">', 'rgb(40, 40, 40);" class="material-icons">');
-                convertedPreview = convertedPreview.replaceAll('rgb(TEMP, TEMP, TEMP);" class="material-icons">', 'rgb(224, 224, 224);" class="material-icons">');
+                convertedPreview = convertedPreview.replaceAll('rgb(0, 0, 0);" class="material-icons">', 'rgb(224, 224, 224);" class="material-icons">');
                 // contraste no azul 
                 convertedPreview = convertedPreview.replaceAll('rgb(26, 35, 126);" class="material-icons">', 'rgb(62, 112, 230);" class="material-icons">');
                 // contraste no verde
                 convertedPreview = convertedPreview.replaceAll('rgb(0, 77, 64);" class="material-icons">', 'rgb(0, 125, 104);" class="material-icons">');
                 // contraste no <hr>
                 convertedPreview = convertedPreview.replaceAll('solid rgb(238, 238, 238);', 'solid rgb(50, 50, 50);');
-                // ajuste backgroudn tabelas
+                // ajuste tabelas novas
                 convertedPreview = convertedPreview.replaceAll(';border:solid 2px #fff;', ';border:solid 2px #111;');
+                // ajuste tabelas antigas
+                convertedPreview = convertedPreview.replaceAll('ext-align:left;background-color:#fff;padding:20px 10px;border:solid 1px #000', 'ext-align:left;background-color:transparent;padding:20px 10px;border:solid 1px #666');
+                convertedPreview = convertedPreview.replaceAll('(1)>td{background-color:rgb(255, 225, 189)', '(1)>td{color:#000;background-color:rgb(255, 225, 189)');
                 // ajuste na codebox do HiliteAPI 
                 convertedPreview = convertedPreview.replaceAll(';border:solid #eb8475;', ';border:solid #147b8a;');
             }
@@ -177,7 +179,7 @@ function mixWrapper() {
             })
         },
         // método principal para injetar o código HTML do elemento selecionado, na última posição do cursor
-        escreveNaTextarea: function (outerHTML) {   
+        escreveNaTextarea: function (outerHTML) {
             let novoSourceCode;
             // babyproof
             if (leggeraVariables.activeTextarea === '') { alert('Coloca o cursor numa área de texto antes de adicionar conteúdos.'); return }
@@ -329,7 +331,7 @@ function mixWrapper() {
             }
             // caso a textarea esteja vazia, adiciona o cartão com estatísticas do utilizador
             if (leggeraVariables.hcPreview.innerHTML == '') {
-                leggeraMethods.displayUserStats();
+                leggeraMethods.displayUserStats('opcao-tema');
             }
             // atualiza o appControls do menu ativo, para mostrar as alterações de contraste 
             if (document.querySelector('.btn.btn-info.main-menu') !== null) { document.querySelector('.btn.btn-info.main-menu').click(); };
@@ -345,20 +347,18 @@ function mixWrapper() {
                 },
                 success: function (rsp) {
                     leggeraVariables.hcPreview.innerHTML = '';
-                    leggeraMethods.displayUserStats();
+                    leggeraMethods.displayUserStats('opcao-tema');
                 },
                 error: function (rsp) {
                     leggeraVariables.hcPreview.innerHTML = '';
-                    leggeraMethods.displayUserStats();
+                    leggeraMethods.displayUserStats('opcao-tema');
                 }
             })
         },
         // método para ativar/desativar os alertas
         updateWantAlerts: function () {
             if (Number(userWantAlerts) === 1) {
-                console.log(`só lá, eu tinha o want alerts a: ${userWantAlerts}`)
                 userWantAlerts = 0;
-                console.log(`só lá, eu agora tenho o want alerts a: ${userWantAlerts}`)
                 $.ajax({
                     type: "POST",
                     url: "assets/php/userinfo.php",
@@ -370,17 +370,15 @@ function mixWrapper() {
                     },
                     success: function (rsp) {
                         leggeraVariables.hcPreview.innerHTML = '';
-                        leggeraMethods.displayUserStats();
+                        leggeraMethods.displayUserStats('opcao-alertas');
                     },
                     error: function (rsp) {
                         leggeraVariables.hcPreview.innerHTML = '';
-                        leggeraMethods.displayUserStats();
+                        leggeraMethods.displayUserStats('opcao-alertas');
                     }
                 })
             } else {
-                console.log(`só lá, eu tinha o want alerts a: ${userWantAlerts}`)
                 userWantAlerts = 1;
-                console.log(`só lá, eu agora tenho o want alerts a: ${userWantAlerts}`)
                 $.ajax({
                     type: "POST",
                     url: "assets/php/userinfo.php",
@@ -392,57 +390,117 @@ function mixWrapper() {
                     },
                     success: function (rsp) {
                         leggeraVariables.hcPreview.innerHTML = '';
-                        leggeraMethods.displayUserStats();
+                        leggeraMethods.displayUserStats('opcao-alertas');
                     },
                     error: function (rsp) {
                         leggeraVariables.hcPreview.innerHTML = '';
-                        leggeraMethods.displayUserStats();
+                        leggeraMethods.displayUserStats('opcao-alertas');
                     }
                 })
             }
         },
         // método para mostrar o painel de estatísticas do utilizador
-        displayUserStats: function () {
-            // caso a textarea esteja vazia, adiciona o cartão com estatísticas do utilizador
+        displayUserStats: function (action = 'no-change') {
             const userPanelWrapper = leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('div', 'user-panel-container', '', `${leggeraVariables.userInfo}`));
             const userOptions = userPanelWrapper.appendChild(leggeraMethods.mambo('div', 'user-options', '', 'Alerta conteúdos antigos&nbsp;&nbsp;&nbsp;&nbsp;'));
-            let alertToggle;
-            let wantAlertsOption;
-            let wantAlertsOptionBG;
-            switch (Number(userWantAlerts)) {
-                case 0:
-                    alertToggle = userOptions.appendChild(leggeraMethods.mambo('span', 'alerts-toggle', `mix-toggle-${userWantAlerts}`));
-                    wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option', 'material-icons animate__animated animate__slideInRight', 'cancel'));
-                    wantAlertsOption.style.color = 'rgb(104, 1, 1)'
-                    wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg', 'animate__animated animate__slideInRight'));
-                    alertToggle.addEventListener('click', leggeraMethods.updateWantAlerts)
-                    break;
-                case 1:
-                    alertToggle = userOptions.appendChild(leggeraMethods.mambo('span', 'alerts-toggle', `mix-toggle-${userWantAlerts}`));
-                    wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option', 'material-icons animate__animated animate__slideInLeft', 'check_circle'));
-                    wantAlertsOption.style.color = 'rgb(1, 100, 1)'
-                    wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg', 'animate__animated animate__slideInLeft'));
-                    alertToggle.addEventListener('click', leggeraMethods.updateWantAlerts)
-                    break;
-            }
             const userOptions2 = userPanelWrapper.appendChild(leggeraMethods.mambo('div', 'user-options-2', '', 'Tema escuro&nbsp;&nbsp;&nbsp;&nbsp;'));
-            switch (Number(lightTheme)) {
-                case 1:
-                    alertToggle = userOptions2.appendChild(leggeraMethods.mambo('span', 'darktheme-toggle', `mix-toggle-0`));
-                    wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-2', 'material-icons animate__animated animate__slideInRight', 'cancel'));
-                    wantAlertsOption.style.color = 'rgb(104, 1, 1)'
-                    wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg-2', 'animate__animated animate__slideInRight'));
-                    alertToggle.addEventListener('click', leggeraMethods.changeLeggeraTheme)
+            const alertToggle = userOptions.appendChild(leggeraMethods.mambo('span', 'alerts-toggle', `mix-toggle-${userWantAlerts}`));
+            const wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option', 'material-icons'));
+            const wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg'));
+            alertToggle.addEventListener('click', leggeraMethods.updateWantAlerts)
+            let lightThemeFix;
+            if (Number(lightTheme) === 1) { lightThemeFix = '0' } else { lightThemeFix = '1' }
+            const themeToggle = userOptions2.appendChild(leggeraMethods.mambo('span', 'darktheme-toggle', `mix-toggle-${lightThemeFix}`));
+            const changeThemeOption = themeToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-2', 'material-icons'));
+            const changeThemeOptionBG = themeToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg-2'));
+            themeToggle.addEventListener('click', leggeraMethods.changeLeggeraTheme)
+            function toogleStatus(toogle, status) {
+                switch (status) {
+                    case 'true':
+                        toogle.innerHTML = 'check_circle';
+                        toogle.style.color = 'rgb(1, 100, 1)'
+                        break;
+                    case 'false':
+                        toogle.innerHTML = 'cancel'
+                        toogle.style.color = 'rgb(104, 1, 1)'
+                        break;
+                }
+            }
+            // switch para as animações das opções menu (precisa refract, está totil ineficiente)
+            switch (action) {
+                // default, quando não é alterado nada
+                case 'no-change':
+                    // opção alerta conteudos antigos 
+                    switch (Number(userWantAlerts)) {
+                        case 0:
+                            toogleStatus(wantAlertsOption, 'false')
+                            break;
+                        case 1:
+                            toogleStatus(wantAlertsOption, 'true')
+                            break;
+                    }
+                    // opção tema escuro
+                    switch (Number(lightTheme)) {
+                        case 1:
+                            toogleStatus(changeThemeOption, 'false')
+                            break;
+                        case 0:
+                            toogleStatus(changeThemeOption, 'true')
+                            break;
+                    }
+                    leggeraListeners.allEvents();
                     break;
-                case 0:
-                    alertToggle = userOptions2.appendChild(leggeraMethods.mambo('span', 'darktheme-toggle', `mix-toggle-1`));
-                    wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-2', 'material-icons animate__animated animate__slideInLeft', 'check_circle'));
-                    wantAlertsOption.style.color = 'rgb(1, 100, 1)'
-                    wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg-2', 'animate__animated animate__slideInLeft'));
-                    alertToggle.addEventListener('click', leggeraMethods.changeLeggeraTheme)
+                //  quando é alterado os alertas
+                case 'opcao-alertas':
+                    // opção alerta conteudos antigos 
+                    switch (Number(userWantAlerts)) {
+                        case 0:
+                            toogleStatus(wantAlertsOption, 'false')
+                            wantAlertsOption.classList = 'material-icons animate__animated animate__slideInRight';
+                            wantAlertsOptionBG.classList = 'animate__animated animate__slideInRight';
+                            break;
+                        case 1:
+                            toogleStatus(wantAlertsOption, 'true')
+                            wantAlertsOption.classList = 'material-icons animate__animated animate__slideInLeft';
+                            wantAlertsOptionBG.classList = 'animate__animated animate__slideInLeft';
+                            break;
+                    }
+                    // opção tema escuro
+                    switch (Number(lightTheme)) {
+                        case 1:
+                            toogleStatus(changeThemeOption, 'false')
+                            break;
+                        case 0:
+                            toogleStatus(changeThemeOption, 'true')
+                            break;
+                    }
+                    leggeraListeners.allEvents();
+                    break;
+                //  quando é alterado os temas
+                case 'opcao-tema':
+                    switch (Number(userWantAlerts)) {
+                        case 0:
+                            toogleStatus(wantAlertsOption, 'false')
+                            break;
+                        case 1:
+                            toogleStatus(wantAlertsOption, 'true')
+                            break;
+                    }
+                    switch (Number(lightTheme)) {
+                        case 1:
+                            toogleStatus(changeThemeOption, 'false');
+                            changeThemeOption.classList = 'material-icons animate__animated animate__slideInRight';
+                            changeThemeOptionBG.classList = 'animate__animated animate__slideInRight';
+                            break;
+                        case 0:
+                            toogleStatus(changeThemeOption, 'true');
+                            changeThemeOption.classList = 'material-icons animate__animated animate__slideInLeft';
+                            changeThemeOptionBG.classList = 'animate__animated animate__slideInLeft';
+                            break;
+                    }
+                    leggeraListeners.allEvents();
                     break;
             }
-            leggeraListeners.allEvents();
         }
     }
 
@@ -1891,8 +1949,8 @@ function mixWrapper() {
     leggeraListeners.allEvents();
 
     // ################ Session 
-    (function leggeraSession () {
-        setInterval(function(){
+    (function leggeraSession() {
+        setInterval(function () {
             $.ajax({    //create an ajax request to display.php
                 type: "POST",
                 url: "assets/php/session.php",
@@ -1902,13 +1960,12 @@ function mixWrapper() {
                     sessioncookie: localStorage.getItem('session')
                 },
                 success: function (response) {
-                   if (!response.includes('OK'))  { leggeraMethods.logout(); }
+                    if (!response.includes('OK')) { leggeraMethods.logout(); }
                 },
                 error: function (response) {
-                    if (!response.includes('OK'))  { leggeraMethods.logout(); }
-                 }
+                    if (!response.includes('OK')) { leggeraMethods.logout(); }
+                }
             });
-        },10000);
+        }, 10000);
     })();
-    
 }   

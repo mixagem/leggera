@@ -1,22 +1,28 @@
 <?php
     // obtem os valores do formulário
     $un = trim($_POST['username']);
-    $pw = trim($_POST['password']);
 
     // ligação à BD
     $con = mysqli_connect ('localhost', 'root', '', 'superliggera');
 
     // query
-    $query = "SELECT username, password, name FROM users WHERE (username = '$un' AND password = '$pw')";
+    $query = "SELECT title, code, timestamp FROM manuals WHERE author = '$un'";
     $result = mysqli_query($con, $query);
 
+    $jsonarray = array();
+
     // se da query resultar 1 match (ou seja, credenciais corretas)
-    if (mysqli_num_rows($result) == 1) {
-        while($row = mysqli_fetch_array($result)) {
-            echo $row['name'];
-        }
+    if (mysqli_num_rows($result) !== 0) {
+
+        while($row = mysqli_fetch_assoc($result)) {
+            $jsonarray[] = $row;
+        };
+
+        echo json_encode($jsonarray);
+
     } else {
-        echo "login-failed";
+        echo "you have no manuals";
     }   
     mysqli_close($con);
 ?>
+

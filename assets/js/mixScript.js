@@ -3,6 +3,8 @@
 /* mambosinfinitos, 2022            */
 /************************************/
 
+let loggedinUser;
+let currentUsername = document.querySelector('#username');
 
 // ############ LANDING START ############
 
@@ -62,7 +64,11 @@ function cookieLogin() {
                     localStorage.removeItem('bolachinha');
                     console.log('Token expirado')
                 } else {
-                    leggeraLoginSucess(response);
+                    const splitPos = response.indexOf("/")
+                    const splitUser = response.slice(0, splitPos)
+                    const splitName = response.slice(splitPos + 1, response.length)
+                    loggedinUser = splitUser;
+                    leggeraLoginSucess(splitName);
                 }
             }
 
@@ -96,7 +102,7 @@ function leggeraLogin() {
         url: "assets/php/auth.php",
         dataType: "text",
         data: {
-            username: document.querySelector('#username').value,
+            username: currentUsername.value,
             password: document.querySelector('#password').value
 
         },
@@ -104,6 +110,7 @@ function leggeraLogin() {
             if (response.startsWith('login-failed')) {
                 leggeraLoginFail();
             } else {
+                loggedinUser = currentUsername.value;;
                 leggeraLoginSucess(response);
             }
         }
@@ -143,6 +150,8 @@ function leggeraLoginFail() {
 
 function leggeraLoginSucess(rsp) {
 
+
+
     if (wantCookie === 1) {
         const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);
         const novaBolachinha = JSON.stringify(fornoBolachinha);
@@ -155,7 +164,6 @@ function leggeraLoginSucess(rsp) {
                 cookie: novaBolachinha
             },
             success: function (response) {
-                console.log(response);
                 if (response.startsWith('cookie-login-sucessfull')) {
                     console.log('token gerado com sucesso')
                     localStorage.setItem('bolachinha', novaBolachinha)
@@ -400,12 +408,12 @@ function leggeraLoginSucess(rsp) {
 
                 colapList = document.querySelectorAll('.row .seccao-phcgo');
 
-                    for (i = 1; i <= colapList.length; i++) {
-                        let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
-                        if (saveBtn.classList.contains('no-display') == false) {
-                            alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
-                        }
-                    } 
+                for (i = 1; i <= colapList.length; i++) {
+                    let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
+                    if (saveBtn.classList.contains('no-display') == false) {
+                        alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
+                    }
+                }
 
 
 
@@ -624,10 +632,86 @@ function leggeraLoginSucess(rsp) {
             // Debug Tools
 
 
-            document.addEventListener("click", function (e) {
+            // document.addEventListener("click", function (e) {
+            //     console.log(e.target);
+            //     console.log('cursorpos: '+e.target.selectionStart)
+            // });
+
+
+            // ############ MANUALS QUERYS ############
+
+            function getManualsDB() {
+                console.log('entrei com: ' + loggedinUser)
+                $.ajax({    //create an ajax request to display.php
+                    type: "POST",
+                    url: "assets/php/manualslist.php",
+                    dataType: "JSON",
+                    data: { username: loggedinUser },
+                    success: function (rsp) {
+                        myManuals(rsp);
+                    }
+                })
+
+            }
+
+            function myManuals(rsp) {
+
+                // oculta a app
+                const sectionsArray = document.querySelectorAll('section');
+                console.log(sectionsArray)
+
+                for (i = 0; i < sectionsArray.length; i++) {
+                    if (sectionsArray[i].classList.contains('no-display')) {
+                        console.log('ja tinha')
+                    } else {
+                        sectionsArray[i].classList.add('no-display')
+                    }
+                }
+
+                const modal = document.querySelector('body').appendChild(elementGenerator('div', 'manuals-modal', '', ''));
+                const modalTable = modal.appendChild(elementGenerator('table', 'modal-container', '', ''));
+                const modalHeader = modalTable.appendChild(elementGenerator('thead', '', '', ''));
+                modalHeader.appendChild(elementGenerator('th', '', '', 'Título do Manual'))
+                modalHeader.appendChild(elementGenerator('th', '', '', 'Última atualização'))
+                const modalBody = modalTable.appendChild(elementGenerator('tbody', '', '', ''));
+                for (i = 0; i < rsp.length; i++) {
+
+
+                    let modalRow = modalBody.appendChild(elementGenerator('tr', `manual-${i + 1}`, `animate__animated animate__fadeInUp`, ''))
+
+                    modalRow.addEventListener('click', function (e) {
+                        getManualCode(e,rsp);
+                    });
+
+                    if (i % 2 === 0) {modalRow.classList.add('manual-par')} else {modalRow.classList.add('manual-impar')}
+                    modalRow.setAttribute('style',`--animate-delay: ${(i+1)*0.2}s`)
+                    modalRow.appendChild(elementGenerator('td', '', '', rsp[i].title))
+                    let data = new Date(Number(rsp[i].timestamp));
+                    modalRow.appendChild(elementGenerator('td', '', '', `${data.toLocaleDateString('pt-PT',{ dateStyle: 'short'})} @ ${data.toLocaleTimeString('pt-PT',{ timeStyle: 'short'})}`))
+                }
+            }
+
+            function getManualCode(e,rsp) {
                 console.log(e.target);
-            // console.log('cursorpos: '+e.target.selectionStart)
-            });
+                const manualID = e.target.parentElement.id;
+
+                // mostra a app
+                const sectionsArray = document.querySelectorAll('section');
+                for (i = 0; i < sectionsArray.length; i++) {
+                    sectionsArray[i].classList.remove('no-display')
+                }
+                document.querySelector('#manuals-modal').remove();
+                console.log(manualID.slice(7,manualID.length))
+                textarea.value = rsp[Number(manualID.slice(7,manualID.length)) - 1].code;
+
+                // Atualiza o preview
+                hcPreview.innerHTML = textarea.value;
+
+                appControlsColap();
+
+                // Guarda as alterações em cache
+                autosave2JSON();
+            }
 
 
             // ############ HILITE.ME API ############
@@ -677,6 +761,8 @@ function leggeraLoginSucess(rsp) {
             document.querySelector('#quicksave-btn').addEventListener('click', quickSave);
             document.querySelector('#quickload-btn').addEventListener('click', quickLoad);
             document.querySelector('#image-btn').addEventListener('click', writeImage);
+            document.querySelector('#logout-btn').addEventListener('click', logout);
+            document.querySelector('#manuals-btn').addEventListener('click', getManualsDB);
             textarea.addEventListener('keyup', updatePreviewsSlim);
             textarea.addEventListener('click', updatePreviews);
 
@@ -689,21 +775,6 @@ function leggeraLoginSucess(rsp) {
 
                 // Vai buscar os dados aos JSON
                 grabThemAll();
-
-                // RNG entre 2500 e 3000
-                const rng = Math.floor(Math.random() * (3000 - 2500)) + 2500;
-
-                // Função a ser executada RNG milisegundos depois de ter sido carregada a página
-                const landingTimer = setTimeout(function () {
-
-                    // Mostra a aplicação
-                    const allSections = [];
-                    allSections.push(document.querySelector('.sticky-top'))
-                    allSections.push(document.querySelector('.display-preview'))
-                    for (i = 0; i < allSections.length; i++) {
-                        allSections[i].classList.remove('no-display')
-                    }
-                }, rng);
 
                 // Vai buscar o último tópico de manual à cache (caso exista)
                 (function fromJSON2Textarea() {
@@ -834,6 +905,48 @@ function leggeraLoginSucess(rsp) {
                     }
                 })();
             }
+
+
+            // ############ LOGOUT ############
+
+            function logout() {
+                localStorage.removeItem('bolachinha');
+                location.reload();
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             // ############ APPCONTROLS TEXTBOXES ############

@@ -979,3 +979,74 @@ a.manuais:hover {
 #novo-hilitecode-btn {
     color: rgb(0, 255, 13);
 }
+
+
+
+/*  Manuals Modal */
+
+#manuals-modal {
+    height:100vh;
+    background-color:#3934BE;
+    display: grid;
+}
+#modal-container {
+    background:rgba(255,255,255,0.2);
+    width:80%;
+    padding-bottom:25px;
+    margin:auto;
+    border-radius:10px;
+}
+#modal-container > thead > th {
+    font-size:16px;
+    color:var(--primary-title-color)
+}
+
+#modal-container > thead > th:first-child,
+#modal-container > tbody > tr > td:first-child{
+    padding-left:30px;
+    width: 70%;
+}
+
+#modal-container > thead > th:last-child,
+#modal-container > tbody > tr > td:last-child{
+    text-align:right;
+    width: 30%;
+}
+
+
+#modal-container > tbody > tr {
+    color:var(--text-color-clear);
+}
+
+#modal-container > tbody > tr > td > span {
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+#modal-container > tbody > tr > td > span {
+    vertical-align: bottom;
+}
+
+#modal-container > tbody > tr > td:last-child:hover {
+    color: var(--primary-title-color);
+    transition-duration: 500ms;
+    cursor: pointer;
+}
+
+.manual-par {
+    background-color:#EB8475;
+}
+
+.manual-par:hover {
+    background-color:#e45e4a;
+    cursor: pointer;
+}
+
+.manual-impar {
+    background-color:aquamarine;
+}
+
+.manual-impar:hover {
+    background-color:rgb(56, 240, 178);
+    cursor: pointer;
+}

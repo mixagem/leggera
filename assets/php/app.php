@@ -15,12 +15,16 @@ echo "<section class='header sticky-top'>
                         <button type='button' class='btn btn-danger no-display' id='preview-btn'><i
                                 class='lni lni-save'></i>
                             Pré-visualizar</button>
+                        <button type='button' class='btn btn-warning' id='manuals-btn'><i class='lni lni-library'></i>
+                            </button>
                         <button type='button' class='btn btn-warning' id='image-btn'><i class='lni lni-paperclip'></i>
-                            IMG</button>
+                            </button>
                         <button type='button' class='btn btn-warning' id='quicksave-btn'><i class='lni lni-save'></i>
                             QuickSave</button>
-                        <button type='button' class='btn btn-warning' id='quickload-btn'><i class='lni lni-upload'></i>
+                            <button type='button' class='btn btn-warning' id='quickload-btn'><i class='lni lni-upload'></i>
                             QuickLoad</button>
+                        <button type='button' class='btn btn-danger' id='logout-btn'><i class='lni lni-power-switch'></i>
+                            Logout</button>
                     </div>
                     <textarea id='textarea'></textarea>
                     <div class='col-md-12 headControls2'>

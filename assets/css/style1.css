@@ -61,6 +61,19 @@ body {
     color: var(--primary-title-color) !important;
 }
 
+.update-more-details {
+    color: var(--primary-title-color);
+    /* color: var(--text-color-dark);
+    border-radius: 50%; */
+    text-align: center;
+    padding: 5px;
+    margin-top: 2px;
+    display: inline-block;
+    font-size: 15px;
+    vertical-align: top;
+    cursor: pointer;
+}
+
 
 /*###########    Landing     ###########*/
 
@@ -195,6 +208,11 @@ body {
     cursor: pointer;
 }
 
+#update-wrapper {
+    min-height: 100vh;
+    background-color: var(--background-color);
+}
+
 /*###########     Editor     ###########*/
 
 .sticky-top {
@@ -217,7 +235,7 @@ body {
 /* estilo das textareas do cabeçalho do editor (principal + hilite.me)*/
 .header textarea {
     width: 100%;
-    min-height: 450px;
+    min-height: 400px;
     border-radius: 10px;
     padding: 5px 10px;
     background-color: transparent;
@@ -465,7 +483,7 @@ body {
 
 #tipo-lista-span {
     display: block;
-    text-align: center;
+    text-align: left;
     color: var(--text-color-light);
     padding-left: 2px;
     font-size: 14.5px;
@@ -473,7 +491,7 @@ body {
 
 #num-itens-span {
     display: block;
-    text-align: right;
+    text-align: center;
     color: var(--text-color-light);
     padding-right: 2px
 }
@@ -497,11 +515,11 @@ body {
 }
 
 #num-linhas-input {
-    width: 65%
+    width: 85%
 }
 
 #num-colunas-input {
-    width: 65%
+    width: 85%
 }
 
 #table-id-input {
@@ -585,16 +603,11 @@ body {
     padding-top:15px;
 }
 
-
 #preview-heading-row {
     color: var(--text-color-light);
     padding: 10px 0px;
     min-height: 60px;
-}
-
-#gerador-links-h1 {
-    text-align: center;
-    padding-bottom: 20px;
+    transform: scale(0.7);
 }
 
 #preview-heading-row>* {
@@ -604,11 +617,11 @@ body {
 
 .gerador-links-wrapper {
     color: var(--text-color-light);
+    padding-bottom:2vh;
 }
 
 .gerador-links-wrapper>div>input {
-    width: 90%;
-    border-radius: 5px;
+    width: 100%;
     color: var(--text-color-dark);
 }
 
@@ -618,16 +631,28 @@ body {
 
 #gerador-titulos {
     color: var(--text-color-light);
-    font-size: 20px;
     text-align: center;
+}
+
+#gerador-titulos > span {
+    font-size: 20px;
 }
 
 #gerador-titulos select {
     color: var(--text-color-dark);
 }
 
-.gerador-links-wrapper .col-sm-12 {
+.gerador-links-wrapper .col-sm-12,
+.gerador-marcadores-wrapper .col-sm-12 {
     font-size: 20px;
+    text-align: center;
+    padding-bottom:1.5vh;
+}
+
+#marcador-nome-span,
+#marcador-link-span,
+#gerador-marcadores-h1 {
+	color: var(--text-color-light);
 }
 
 #hilite-wrapper {

@@ -6,8 +6,8 @@ $nome = trim($_POST['nome']);
 $email = trim($_POST['email']);
 $image = trim($_POST['image']);
 $con = mysqli_connect('localhost', 'root', '', 'superleggera');
-// $svurl = 'http://phc202107001.phc.local:8080/leggera';
-$svurl = 'http://localhost/leggera';
+// $svurl = 'http://phc202107001.phc.local:8080/leggera/v1-28';
+$svurl = 'http://localhost/leggera/v1-28';
 
 // AES
 $data = $pw;

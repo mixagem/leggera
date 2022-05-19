@@ -2,6 +2,10 @@
 /* helpcenter+ supperliggera        */
 /* mambosinfinitos, 2022            */
 /************************************/
+function teste(e) {
+    console.log(e)
+    e.target.style.transform = 'rotate(90deg)'
+};
 let lightTheme = 1;
 let userWantAlerts;
 const getThemeFromCache = localStorage.getItem('lightTheme');
@@ -118,20 +122,12 @@ function leggeraLogin() {
                 leggeraLoginFail('Erro: Conta inativa');
             } else if (response.includes('Credenciais')) {
                 leggeraLoginFail('Erro: Credenciais inválidas');
-            } else if (response.length > 3) {
+            } else {
                 loggedinUser = currentUsername.value;
                 lightTheme = response[1];
                 let saveTheme2Cache = JSON.stringify(lightTheme);
                 localStorage.setItem('lightTheme', saveTheme2Cache);
-                localStorage.setItem('session', response[2]);
-                leggeraLoginSucess(response);
-            }
-            else {
-                loggedinUser = currentUsername.value;
-                lightTheme = response[1];
-                let saveTheme2Cache = JSON.stringify(lightTheme);
-                localStorage.setItem('lightTheme', saveTheme2Cache);
-                localStorage.setItem('session', response[2]);
+                localStorage.setItem('session', response[3]);
                 leggeraLoginSucess(response);
             }
         },
@@ -167,8 +163,6 @@ function leggeraLoginFail(status) {
     }, 4000);
 }
 function leggeraLoginSucess(rsp) {
-    console.log(rsp)
-    lightTheme = rsp[1];
     document.querySelector('#theme-css').setAttribute('href', `assets/css/style${lightTheme}.css`);
     document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${lightTheme}.css`);
     document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${lightTheme}.css`);
@@ -200,7 +194,9 @@ function leggeraLoginSucess(rsp) {
     // animação fadeOut para o wrapper de login
     document.querySelector('#login-wrapper').classList = ('animate__fadeOutDown animate__animated');
 
-    if (rsp.length <= 4) {
+    // a rsp do login devolve 4 elementos
+    // quando existe update, as respostas dos logins são de 5 elementos 
+    if (rsp.length < 5) {
         const landingLogos = document.querySelectorAll('#loading-wrapper .animate__animated')
         const landingLogosArray = Array.from(landingLogos);
         // remover o log-in wrapper da secelção
@@ -251,6 +247,8 @@ function leggeraLoginSucess(rsp) {
             // leggera-app.js
             mixWrapper();
         }, 3500)
+
+        // caso exista update
     } else {
         for (i = 0; i < landingLogosArray.length; i++) {
             landingLogosArray[i].classList = 'animate__fadeOutDown animate__animated';
@@ -258,7 +256,48 @@ function leggeraLoginSucess(rsp) {
         setTimeout(function () {
             document.querySelector('#loading-wrapper').id = 'update-wrapper';
             document.querySelector('#update-wrapper').style.overflow = 'clip';
-            document.querySelector('#update-wrapper').innerHTML = rsp[4]
+            document.querySelector('#update-wrapper').innerHTML = rsp[4];
+
+            setTimeout(function () {
+                for (updates of document.querySelectorAll('.update-more-details')) {
+                    updates.addEventListener('click', expandUpdate)
+                }
+            }, 1000)
+
+            function expandUpdate(e) {
+                (e.target.style.transform === 'rotate(180deg)') ? (e.target.style.transform = 'rotate(0deg)') : (e.target.style.transform = 'rotate(180deg)');
+            }
+
+
         }, 1200)
+
     }
+}
+
+function updateNotice() {
+    $.ajax({    //create an ajax request to display.php
+        type: "POST",
+        url: "assets/php/update.php",
+        dataType: "text",
+        data: {
+            username: loggedinUser,
+        },
+        success: function () {
+            document.querySelector('.animate__fadeInUp.animate__animated.container-fluid').classList = 'animate__fadeOutDown animate__animated container-fluid';
+            setTimeout(function () {
+                $.ajax({    //create an ajax request to display.php
+                    type: "GET",
+                    url: "assets/php/app.php",
+                    dataType: "text",
+                    success: function (rsp) {
+                        document.querySelector('body').innerHTML = rsp;
+                    }
+                })
+            }, 1000)
+            setTimeout(function () {
+                // leggera-app.js
+                mixWrapper();
+            }, 1300)
+        }
+    })
 }

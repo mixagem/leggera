@@ -97,6 +97,7 @@ function mixWrapper() {
                 convertedPreview = leggeraPreviewAdjustments.topicLinkAlert(convertedPreview);
             }
             convertedPreview = leggeraPreviewAdjustments.lightThemePreview(convertedPreview);
+            convertedPreview = leggeraPreviewAdjustments.funkyBookmarks(convertedPreview);
             return convertedPreview
         },
         // alerta topiclink
@@ -145,6 +146,13 @@ function mixWrapper() {
                 convertedPreview = convertedPreview.replaceAll(';border:solid #eb8475;', ';border:solid #147b8a;');
             }
             return convertedPreview;
+        },
+        // visibilidade dos marcaores 
+        funkyBookmarks: function (convertedPreview) {
+            convertedPreview = convertedPreview.replaceAll('<div id="marcador-', '<div class="funky-bookmarks" id="marcador-');
+            convertedPreview = convertedPreview.replaceAll(' style="display: none;"></div>', '>### marcador ###</div>');
+            
+            return convertedPreview
         }
     }
     // ################ funções várias da aplicação
@@ -624,10 +632,7 @@ function mixWrapper() {
         // Constroi a modal com os manuais recebidos da DB
         myManuals: function (rsp) {
             // oculta a app
-            const sectionsArray = document.querySelectorAll('section');
-            for (i = 0; i < sectionsArray.length; i++) {
-                if (!sectionsArray[i].classList.contains('no-display')) { sectionsArray[i].classList.add('no-display') }
-            }
+            if (!document.querySelector('.app-grid').classList.contains('no-display')) { document.querySelector('.app-grid').classList.add('no-display') }
             // cabeçalho
             const myManualsModal = document.querySelector('body').appendChild(leggeraMethods.mambo('div', id = 'manuals-modal', cla = '', inn = leggeraTemplates.myManualsHeader));
             document.querySelector('#save-manual-input').addEventListener('keyup', leggeraManuais.myManualsFilterResults);
@@ -665,10 +670,7 @@ function mixWrapper() {
         getManualCode: function (e, rsp) {
             const manualID = e.target.parentElement.id;
             // mostra a app
-            const sectionsArray = document.querySelectorAll('section');
-            for (i = 0; i < sectionsArray.length; i++) {
-                sectionsArray[i].classList.remove('no-display')
-            }
+            document.querySelector('.app-grid').classList.remove('no-display');
             document.querySelector('#manuals-modal').remove();                                                                                                              // 01234567    
             leggeraVariables.textarea.value = rsp[Number(manualID.slice(7, manualID.length)) - 1].code;// este 7 serve para selecionar o inicio da string que vem do manualID (manual-1)
             // Atualiza o preview
@@ -700,14 +702,12 @@ function mixWrapper() {
                     else if (rsp.includes('atual')) {
                         alert('tópico atualizado com sucesso');
                         // mostra a app
-                        const sectionsArray = document.querySelectorAll('section');
-                        for (i = 0; i < sectionsArray.length; i++) { sectionsArray[i].classList.remove('no-display') }
+                        document.querySelector('.app-grid').classList.remove('no-display');
                         document.querySelector('#manuals-modal').remove();
                     } else {
                         alert('tópico criado com sucesso');
                         // mostra a app
-                        const sectionsArray = document.querySelectorAll('section');
-                        for (i = 0; i < sectionsArray.length; i++) { sectionsArray[i].classList.remove('no-display') }
+                        document.querySelector('.app-grid').classList.remove('no-display');
                         document.querySelector('#manuals-modal').remove();
                     }
                 }
@@ -715,13 +715,14 @@ function mixWrapper() {
         },
         // volta para o editor
         backHome: function () {
-            const sectionsArray = document.querySelectorAll('section');
+
             // caso a textarea esteja vazia, mostra as estatísticas do utilizador
             if (leggeraVariables.activeTextarea.value === '') {
                 leggeraVariables.hcPreview.innerHTML = '';
                 leggeraMethods.displayUserStats();
             }
-            for (i = 0; i < sectionsArray.length; i++) { sectionsArray[i].classList.remove('no-display') }
+            // mostra a app
+            document.querySelector('.app-grid').classList.remove('no-display');
             document.querySelector('#manuals-modal').remove();
         },
         deleteManual: function (e) {
@@ -744,8 +745,7 @@ function mixWrapper() {
                         if (rsp.startsWith('Err')) { console.log('fudeu') }
                         else {
                             alert('tópico removido com sucesso');
-                            const sectionsArray = document.querySelectorAll('section');
-                            for (i = 0; i < sectionsArray.length; i++) { sectionsArray[i].classList.remove('no-display') }
+                            document.querySelector('.app-grid').classList.remove('no-display');
                             document.querySelector('#manuals-modal').remove();
                         }
                     }
@@ -1042,8 +1042,8 @@ function mixWrapper() {
         }
     }
     const leggeraTemplates = {
-        listsAndTables: '<div class="row lists-tables-wrapper"> <div id="listas-wrapper" class="col-sm-5"> <div id="header-listas" class="row"><i class="lni lni-list gold"></i>&nbsp;&nbsp;Gerador de listas</div><div class="row"> <div class="col-sm-8"><span id="tipo-lista-span">Tipo de lista</span></div><div class="col-sm-3"><span id="num-itens-span">Itens</span></div><div class="col-md-1"></div></div><div class="row"> <div class="col-sm-8"><select id="tipo-lista-dropdown"> <option value="ul">&nbsp;Não ordenada</option> <option value="ol-1">&nbsp;Ordenada numérica</option> <option value="ol-a">&nbsp;Ordenada alfabética</option> </select></div><div class="col-sm-3"><input id="num-itens-input" type="number"></div><div class="col-sm-1"></div></div><div class="row"> <div id="preview-list-row" class="col-sm-8"> <ul style="list-style-position: inside;"> <li><b>Item 1:</b> Lorem Ipsum</li><li><b>Item 2:</b> Lorem Ipsum</li><li><b>Item 3:</b> Lorem Ipsum</li></ul> </div><div class="col-sm-4"><input id="want-links-checkbox" type="checkbox"><span id="want-links-span">&nbsp;&nbsp;&nbsp;Links ?</span></div><div class="col-sm-12 text-center"><button id="create-list-btn" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir lista</button></div><div class="col-sm-12 novo-separador"><span><i class="lni lni-page-break gold"></i> Separador horizontal<br></span><button id="nova-quebra-btn" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir separador horizontal</button> </div></div></div><div id="tabelas-wrapper" class="col-sm-7"> <div id="header-tabelas" class="row"><i class="lni lni-layout gold"></i>&nbsp;&nbsp;Gerador de tabelas</div><div class="row"> <div class="col-sm-2"><span id="num-linhas-span">Linhas</span><input id="num-linhas-input" type="number"> </div><div class="col-sm-2"><span id="num-colunas-span">Colunas</span><input id="num-colunas-input" type="number"></div><div class="col-sm-3"><span id="table-id-span">ID tabela</span><input id="table-id-input"></div><div class="col-sm-5" id="import-table-btn"><button class="btn btn-warning"><i class="lni lni-code"></i>&nbsp;&nbsp;Importar tabela</button></div></div><div class="row"> <div class="col-sm-7" id="cria-tabela-checkbox-wrapper"><input id="normal-table" type="radio" name="tablestyle" checked="true"><span>&nbsp;&nbsp;Original</span><input id="modern-table" type="radio" name="tablestyle"><span>&nbsp;&nbsp;Moderna</span><br><input id="modern-table-blue" type="radio" name="tablestyle"><span>&nbsp;&nbsp;Moderna azul</span></div><div class="col-sm-5" id="cria-tabela-btn-div"><button id="add-table" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir tabela</button></div><div class="col-sm-12 nova-imagem"><span id="imageb64-span"><i class="lni lni-gallery gold"></i>&nbsp;&nbsp;Carregar imagem<br></span> <form id="upload-form" method="post" enctype="multipart/form-data"><input id="file-upload-input" type="file" name="file-upload-input"></form><input id="imagem-centrada" type="checkbox"><span id="imagem-centrada-span">&nbsp;&nbsp;&nbsp;Centrar imagem</span><button id="nova-imagem-btn" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir imagem</button> </div></div></div></div>',
-        titlesAndLinks: '<div class="row titles-links-wrapper"> <div id="left-wrapper" class="col-sm-8"> <div id="gerador-titulos" class="row"><i class="lni lni-pilcrow gold"></i>&nbsp;Gerador de títulos<div class="row"> <div class="col-sm-1"></div><div class="col-sm-11"><span id="tipo-lista-span">Tipo de título</span></div></div><div class="row"> <div class="col-sm-1"></div><div class="col-sm-6"><select id="tipo-titulo-dropdown"> <option value="old1">&nbsp;Título H1</option> <option value="old2">&nbsp;Título H2</option> <option value="old3">&nbsp;Título H3</option> <option value="default1">&nbsp;Título H1 (alternativo)</option> <option value="default2">&nbsp;Título H2 (alternativo)</option> <option value="default3">&nbsp;Título H3 (alternativo)</option> </select></div><div class="col-sm-5"><button id="add-title" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir título</button></div></div></div><div class="row"> <div id="preview-heading-row" class="col-sm-12 text-center"> <h1 class="manuais">Título/Heading 1</h1> </div></div><div class="row title-link-filler"></div><div class="row gerador-links-wrapper"> <div id="gerador-links-h1" class="col-sm-12"><i class="lni lni-website gold"></i>&nbsp;&nbsp;Gerador de links</div><div class="col-md-1"></div><div class="col-sm-2 text-left"><span id="nome-span">Descrição:</span></div><div class="col-sm-5"><input id="nome-input"></div><div class="col-sm-4 nova-ligacao-btn-col"><button id="add-link" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir ligação</button></div><div class="col-md-1"></div><div class="col-sm-2 text-left"><span id="link-span">URL:</span></div><div class="col-sm-5"><input id="link-input"></div></div><div class="row title-link-filler"></div><div class="row gerador-marcadores-wrapper"> <div id="gerador-marcadores-h1" class="col-sm-12"><i class="lni lni-website gold"></i>&nbsp;&nbsp;Gerador de Marcadores</div><div class="col-md-1"></div><div class="col-sm-3 text-left"><span id="marcador-nome-span">Novo Marcador:</span></div><div class="col-sm-4"><input id="marcador-nome-input"></div><div class="col-sm-4 novo-marcador-btn-col"><button id="new-bookmark" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir Marcador</button></div><div class="col-md-1"></div><div class="col-sm-3 text-left"><span id="marcador-link-span">Selecionar marcador:</span></div><div class="col-sm-4"><select id="marcadores-dropdown" disabled> <option value="no-bookmark">-- não existem marcadores neste manual --</option> </select></div><div class="col-sm-4 novo-marcador-btn-col"><button id="separador-add-link" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir Ligação</button></div></div></div><div id="hilite-wrapper" class="col-sm-4"> <div id="hilite-subwrapper" class="row"><i class="lni lni-skipping-rope gold"></i>&nbsp;&nbsp;Hilite.me API </div><div class="row"> <div class="col-sm-12"><textarea id="hilite-textarea"></textarea> <div id="hilite-radio-row" class="row"> <div class="col-sm-3"><input id="vbnet" type="radio" name="hilite" checked="true"><span>&nbsp;&nbsp;VB</span></div><div class="col-sm-3"><input id="ts" type="radio" name="hilite"><span>&nbsp;&nbsp;&nbsp;TS</span> </div><div class="col-sm-3"><input id="json" type="radio" name="hilite"><span>&nbsp;&nbsp;JSON</span> </div><div class="col-sm-3"><input id="sql" type="radio" name="hilite"><span>&nbsp;&nbsp;SQL</span> </div></div><div class="row"> <div class="col-sm-12 line-numbers"><input id="line-numbers" type="checkbox"><span>&nbsp;&nbsp;Linhas numeradas</span></div></div><button id="add-hilite" class="btn btn-warning"><i class="lni lni-code"></i>&nbsp;&nbsp;Introduzir código</button> </div></div></div></div>',
+        listsAndTables: '<div class="row lists-tables-wrapper"> <div id="listas-wrapper" class="col-sm-5"> <div id="header-listas" class="row"><i class="lni lni-list gold"></i>&nbsp;&nbsp;Gerador de listas</div><div class="row"> <div class="col-sm-8"><span id="tipo-lista-span">Tipo de lista</span></div><div class="col-sm-3"><span id="num-itens-span">Itens</span></div><div class="col-sm-1"></div></div><div class="row"> <div class="col-sm-8"><select id="tipo-lista-dropdown"> <option value="ul">&nbsp;Não ordenada</option> <option value="ol-1">&nbsp;Ordenada numérica</option> <option value="ol-a">&nbsp;Ordenada alfabética</option> </select></div><div class="col-sm-3"><input id="num-itens-input" type="number"></div><div class="col-sm-1"></div></div><div class="row"> <div id="preview-list-row" class="col-sm-8"> <ul style="list-style-position: inside;"> <li><b>Item 1:</b> Lorem Ipsum</li><li><b>Item 2:</b> Lorem Ipsum</li><li><b>Item 3:</b> Lorem Ipsum</li></ul> </div><div class="col-sm-4"><input id="want-links-checkbox" type="checkbox"><span id="want-links-span">&nbsp;&nbsp;&nbsp;Links ?</span></div><div class="col-sm-12 text-center"><button id="create-list-btn" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir lista</button></div><div class="col-sm-12 novo-separador"><span><i class="lni lni-page-break gold"></i> Separador horizontal<br></span><button id="nova-quebra-btn" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir separador horizontal</button> </div></div></div><div id="tabelas-wrapper" class="col-sm-7"> <div id="header-tabelas" class="row"><i class="lni lni-layout gold"></i>&nbsp;&nbsp;Gerador de tabelas</div><div class="row"> <div class="col-sm-2"><span id="num-linhas-span">Linhas</span><input id="num-linhas-input" type="number"> </div><div class="col-sm-2"><span id="num-colunas-span">Colunas</span><input id="num-colunas-input" type="number"></div><div class="col-sm-3"><span id="table-id-span">ID tabela</span><input id="table-id-input"></div><div class="col-sm-5" id="import-table-btn"><button class="btn btn-warning"><i class="lni lni-code"></i>&nbsp;&nbsp;Importar tabela</button></div></div><div class="row"> <div class="col-sm-7" id="cria-tabela-checkbox-wrapper"><input id="normal-table" type="radio" name="tablestyle" checked="true"><span>&nbsp;&nbsp;Original</span><input id="modern-table" type="radio" name="tablestyle"><span>&nbsp;&nbsp;Moderna</span><br><input id="modern-table-blue" type="radio" name="tablestyle"><span>&nbsp;&nbsp;Moderna azul</span></div><div class="col-sm-5" id="cria-tabela-btn-div"><button id="add-table" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir tabela</button></div><div class="col-sm-12 nova-imagem"><span id="imageb64-span"><i class="lni lni-gallery gold"></i>&nbsp;&nbsp;Carregar imagem<br></span> <form id="upload-form" method="post" enctype="multipart/form-data"><input id="file-upload-input" type="file" name="file-upload-input"></form><input id="imagem-centrada" type="checkbox"><span id="imagem-centrada-span">&nbsp;&nbsp;&nbsp;Centrar imagem</span><button id="nova-imagem-btn" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir imagem</button> </div></div></div></div>',
+        titlesAndLinks: '<div class="row titles-links-wrapper"> <div id="left-wrapper" class="col-sm-8"> <div id="gerador-titulos" class="row"><span><i class="lni lni-pilcrow gold"></i>&nbsp;Gerador de títulos</span><div class="row"> <div class="col-sm-1"></div><div class="col-sm-11"><span id="tipo-lista-span">Tipo de título</span></div></div><div class="row"> <div class="col-sm-1"></div><div class="col-sm-6"><select id="tipo-titulo-dropdown"> <option value="old1">&nbsp;Título H1</option> <option value="old2">&nbsp;Título H2</option> <option value="old3">&nbsp;Título H3</option> <option value="default1">&nbsp;Título H1 (alternativo)</option> <option value="default2">&nbsp;Título H2 (alternativo)</option> <option value="default3">&nbsp;Título H3 (alternativo)</option> </select></div><div class="col-sm-5"><button id="add-title" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir título</button></div></div></div><div class="row"> <div id="preview-heading-row" class="col-sm-12 text-center"> <h1>Título/Heading 1</h1> </div></div><div class="row title-link-filler"></div><div class="row gerador-links-wrapper"> <div id="gerador-links-h1" class="col-sm-12"><i class="lni lni-website gold"></i>&nbsp;&nbsp;Gerador de links</div><div class="col-sm-2 text-left"><span id="nome-span">Descrição:</span></div><div class="col-sm-5"><input id="nome-input"></div><div class="col-sm-4 nova-ligacao-btn-col"><button id="add-link" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir ligação</button></div><div class="col-sm-1"></div><div class="col-sm-2 text-left"><span id="link-span">URL:</span></div><div class="col-sm-5"><input id="link-input"></div></div><div class="row title-link-filler"></div><div class="row gerador-marcadores-wrapper"> <div id="gerador-marcadores-h1" class="col-sm-12"><i class="lni lni-bookmark-alt gold"></i>&nbsp;&nbsp;Gerador de marcadores</div><div class="col-sm-3 text-left"><span id="marcador-nome-span">Novo marcador:</span></div><div class="col-sm-4"><input id="marcador-nome-input"></div><div class="col-sm-1"></div><div class="col-sm-4 novo-marcador-btn-col"><button id="new-bookmark" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir Marcador</button></div><div class="col-sm-3 text-left"><span id="marcador-link-span">Marcadores:</span></div><div class="col-sm-4"><select id="marcadores-dropdown" disabled> <option value="no-bookmark">-- não existem marcadores neste manual --</option> </select></div><div class="col-sm-1"></div><div class="col-sm-4 novo-marcador-btn-col"><button id="separador-add-link" class="btn btn-success"><i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir Ligação</button></div></div></div><div id="hilite-wrapper" class="col-sm-4"> <div id="hilite-subwrapper" class="row"><i class="lni lni-skipping-rope gold"></i>&nbsp;&nbsp;Hilite.me API </div><div class="row"> <div class="col-sm-12"><textarea id="hilite-textarea"></textarea> <div id="hilite-radio-row" class="row"> <div class="col-sm-3"><input id="vbnet" type="radio" name="hilite" checked="true"><span>&nbsp;&nbsp;VB</span></div><div class="col-sm-3"><input id="ts" type="radio" name="hilite"><span>&nbsp;&nbsp;&nbsp;TS</span> </div><div class="col-sm-3"><input id="json" type="radio" name="hilite"><span>&nbsp;&nbsp;JSON</span> </div><div class="col-sm-3"><input id="sql" type="radio" name="hilite"><span>&nbsp;&nbsp;SQL</span> </div></div><div class="row"> <div class="col-sm-12 line-numbers"><input id="line-numbers" type="checkbox"><span>&nbsp;&nbsp;Linhas numeradas</span></div></div><button id="add-hilite" class="btn btn-warning"><i class="lni lni-code"></i>&nbsp;&nbsp;Introduzir código</button> </div></div></div></div>',
         myManualsHeader: '<div id="savemanual-container" class="row"><div class="col-sm-8 text-left"><h1>Nome do manual</h1><input id="save-manual-input"><div id="contida-wrapper"><input id="procura-contida" type="checkbox">&nbsp;&nbsp;&nbsp;Procura contida?</div></div><div class="col-sm-2 text-left"><button id="save-manual-btn" class="btn btn-success"><i class="lni lni-save"></i>&nbsp;&nbsp;Guardar Manual</button></div><div id="close-myManuals-wrapper" class="col-sm-2 text-right"><button id="back-home-btn" class="btn btn-light"><i class="lni lni-reply"></i>&nbsp;&nbsp;Voltar ao editor</button></div></div>',
     }
     // ################ listas, tabelas, separador horizontal & carregamento de imagens
@@ -1440,15 +1440,16 @@ function mixWrapper() {
         },
         createBookmark: function () {
             const nomeMarcador = document.querySelector('#marcador-nome-input').value;
-            const marcador = leggeraMethods.mambo('div', `marcador-${nomeMarcador}`, 'marcador')
-            leggeraMethods.escreveNaTextarea(marcador.outerHTML);
+            const marcador = leggeraMethods.mambo('div', `marcador-${nomeMarcador}`)
+            marcador.style.display = 'none';
+            leggeraMethods.escreveNaTextarea('\n'+marcador.outerHTML+'\n');
             leggeraTitlesAndLinks.refreshBookmarkList();
         },
         refreshBookmarkList: function () {
             const bookmarkListWrapper = document.querySelector('#marcadores-dropdown').parentElement;
             bookmarkListWrapper.innerHTML = '';
             const bookmarkList = bookmarkListWrapper.appendChild(leggeraMethods.mambo('select', 'marcadores-dropdown'));
-            const allBookmarks = document.querySelectorAll('.marcador');
+            const allBookmarks = document.querySelectorAll('div[id^=marcador-]');
             if (allBookmarks.length > 0) {
                 //marcador-                                                               
                 for (marcador of allBookmarks) {      //012345678   
@@ -1456,13 +1457,13 @@ function mixWrapper() {
                     bookmarkList.lastChild.value = marcador.id
                 }
             } else {
-                bookmarkList.appendChild(leggeraMethods.mambo('option', '', '', '-- não existem marcadores --'))
-                bookmarkList.setAttribute('disabled',true);
+                bookmarkList.appendChild(leggeraMethods.mambo('option', '', '', 'não existem marcadores'))
+                bookmarkList.setAttribute('disabled', true);
             }
         },
         writeBookmark: function () {
             const selectedBookmarkID = document.querySelector('#marcadores-dropdown').value;
-            const linkParaBookmark = leggeraMethods.mambo('a','','manuais',`Nome da ligação para o marcador ${selectedBookmarkID.slice(9)}`,'',`#${selectedBookmarkID}`);
+            const linkParaBookmark = leggeraMethods.mambo('a', '', 'manuais', `Nome da ligação para o marcador ${selectedBookmarkID.slice(9)}`, '', `#${selectedBookmarkID}`);
             leggeraMethods.escreveNaTextarea(linkParaBookmark.outerHTML);
         }
     }

@@ -3,8 +3,8 @@
 $usermail = trim($_POST['usermail']);
 $un = trim($_POST['username']);
 $con = mysqli_connect('localhost', 'root', '', 'superleggera');
-// $svurl = 'http://phc202107001.phc.local:8080/leggera';
-$svurl = 'http://localhost/leggera';
+// $svurl = 'http://phc202107001.phc.local:8080/leggera/v1-28';
+$svurl = 'http://localhost/leggera/v1-28';
 
 // Import PHPMailer classes into the global namespace 
 use PHPMailer\PHPMailer\PHPMailer;

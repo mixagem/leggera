@@ -35,6 +35,22 @@
     animation-delay: 0s;
 }
 
+
+.funky-bookmarks {
+    width: 100%;
+    height: 20px;
+    background-color: var(--primary-title-color);
+    color: var(--text-color-light);
+    border-radius: 5px;
+    animation-name: periodicfading;
+    animation-duration: 3.0s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    text-align: center;
+}
+
+
 /* user options */
 #user-options,
 #user-options-2 {
@@ -102,13 +118,13 @@
     min-height: 100vh;
 }
 
-.app-grid > div {
-    padding:0px;
+.app-grid>div {
+    padding: 0px;
 }
 
 .menu-nav-top-left {
     text-align: left;
-    padding-left:20px;
+    padding-left: 20px;
 }
 
 /*########### Live preview         */
@@ -118,6 +134,9 @@
 
 .display-preview {
     background-color: #000;
+    overflow-y: auto;
+    max-height: 100vh;
+    overflow-x: clip;
 }
 
 #helpcenter-preview a,
@@ -323,7 +342,7 @@ a.manuais:hover {
     color: var(--secondary-title-color);
 }
 
-#user-info>div:nth-child(2){
+#user-info>div:nth-child(2) {
     color: rgb(20, 123, 133);
 }
 

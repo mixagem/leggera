@@ -1,1 +1,1 @@
-console.log('abcd'.slice(2))
+(1===2) ? (console.log('s')) : (console.log('n'))

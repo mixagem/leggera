@@ -17,6 +17,9 @@ body {
     overflow-x: clip;
 }
 
+pre {
+    white-space: normal;
+}
 a {
 color: #000000 !important;
 font-family: 'Neutrif Pro' !important;
@@ -71,7 +74,7 @@ a:hover {
 
 .header {
     min-height: 25vh;
-    background: #333;
+    background: #1D1D1D;
     background-image: url('../img/header-bg.png');
     background-size: 2%;
 }
@@ -230,7 +233,7 @@ a:hover {
 }
 
 #cria-tabela-btn-div{
-    padding-top:50px;
+    padding-top:20px;
 }
 
 #num-linhas-span,
@@ -624,4 +627,29 @@ a.manuais:hover {
     padding-top:20px;
     font-size:30px;
     padding-bottom:20px;
+}
+
+.novo-separador {
+    padding-top:20px;
+}
+
+.novo-separador span {
+    font-size:20px;
+    color:#fff;
+    display: block;
+padding: 10px 0px;
+}
+
+#hilite-textarea {
+    min-height: 100px!important;
+    font-size:12px;
+}
+
+#hilite-checkboxes-row {
+    padding:15px 0px;
+    color:#fff;
+}
+
+#novo-hilitecode-btn {
+    color:#000;
 }

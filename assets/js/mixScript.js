@@ -17,17 +17,20 @@ function mixWrapper() {
     // div principal do helpcenter preview 
     const maindiv = document.querySelector('#main-div');
 
-    let collapsablesArray = [];
     /** 
      * arrays a ser utilizados para guardar os slices
      * das textareas, aquando da introdução de elementos
      * ([0] = texto até ao cursor | [1] = texto a partir do cursos)
     */
     let cursorPosInfo = ['', ''];
-    let modalTextareaPos = ['', '']
+    let modalTextareaPos = ['', ''];
+    let collapsablesArray = [];
 
     // variável com o valor da última textarea selecionada
     let activeTextarea = '';
+
+    // variável com o valor da última checkbox (hilite.me) selecionada
+    let codetype = 'vbnet'
 
     // Variáveis globais [preciso de aprender async(?) para guardar nas globais o valor dos length dos json]   
     const numeroImagens = 70;
@@ -97,6 +100,7 @@ function mixWrapper() {
                 wrapperLeft.appendChild(newSpan('colap-id', 'ID do colapsável (minúsculas, sem acentuação, sem espaçamento)'));
                 let idInput = wrapperLeft.appendChild(newColapIDInput(i));
                 idInput.value = collapsablesArray[i - 1].nextElementSibling.id;
+                idInput.addEventListener('keyup', updateColapPreviewByID)
 
                 // Input 2
                 wrapperLeft.appendChild(newSpan('colap-h2', 'Título do colapsável'));
@@ -147,16 +151,16 @@ function mixWrapper() {
             // adicionar novo collap
             row = colapWrapper.appendChild(newColapRow());
 
-                col = row.appendChild(document.createElement('div'));
-                col.id = 'add-new-collap'
-                const newCollapBtn = col.appendChild(document.createElement('button'));
-                newCollapBtn.classList = "btn btn-info"
-                newCollapBtn.innerHTML = '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'
-                newCollapBtn.addEventListener('click', novoColapsavel)
-                const scrollToTop = col.appendChild(document.createElement('button'));
-                scrollToTop.classList = "btn btn-info"
-                scrollToTop.innerHTML = '<i class="lni lni-arrow-up-circle"></i>&nbsp;&nbsp;Voltar ao início'
-                scrollToTop.addEventListener('click', function() {window.scrollTo({ top: 0, behavior: 'smooth' });})
+            col = row.appendChild(document.createElement('div'));
+            col.id = 'add-new-collap'
+            const newCollapBtn = col.appendChild(document.createElement('button'));
+            newCollapBtn.classList = "btn btn-info"
+            newCollapBtn.innerHTML = '<i class="lni lni-circle-plus"></i>&nbsp;&nbsp;Adicionar um novo colapsável'
+            newCollapBtn.addEventListener('click', novoColapsavel)
+            const scrollToTop = col.appendChild(document.createElement('button'));
+            scrollToTop.classList = "btn btn-info"
+            scrollToTop.innerHTML = '<i class="lni lni-arrow-up-circle"></i>&nbsp;&nbsp;Voltar ao início'
+            scrollToTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); })
 
         } else {
             let geradorColapWrapper = colapMainDiv.appendChild(document.createElement('div'));
@@ -166,7 +170,7 @@ function mixWrapper() {
             let col = geradorColapWrapper.appendChild(document.createElement('div'));
             col.classList = 'col-md-12 gerador-colaps-1'
             col.innerHTML = 'Não foi encontrado nenhum colapsável.'
-                
+
 
             geradornewCollapBtn = geradorColapWrapper.appendChild(document.createElement('button'));
             geradornewCollapBtn.classList = "btn btn-info"
@@ -179,7 +183,16 @@ function mixWrapper() {
 
     }
 
-    function updateColapHeading (e) {
+    // Função para mostrar o savebutton ao atualizar o ID dos colapsáveis
+    function updateColapPreviewByID(e) {
+        // Mostra o save button
+        console.log(e.target)
+        const saveButton = e.target.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling
+        saveButton.classList.remove('no-display');
+    }
+
+    // Função para atualizar o prewview dos colapsáveis (H2)
+    function updateColapHeading(e) {
         activeTextarea = e.target;
 
         let inputText = activeTextarea.value;
@@ -201,10 +214,8 @@ function mixWrapper() {
         inputPreview.innerHTML = inputColapTextWithCursor;
 
         // Mostra o save button
-        console.log(e.target)
         const saveButton = e.target.nextElementSibling.nextElementSibling.nextElementSibling
         saveButton.classList.remove('no-display');
-        
     }
 
     function colapTextAreaEvents(e) {
@@ -218,6 +229,7 @@ function mixWrapper() {
         let inputColapTextStrings = [];
         inputColapTextStrings.push([inputText.slice(0, cursorModalPos)]);
         inputColapTextStrings.push([inputText.slice(cursorModalPos)]);
+
         // introduz o cursor laranja
         let inputColapTextWithCursor = `${inputColapTextStrings[0]}<span id="pulse">|</span>${inputColapTextStrings[1]}`;
 
@@ -228,11 +240,9 @@ function mixWrapper() {
         let inputPreview = e.target.parentElement.nextElementSibling.children[1];
         inputPreview.innerHTML = inputColapTextWithCursor;
 
-
         // Mostra o save button
         const saveButton = e.target.nextElementSibling
         saveButton.classList.remove('no-display');
-
     }
 
     function gerarColapsaveis() {
@@ -266,12 +276,9 @@ function mixWrapper() {
             newtituloH2.classList = 'manuais'
             newtituloH2.innerText = newCollapseArray[1][i - 1]
 
-
-
             //abrir/fechar
             let newCollapCol1 = newCollap.appendChild(document.createElement('div'))
             newCollapCol1.classList = 'col-xs-4 text-right'
-
 
             //link do abrir/fechar
             let link = newCollapCol1.appendChild(document.createElement('a'));
@@ -284,13 +291,13 @@ function mixWrapper() {
             newCollapConteudo.classList = 'collapse multi-collapse'
             newCollapConteudo.id = newCollapseArray[0][i - 1]
             newCollapConteudo.innerHTML = newCollapseArray[2][i - 1]
-
-            newCollapFinal = newCollapFinal + (newCollap.outerHTML + newCollapConteudo.outerHTML)
+            newCollapFinal = newCollapFinal + `<!-- Início do Colapsável #${i} -->` + "\n" + (newCollap.outerHTML.toString() + "\n\n" + newCollapConteudo.outerHTML.toString() + "\n" + `<!-- Fim do Colapsável #${i} -->` + "\n")
         }
 
         // função para obter o texto antes do primeiro collap
         function topicoAntesColapsaveis() {
-            const charCountAntes = textarea.value.search('<div class="row seccao-phcgo">');
+            let charCountAntes = textarea.value.search('<!-- Início do Colapsável #1 -->');
+            if (charCountAntes < 0) { charCountAntes = textarea.value.search('<div class="row seccao-phcgo">') }
             const textoAntesCollaps = textarea.value.slice(0, charCountAntes);
             return textoAntesCollaps
         }
@@ -358,7 +365,6 @@ function mixWrapper() {
         newSpan.innerText = `${text}`;
         return newSpan
     }
-
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -561,8 +567,6 @@ function mixWrapper() {
         col.classList.add('col-md-12')
         col.id = 'cria-tabela-btn-div'
 
-
-
         // Button 'Criar tabela'
         let criarCabecalho = col.appendChild(document.createElement('button'));
         criarCabecalho.classList.add('btn');
@@ -570,9 +574,21 @@ function mixWrapper() {
         criarCabecalho.innerHTML = '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar tabela';
         criarCabecalho.addEventListener('click', escreverTabela);
 
+        //wrapper novo separador
+        const novoSeparadorWrapper = row.appendChild(document.createElement('div'));
+        novoSeparadorWrapper.classList = 'col-md-12 novo-separador'
+        novoSeparadorWrapper.appendChild(document.createElement('span'));
+        novoSeparadorWrapper.lastChild.innerHTML = '<i class="lni lni-code"></i> Separador horizontal<br>'
+
+        // Button para adicionar separador horizontal (hr)
+        const novaQuebraBtn = novoSeparadorWrapper.appendChild(document.createElement('button'));
+        novaQuebraBtn.innerHTML = '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir separador horizontal';
+        novaQuebraBtn.classList = 'btn btn-success';
+        novaQuebraBtn.id = 'nova-quebra-btn';
+        novaQuebraBtn.addEventListener('click', escreverQuebra);
+
         // Anexar o wrapper da secção de ligações à primeira row 
         primeiraPagina.appendChild(novaTabelaWrapper);
-
     }
 
     // Função para adicionar uma lista ao código do tópico
@@ -588,8 +604,6 @@ function mixWrapper() {
 
         // Declarar variávis para o Switch
         let novaLista = '';
-        let novoSourceCode = '';
-
 
         switch (tipo) {
 
@@ -601,7 +615,8 @@ function mixWrapper() {
                     let novoItem = novaLista.appendChild(document.createElement('li'));
                     novoItem.innerHTML = `<b>Item ${i}:</b> Lorem ipsum`;
                 }
-                escreveNaTextarea(novaLista);
+                novaLista = (novaLista.outerHTML.toString().replaceAll('<li><b>', "\n" + '<li><b>'));
+                escreveNaTextareaGeradores(novaLista);
                 break;
 
             // Opção 2
@@ -613,7 +628,8 @@ function mixWrapper() {
                     novaLista.appendChild(document.createElement('li'));
                     novaLista.lastChild.innerHTML = `<b>Item ${i}:</b> Lorem ipsum`;
                 }
-                escreveNaTextarea(novaLista);
+                novaLista = (novaLista.outerHTML.toString().replaceAll('<li><b>', "\n" + '<li><b>'));
+                escreveNaTextareaGeradores(novaLista);
                 break;
 
             // Opção 3
@@ -625,7 +641,8 @@ function mixWrapper() {
                     novaLista.appendChild(document.createElement('li'));
                     novaLista.lastChild.innerHTML = `<b>Item ${i}:</b> Lorem ipsum`;
                 }
-                escreveNaTextarea(novaLista);
+                novaLista = (novaLista.outerHTML.toString().replaceAll('<li><b>', "\n" + '<li><b>'));
+                escreveNaTextareaGeradores(novaLista);
                 break;
         }
 
@@ -646,7 +663,7 @@ function mixWrapper() {
             || numColunas <= 0) { alert('O valor para o número de colunas não é válido (só aceito números positivos, acima de zero).'); return }
 
         // <table>
-        const novaTabela = document.createElement('table');
+        let novaTabela = document.createElement('table');
         novaTabela.classList.add('phcgo-table');
         novaTabela.style.display = 'flex';
         novaTabela.style.justifyContent = 'center';
@@ -674,8 +691,11 @@ function mixWrapper() {
             }
             tBody.appendChild(novaLinha);
         }
-
-        escreveNaTextarea(novaTabela);
+        // para tornar o código gerado mais clean
+        novaTabela = (novaTabela.outerHTML.toString().replaceAll('<tr>', "\n" + '<tr>'));
+        novaTabela = (novaTabela.toString().replaceAll('</td><td>', '</td>' + "\n" + '<td>'));
+        novaTabela.replaceAll('</tbody>', "\n" + '</tbody>');
+        escreveNaTextareaGeradores(novaTabela);
     }
 
     // // Função para mostrar a moda de Títulos e Ligações
@@ -690,197 +710,214 @@ function mixWrapper() {
         // Anexar à modal a primeira página (atualmente não existe segunda página)
         let primeiraPagina = modaldiv.appendChild(newRow(pag));
 
-            // Wrapper da secção da esquerda
-            const novoVariosWrapperLeft = primeiraPagina.appendChild(document.createElement('div'));
-            novoVariosWrapperLeft.classList.add('col-md-8');
-            novoVariosWrapperLeft.id = 'left-wrapper';
+        // Wrapper da secção da esquerda
+        const novoVariosWrapperLeft = primeiraPagina.appendChild(document.createElement('div'));
+        novoVariosWrapperLeft.classList.add('col-md-8');
+        novoVariosWrapperLeft.id = 'left-wrapper';
 
-                // Wrapper gerador titulos
-                const geradorTitulosWrapper = novoVariosWrapperLeft.appendChild(document.createElement('div'));
-                geradorTitulosWrapper.classList.add('row')
-                geradorTitulosWrapper.id = 'gerador-titulos'
-                geradorTitulosWrapper.innerHTML = '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de títulos'
+        // Wrapper gerador titulos
+        const geradorTitulosWrapper = novoVariosWrapperLeft.appendChild(document.createElement('div'));
+        geradorTitulosWrapper.classList.add('row')
+        geradorTitulosWrapper.id = 'gerador-titulos'
+        geradorTitulosWrapper.innerHTML = '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de títulos'
 
-                    // Row 1
-                    row = geradorTitulosWrapper.appendChild(document.createElement('div'));
-                    row.classList.add('row')
+        // Row 1
+        row = geradorTitulosWrapper.appendChild(document.createElement('div'));
+        row.classList.add('row')
 
-                        // Col 0 (filler)
-                        let col = row.appendChild(document.createElement('div'));
-                        col.classList.add('col-md-1')
+        // Col 0 (filler)
+        let col = row.appendChild(document.createElement('div'));
+        col.classList.add('col-md-1')
 
-                        // Col 1
-                        col = row.appendChild(document.createElement('div'));
-                        col.classList.add('col-md-11')
+        // Col 1
+        col = row.appendChild(document.createElement('div'));
+        col.classList.add('col-md-11')
 
-                            // Span Tipo Lista
-                            let tipoListaSpan = col.appendChild(document.createElement('span'));
-                            tipoListaSpan.innerText = 'Tipo de título:';
-                            tipoListaSpan.id = 'tipo-lista-span';
+        // Span Tipo Lista
+        let tipoListaSpan = col.appendChild(document.createElement('span'));
+        tipoListaSpan.innerText = 'Tipo de título:';
+        tipoListaSpan.id = 'tipo-lista-span';
 
-                    // Row 2 
-                    row = geradorTitulosWrapper.appendChild(document.createElement('div'));
-                    row.classList.add('row')
+        // Row 2 
+        row = geradorTitulosWrapper.appendChild(document.createElement('div'));
+        row.classList.add('row')
 
-                        // Col 0 (filler)   
-                        col = row.appendChild(document.createElement('div'));
-                        col.classList.add('col-md-1')
-                        
-                        // Col 1
-                        col = row.appendChild(document.createElement('div'));
-                        col.classList.add('col-md-8')
+        // Col 0 (filler)   
+        col = row.appendChild(document.createElement('div'));
+        col.classList.add('col-md-1')
 
-                            // Dropdown para "Tipo de título"
-                            let tipoTituloDropdown = col.appendChild(document.createElement('select'));
-                            tipoTituloDropdown.id = 'tipo-titulo-dropdown'
-                            tipoTituloDropdown.addEventListener('change', previewTitulo)
+        // Col 1
+        col = row.appendChild(document.createElement('div'));
+        col.classList.add('col-md-7')
 
-                            // Opção 1    
-                            tipoTituloDropdown.appendChild(document.createElement('option'));
-                            tipoTituloDropdown.lastChild.value = 'default1' // Valor a se passado para a função construtora de lista
-                            tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H1';
-                            // Opção 2
-                            tipoTituloDropdown.appendChild(document.createElement('option'));
-                            tipoTituloDropdown.lastChild.value = 'default2'
-                            tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H2';
-                            // Opção 3
-                            tipoTituloDropdown.appendChild(document.createElement('option'));
-                            tipoTituloDropdown.lastChild.value = 'default3'
-                            tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H3';
-                            // Opção 4
-                            tipoTituloDropdown.appendChild(document.createElement('option'));
-                            tipoTituloDropdown.lastChild.value = 'old1' // Valor a se passado para a função construtora de lista
-                            tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H1 (antigo)';
-                            // Opção 5
-                            tipoTituloDropdown.appendChild(document.createElement('option'));
-                            tipoTituloDropdown.lastChild.value = 'old2'
-                            tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H2 (antigo)';
-                            // Opção 6
-                            tipoTituloDropdown.appendChild(document.createElement('option'));
-                            tipoTituloDropdown.lastChild.value = 'old3'
-                            tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H3 (antigo)';
+        // Dropdown para "Tipo de título"
+        let tipoTituloDropdown = col.appendChild(document.createElement('select'));
+        tipoTituloDropdown.id = 'tipo-titulo-dropdown'
+        tipoTituloDropdown.addEventListener('change', previewTitulo)
 
-                        // Col 2 (filler)
-                        col = row.appendChild(document.createElement('div'));
-                        col.classList.add('col-md-1')
+        // Opção 1    
+        tipoTituloDropdown.appendChild(document.createElement('option'));
+        tipoTituloDropdown.lastChild.value = 'default1' // Valor a se passado para a função construtora de lista
+        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H1';
+        // Opção 2
+        tipoTituloDropdown.appendChild(document.createElement('option'));
+        tipoTituloDropdown.lastChild.value = 'default2'
+        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H2';
+        // Opção 3
+        tipoTituloDropdown.appendChild(document.createElement('option'));
+        tipoTituloDropdown.lastChild.value = 'default3'
+        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H3';
+        // Opção 4
+        tipoTituloDropdown.appendChild(document.createElement('option'));
+        tipoTituloDropdown.lastChild.value = 'old1' // Valor a se passado para a função construtora de lista
+        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H1 (antigo)';
+        // Opção 5
+        tipoTituloDropdown.appendChild(document.createElement('option'));
+        tipoTituloDropdown.lastChild.value = 'old2'
+        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H2 (antigo)';
+        // Opção 6
+        tipoTituloDropdown.appendChild(document.createElement('option'));
+        tipoTituloDropdown.lastChild.value = 'old3'
+        tipoTituloDropdown.lastChild.innerHTML = '&nbsp;Título H3 (antigo)';
 
-                        // Col Button criar título
-                        col = row.appendChild(document.createElement('div'));
-                        col.classList.add('col-md-2')
-                        col.id = 'cria-lista-btn-div'
+        // Col 2 (filler)
+        col = row.appendChild(document.createElement('div'));
+        col.classList.add('col-md-1')
 
-                            // Button "Criar título"
-                            let criarListaButton = col.appendChild(document.createElement('button'));
-                            criarListaButton.classList = 'btn btn-success';
-                            criarListaButton.innerHTML = '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar título'
-                            criarListaButton.addEventListener('click', escreveTitulo)
+        // Col Button criar título
+        col = row.appendChild(document.createElement('div'));
+        col.classList.add('col-md-2')
+        col.id = 'cria-lista-btn-div'
 
-                    // Row 3 
-                    row = geradorTitulosWrapper.appendChild(document.createElement('div'));
-                    row.classList.add('row')
+        // Button "Criar título"
+        let criarListaButton = col.appendChild(document.createElement('button'));
+        criarListaButton.classList = 'btn btn-success';
+        criarListaButton.innerHTML = '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar título'
+        criarListaButton.addEventListener('click', escreveTitulo)
 
-                        // Col 1 (pre-view do título)
-                        col = row.appendChild(document.createElement('div'));
-                        col.classList = 'col-md-12'
-                        col.id = 'preview-heading-row'
+        // Col 4 (filler)
+        col = row.appendChild(document.createElement('div'));
+        col.classList.add('col-md-1')
 
-                // Filler Row
-                row = novoVariosWrapperLeft.appendChild(document.createElement('div'));
-                row.classList = ('row title-link-filler')
+        // Row 3 
+        row = geradorTitulosWrapper.appendChild(document.createElement('div'));
+        row.classList.add('row')
 
-            //             
+        // Col 1 (pre-view do título)
+        col = row.appendChild(document.createElement('div'));
+        col.classList = 'col-md-12'
+        col.id = 'preview-heading-row'
 
-                // Wrapper da secção das ligações
-                const novaLigacaoWrapper = novoVariosWrapperLeft.appendChild(document.createElement('div'));
-                novaLigacaoWrapper.classList = 'row gerador-links-wrapper'
+        // Filler Row
+        row = novoVariosWrapperLeft.appendChild(document.createElement('div'));
+        row.classList = ('row title-link-filler')
 
-                    // Col 0
-                    col = novaLigacaoWrapper.appendChild(document.createElement('div'));
-                    col.classList.add('col-md-12')
-                    col.innerHTML = '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de links'
+        // Wrapper da secção das ligações
+        const novaLigacaoWrapper = novoVariosWrapperLeft.appendChild(document.createElement('div'));
+        novaLigacaoWrapper.classList = 'row gerador-links-wrapper'
 
-                    // Col 1
-                    col = novaLigacaoWrapper.appendChild(document.createElement('div'));
-                    col.classList = 'col-md-3 text-left'
+        // Col 0
+        col = novaLigacaoWrapper.appendChild(document.createElement('div'));
+        col.classList.add('col-md-12')
+        col.innerHTML = '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de links'
 
-                        // Span 'Descrição da ligação'
-                        let spanDescricao = col.appendChild(document.createElement('span'));
-                        spanDescricao.innerText = 'Descrição da ligação:'
-                        spanDescricao.id = 'nome-span';
+        // Col 1
+        col = novaLigacaoWrapper.appendChild(document.createElement('div'));
+        col.classList = 'col-md-3 text-left'
 
+        // Span 'Descrição da ligação'
+        let spanDescricao = col.appendChild(document.createElement('span'));
+        spanDescricao.innerText = 'Descrição da ligação:'
+        spanDescricao.id = 'nome-span';
 
+        // Col 2
+        col = novaLigacaoWrapper.appendChild(document.createElement('div'));
+        col.classList.add('col-md-6')
 
-                    // Col 2
-                    col = novaLigacaoWrapper.appendChild(document.createElement('div'));
-                    col.classList.add('col-md-7')
+        // Input 'Descrição da ligação'
+        let inputDescricao = col.appendChild(document.createElement('input'));
+        inputDescricao.id = 'nome-input';
 
+        // Col 3
+        col = novaLigacaoWrapper.appendChild(document.createElement('div'));
+        col.classList = 'col-md-2 nova-ligacao-btn-col'
 
-                        // Input 'Descrição da ligação'
-                        let inputDescricao = col.appendChild(document.createElement('input'));
-                        inputDescricao.id = 'nome-input';
+        // Button Criar ligação
+        let criarLigacao = col.appendChild(document.createElement('button'));
+        criarLigacao.classList = 'btn btn-success';
+        criarLigacao.innerHTML = '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar ligação';
+        criarLigacao.addEventListener('click', escreverLigacao);
 
-                    // Col 3
-                    col = novaLigacaoWrapper.appendChild(document.createElement('div'));
-                    col.classList = 'col-md-2 nova-ligacao-btn-col'
-                    
+        // Col 4
+        col = novaLigacaoWrapper.appendChild(document.createElement('div'));
+        col.classList = 'col-md-3 text-left'
 
-                        // Button Criar ligação
-                        let criarLigacao = col.appendChild(document.createElement('button'));
-                        criarLigacao.classList = 'btn btn-success';
-                        criarLigacao.innerHTML = '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar ligação';
-                        criarLigacao.addEventListener('click', escreverLigacao);
+        // Span 'URL'
+        let spanURL = col.appendChild(document.createElement('span'));
+        spanURL.innerText = 'URL da ligação:'
+        spanURL.id = 'link-span';
 
+        // Col 5
+        col = novaLigacaoWrapper.appendChild(document.createElement('div'));
+        col.classList.add('col-md-6')
 
-                    // Col 4
-                    col = novaLigacaoWrapper.appendChild(document.createElement('div'));
-                    col.classList = 'col-md-3 text-left'
+        // Input 'URL'
+        let inputURL = col.appendChild(document.createElement('input'));
+        inputURL.id = 'link-input';
 
-                        // Span 'URL'
-                        let spanURL = col.appendChild(document.createElement('span'));
-                        spanURL.innerText = 'URL da ligação:'
-                        spanURL.id = 'link-span';
+        // Wrapper da secção dos extras
+        const novoVariosWrapperRight = primeiraPagina.appendChild(document.createElement('div'));
+        novoVariosWrapperRight.classList.add('col-md-4');
+        novoVariosWrapperRight.id = 'extras-wrapper';
 
+        // Row 0
+        row = novoVariosWrapperRight.appendChild(document.createElement('div'));
+        row.classList.add('row')
+        row.id = 'header-outros'
+        row.innerHTML = '<i class="lni lni-code"></i> Código Hilite.me'
 
-                    // Col 5
-                    col = novaLigacaoWrapper.appendChild(document.createElement('div'));
-                    col.classList.add('col-md-7')
-                    
-                        // Input 'URL'
-                        let inputURL = col.appendChild(document.createElement('input'));
-                        inputURL.id = 'link-input';
+        // Row 1
+        row = novoVariosWrapperRight.appendChild(document.createElement('div'));
+        row.classList.add('row')
 
+        // Wrapper Hilite.me
+        const hiliteWrapper = row.appendChild(document.createElement('div'));
+        hiliteWrapper.classList.add('col-md-12')
 
-                    
+        // Button para formatar hilite.me
+        const hiliteTextarea = hiliteWrapper.appendChild(document.createElement('textarea'));
+        hiliteTextarea.id = 'hilite-textarea'
 
+        const novaHiliteCheckboxesRow = hiliteWrapper.appendChild(document.createElement('div'));
+        novaHiliteCheckboxesRow.classList = 'row'
+        novaHiliteCheckboxesRow.id = 'hilite-checkboxes-row'
 
+        let miniWrapper1 = novaHiliteCheckboxesRow.appendChild(document.createElement('div'))
+        miniWrapper1.classList = 'col-md-6'
+        miniWrapper1.appendChild(document.createElement('span'));
+        miniWrapper1.lastChild.innerHTML = 'VB.NET&nbsp;&nbsp;'
 
-            // Wrapper da secção dos extras
-            const novoVariosWrapperRight = primeiraPagina.appendChild(document.createElement('div'));
-            novoVariosWrapperRight.classList.add('col-md-4');
-            novoVariosWrapperRight.id = 'extras-wrapper';
+        miniWrapper1.appendChild(document.createElement('input'));
+        miniWrapper1.lastChild.type = 'checkbox'
+        miniWrapper1.lastChild.setAttribute('checked', 'true');
+        miniWrapper1.lastChild.id = 'vbnet'
+        miniWrapper1.checked = true;
+        miniWrapper1.addEventListener('change', updateCodeType)
 
-                // Row 0
-                row = novoVariosWrapperRight.appendChild(document.createElement('div'));
-                row.classList.add('row')
-                row.id = 'header-outros'
-                row.innerHTML = '<i class="lni lni-code"></i> Outros'
+        let miniWrapper2 = novaHiliteCheckboxesRow.appendChild(document.createElement('div'))
+        miniWrapper2.classList = 'col-md-6'
+        miniWrapper2.appendChild(document.createElement('span'));
+        miniWrapper2.lastChild.innerHTML = 'TypeScript&nbsp;&nbsp;'
+        miniWrapper2.appendChild(document.createElement('input'));
+        miniWrapper2.lastChild.type = 'checkbox'
+        miniWrapper2.lastChild.id = 'typescript'
+        miniWrapper2.addEventListener('change', updateCodeType)
 
-                // Row 1
-                row = novoVariosWrapperRight.appendChild(document.createElement('div'));
-                row.classList.add('row')
-
-                    // Wrapper várias ações 1-shot
-                    const novoOutrosWrapper = row.appendChild(document.createElement('div'));
-                    novoOutrosWrapper.classList.add('col-md-12')
-
-                        // Button para adicionar separador horizontal (hr)
-                        const novaQuebraBtn = novoOutrosWrapper.appendChild(document.createElement('button'));
-                        novaQuebraBtn.innerHTML = '<i class="lni lni-code"></i>&nbsp;&nbsp;Introduzir Separador Horizontal';
-                        novaQuebraBtn.classList = 'btn btn-info';
-                        novaQuebraBtn.id = 'nova-quebra-btn';
-                        novaQuebraBtn.addEventListener('click', escreverQuebra);
-       
-
+        const novaHiliteBtn = hiliteWrapper.appendChild(document.createElement('button'));
+        novaHiliteBtn.innerHTML = '<i class="lni lni-code"></i>&nbsp;&nbsp;Gerar código hilite.me';
+        novaHiliteBtn.classList = 'btn btn-warning';
+        novaHiliteBtn.id = 'novo-hilitecode-btn';
+        novaHiliteBtn.addEventListener('click', hiliteAPI);
     }
 
     // Função para adicionar uma ligação ao código do tópico
@@ -891,8 +928,7 @@ function mixWrapper() {
         const link = document.querySelector('#link-input').value;
 
         // babyproof
-        console.log(link.slice(0,4))
-        if (link.slice(0,4) !== 'http') {
+        if (link.slice(0, 4) !== 'http') {
             alert('A ligação tem de começar por http ou https (tudo em minúsculas).')
             return
         }
@@ -1022,10 +1058,6 @@ function mixWrapper() {
                 divPrimeiraRow.appendChild(document.createElement('div'));
                 divPrimeiraRow.lastChild.classList = `col-md-6 icon-sub-row-${row}`;
                 divSegundaRow = divPrimeiraRow.lastChild;
-                //  else if ((i % 48) === 0) {
-                //     modaldiv.lastChild.lastChild.appendChild(divIcon(i));
-                //     pag++;
-                //     modaldiv.appendChild(newHiddenRow(pag));
             }
 
             else { divSegundaRow.appendChild(divIcon(i)); }
@@ -1034,7 +1066,7 @@ function mixWrapper() {
         grabJSONIcons();
     }
 
-    function divIcon(i) {                                   // Função geradora <div col> para Logos e Icons
+    function divIcon(i) {
         const divIcon = document.createElement('div');
         divIcon.classList = `icon-${i} col-md-1 phcgo-icon`;
         divIcon.innerHTML = `${i}`;
@@ -1047,8 +1079,6 @@ function mixWrapper() {
 
         // HotFix para quando o target não é igual ao icons
         if (eTarget.classList.contains('phcgo-icon')) { eTarget = eTarget.firstChild };
-
-
 
         escreveNaTextarea(eTarget);
     }
@@ -1124,8 +1154,12 @@ function mixWrapper() {
         // Hotfix para quando o target devolve o wrapper (quando carregamos fora das textboxes)
         if (eTarget.classList.contains('helpcenter-textbox')) { eTarget = eTarget.firstChild };
 
+        eTarget = eTarget.outerHTML.toString().replace('<div class="novoalerta-titulo">', '<div class="novoalerta-titulo">' + "\n")
+        eTarget = eTarget.toString().replace('<br>', '<br>' + "\n")
+        eTarget = eTarget.toString().replace('<ul>', '<ul>' + "\n")
+        eTarget = eTarget.toString().replace('</li>', '</li>' + "\n")
 
-        escreveNaTextarea(eTarget);
+        escreveNaTextareaGeradores(eTarget);
         // Hotfix para corrigir a text-box dos tópicos relacionados
 
     }
@@ -1225,7 +1259,7 @@ function mixWrapper() {
         // atualiza o preview
         maindiv.innerHTML = inputTextWithCursor;
         maindiv.innerHTML = fixArtigosRelacionadosLogo(maindiv.innerHTML);
-        
+
         modalColap();
         saveIntoJSON();
     }
@@ -1351,16 +1385,15 @@ function mixWrapper() {
 
 
     function escreveNaTextarea(etarget) {
-        // console.log(activeTextarea)
 
         // babyproofs
-        if (activeTextarea === '') { alert('Coloca o cursor numa área de texto antes de adicionar conteúdos.'); return}
+        if (activeTextarea === '') { alert('Coloca o cursor numa área de texto antes de adicionar conteúdos.'); return }
 
         // caso seja a textarea principal
         if (activeTextarea.id === 'textarea') {
             // O array cursorPosInfo é composto por duas string, antes e depois do cursor
             // O novoSourceCode faz o concat das string, com o elemento a ser escrito na posição do cursor.
-            novoSourceCode = `${cursorPosInfo[0]}`+"\n"+`${etarget.outerHTML}`+"\n"+`${cursorPosInfo[1]}`;
+            novoSourceCode = `${cursorPosInfo[0]}` + "\n" + `${etarget.outerHTML}` + `${cursorPosInfo[1]}`;
 
             // Atualiza a textarea
             textarea.value = novoSourceCode;
@@ -1375,15 +1408,47 @@ function mixWrapper() {
 
             // caso seja as textareas da vista de collaps
         } else {
-            novoSourceCode = `${modalTextareaPos[0]}`+"\n"+`${(etarget.outerHTML).toString()}`+"\n"+`${modalTextareaPos[1]}`;
+            novoSourceCode = `${modalTextareaPos[0]}` + "\n" + `${(etarget.outerHTML).toString()}` + `${modalTextareaPos[1]}`;
             activeTextarea.value = novoSourceCode;
             let inputPreview = activeTextarea.parentElement.nextElementSibling.children[1];
             inputPreview.innerHTML = novoSourceCode;
         }
     }
 
-    function singleColapsavel () {
-        console.log('work in progress');
+    // serve para adicionar quebras de linha à textarea, aquando da introdução de elementos que utilizam esta função 
+    // em vez de ser etarget.outerhtml, é etarget (porque a esta funçaõ já chega um outerhtml, com os replaces feitos)
+    function escreveNaTextareaGeradores(etarget) {
+
+        // babyproofs
+        if (activeTextarea === '') { alert('Coloca o cursor numa área de texto antes de adicionar conteúdos.'); return }
+
+        // caso seja a textarea principal
+        if (activeTextarea.id === 'textarea') {
+            // O array cursorPosInfo é composto por duas string, antes e depois do cursor
+            // O novoSourceCode faz o concat das string, com o elemento a ser escrito na posição do cursor.
+            novoSourceCode = `${cursorPosInfo[0]}` + "\n" + `${etarget}` + `${cursorPosInfo[1]}`;
+
+            // Atualiza a textarea
+            textarea.value = novoSourceCode;
+
+            // Atualiza o preview
+            maindiv.innerHTML = fixArtigosRelacionadosLogo(novoSourceCode);
+
+            modalColap();
+
+            // Guarda as alterações em cache
+            saveIntoJSON();
+
+            // caso seja as textareas da vista de collaps
+        } else {
+            novoSourceCode = `${modalTextareaPos[0]}` + "\n" + `${(etarget).toString()}` + `${modalTextareaPos[1]}`;
+            activeTextarea.value = novoSourceCode;
+            let inputPreview = activeTextarea.parentElement.nextElementSibling.children[1];
+            inputPreview.innerHTML = novoSourceCode;
+        }
+    }
+
+    function singleColapsavel() {
         // wrapper do collapsavel
         let newCollap = document.createElement('div');
         newCollap.classList = 'row seccao-phcgo';
@@ -1402,11 +1467,9 @@ function mixWrapper() {
         newtituloH2.classList = 'manuais'
         newtituloH2.innerText = 'Novo colapsável'
 
-
         //abrir/fechar
         let newCollapCol1 = newCollap.appendChild(document.createElement('div'))
         newCollapCol1.classList = 'col-xs-4 text-right'
-
 
         //link do abrir/fechar
         let link = newCollapCol1.appendChild(document.createElement('a'));
@@ -1424,17 +1487,19 @@ function mixWrapper() {
         return newCollapFinal
     }
 
-    function novoColapsavel () {
-        if ( collapsablesArray.length === 0 ) {
-            const abrirTodosDiv ='<br><a id="colapse-all-a" style="display: block;text-align: right;" data-toggle="collapse" data-target=".multi-collapse" href="#" role="button" aria-expanded="false"">Abrir Todos</a></p></div>'
-            textarea.value = textarea.value+abrirTodosDiv+(singleColapsavel().toString());
+    function novoColapsavel() {
+        if (collapsablesArray.length === 0) {
+            const abrirTodosDiv = '<br><a id="colapse-all-a" style="display: block;text-align: right;" data-toggle="collapse" data-target=".multi-collapse" href="#" role="button" aria-expanded="false"">Abrir Todos</a></p></div>'
+            textarea.value = textarea.value + "\n" + abrirTodosDiv + "\n" + '<!-- Início do Colapsável #1 -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #1 -->');
+            textarea.value = textarea.value.replaceAll('<div class="collapse', "\n" + "\n" + '<div class="collapse')
             maindiv.innerHTML = textarea.value;
             modalColap();
         } else {
-            textarea.value = textarea.value+(singleColapsavel().toString());
+            textarea.value = textarea.value + "\n" + '<!-- Início do Colapsável #' + (collapsablesArray.length + 1) + ' -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #' + (collapsablesArray.length + 1) + ' -->');
+            textarea.value = textarea.value.replaceAll('><div class="collapse', '>' + "\n" + "\n" + '<div class="collapse ')
             maindiv.innerHTML = textarea.value;
             modalColap();
-            window.scrollTo(0,document.body.scrollHeight);
+            window.scrollTo(0, document.body.scrollHeight);
         }
     }
 
@@ -1442,7 +1507,7 @@ function mixWrapper() {
         let dropdownTitulos = document.querySelector('#tipo-titulo-dropdown');
         let novoTitulo;
         switch (dropdownTitulos.value) {
-    
+
             // Opção 1
             case 'default1':
                 novoTitulo = document.createElement('h1');
@@ -1479,18 +1544,17 @@ function mixWrapper() {
                 break;
         }
     }
-    
-    function previewTitulo () {
-    
+
+    function previewTitulo() {
+
         let dropdownTitulos = document.querySelector('#tipo-titulo-dropdown');
         let titulosPreview = document.querySelector('#preview-heading-row');
         titulosPreview.innerHTML = '';
         let previewTitulo;
         switch (dropdownTitulos.value) {
-    
+
             // Opção 1
             case 'default1':
-                
                 previewTitulo = document.createElement('h1');
                 previewTitulo.classList = 'manuais';
                 previewTitulo.innerText = 'Título/Heading 1'
@@ -1524,9 +1588,49 @@ function mixWrapper() {
                 titulosPreview.appendChild(previewTitulo)
                 break;
         }
-    
+
+    }
+    const titleScrol = setInterval(scrollTitle, 500);
+    function scrollTitle() {
+        let tituloPagina = document.title.toString();
+        const updatedTituloPagina1 = tituloPagina.slice(0, 1)
+        const updatedTituloPagina2 = tituloPagina.slice(1, tituloPagina.length)
+        document.title = updatedTituloPagina2 + updatedTituloPagina1
     }
 
+
+    //hilite.me formatter 
+    function hiliteFormater(novosource) {
+        let fixedHilite = String(novosource).replaceAll("\n", '<br>' + "\n");
+        fixedHilite = fixedHilite.toString().replace('<pre style="', '<pre style="background:transparent;border:0px;');
+        escreveNaTextareaGeradores(fixedHilite);
+    }
+
+    function hiliteAPI() {
+
+        // Babyproof
+        if (document.querySelector('#hilite-textarea').value.length <= 0) { alert('A textarea para o código hilite.me está vazia.'); return }
+
+        const code = document.querySelector('#hilite-textarea').value.toString();
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                hiliteFormater(this.responseText);
+            }
+        };
+        xhttp.open("POST", "http://hilite.me/api", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(`code=${code}&style=monokai&lexer=${codetype}`);
+
+
+    }
+
+    function updateCodeType(e) {
+        document.querySelector('#typescript').checked = false
+        document.querySelector('#vbnet').checked = false
+        e.target.checked = true
+        codetype = e.target.id
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

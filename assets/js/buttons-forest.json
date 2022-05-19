@@ -9,7 +9,7 @@
     },
     {
         "desc" : "Botão processamentos principal",
-        "code" : "<div style='box-shadow:0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);border:0;color:#fff;box-sizing:border-box;outline:0;display:inline-block;text-align:center;margin:0;min-width:64px;padding:0 16px;border-radius:4px;overflow:visible;background:#1976d2;font-size:14px;font-weight:400;line-height:34px'>Processar</div>"
+        "code" : "<div style='box-shadow:0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);border:0;color:#fff;box-sizing:border-box;outline:0;display:inline-block;text-align:center;margin:0;min-width:64px;padding:0 16px;border-radius:4px;overflow:visible;background:#00bfa5;font-size:14px;font-weight:400;line-height:34px'>Processar</div>"
     },
     {
         "desc" : "Botão processamentos principal 2",

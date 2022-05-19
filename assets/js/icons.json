@@ -16,6 +16,10 @@
         "code": "<span style='vertical-align:bottom;' class='material-icons'>more_horiz</span>"
     },
     {
+        "desc": "Novas ações registo",
+        "code": "<span style='vertical-align:bottom;' class='material-icons'>playlist_play</span>"
+    },
+    {
         "desc": "Checkbox false",
         "code": "<span style='vertical-align:bottom;' class='material-icons'>check_box_outline_blank</span>"
     },
@@ -81,11 +85,11 @@
     },
     {
         "desc": "Logout",
-        "code": "<span style='vertical-align:bottom;' class='material-icons'>logout</span>"
+        "code": "<span style='vertical-align:bottom;' class='material-icons'>login</span>"
     },
     {
         "desc": "Login",
-        "code": "<span style='vertical-align:bottom;' class='material-icons'>login</span>"
+        "code": "<span style='vertical-align:bottom;' class='material-icons'>logout</span>"
     },
     {
         "desc": "Power O/I",

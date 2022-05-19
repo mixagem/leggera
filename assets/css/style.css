@@ -1,15 +1,12 @@
-/*######################################*/
 /*###########    Globais     ###########*/
-/*######################################*/
 
 :root {
     --primary-title-color: gold;
     --secondary-title-color: violet;
     --background-color: #000;
     --text-color-dark: #000;
-    --text-color-clear: #fff;
+    --text-color-light: #fff;
     --alert-color: red;
-    --success-color: rgb(0, 189, 0);
 }
 
 html {
@@ -70,9 +67,8 @@ a:hover {
     color: var(--alert-color) !important;
 }
 
-/*######################################*/
+
 /*###########    Landing     ###########*/
-/*######################################*/
 
 #loading-wrapper {
     height: 100vh;
@@ -144,7 +140,7 @@ devia ter feito tudo via js. teve que martelar mais
 
 /* labels */
 #login-wrapper>span {
-    color: var(--text-color-clear);
+    color: var(--text-color-light);
     font-size: 40px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -167,12 +163,11 @@ devia ter feito tudo via js. teve que martelar mais
 #cookie {
     width: 100%;
     text-align: center;
-    color: var(--text-color-clear);
+    color: var(--text-color-light);
     padding-top: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
 
 #cookie>span {
@@ -183,7 +178,7 @@ devia ter feito tudo via js. teve que martelar mais
     display: inline-block;
 }
 
-#cookie-checkbox{
+#cookie-checkbox {
     font-size: 22px;
     vertical-align: sub;
 }
@@ -193,10 +188,7 @@ devia ter feito tudo via js. teve que martelar mais
 }
 
 
-/*######################################*/
 /*###########     Editor     ###########*/
-/*######################################*/
-
 
 .sticky-top {
     position: -webkit-sticky;
@@ -208,7 +200,8 @@ devia ter feito tudo via js. teve que martelar mais
 /* Cabeçalho */
 .header {
     min-height: 330px;
-    background: #1D1D1D;
+    background: var(--background-color);
+    /*padrão repetitivo*/
     background-image: url('../img/header-bg.png');
     background-size: 2%;
 }
@@ -222,26 +215,21 @@ devia ter feito tudo via js. teve que martelar mais
 .header textarea {
     width: 100%;
     min-height: 200px;
-    background-color: transparent;
-    color: #fff;
     border-radius: 10px;
     padding: 5px 10px;
     background-color: transparent;
-    color: #fff;
-    border-radius: 10px;
-    padding: 5px 10px;
+    color: var(--text-color-light);
     background-image: url('../img/mi.png');
     background-size: 10%;
     background-repeat: no-repeat;
     background-position: bottom right;
 }
 
-#app-controls-wrapper {
-    text-align: center;
-    padding-top: 10px;
+#headControlsSpacer {
+    display: inline-block;
+    width: 10px;
 }
 
-/*paddings para a textarea principal */
 .headControls {
     padding-top: 5px;
     padding-bottom: 10px;
@@ -251,9 +239,12 @@ devia ter feito tudo via js. teve que martelar mais
     padding-top: 10px;
 }
 
-/*######################################*/
+
 /*###########   Textboxes    ###########*/
-/*######################################*/
+
+.textbox-wrapper {
+    padding-top: 25px;
+}
 
 /* ajustamento de margem para todas as textboxes */
 .header .novoalerta {
@@ -266,6 +257,7 @@ devia ter feito tudo via js. teve que martelar mais
     overflow: clip;
 }
 
+/* div da textbox */
 .helpcenter-textbox {
     cursor: pointer;
     opacity: 0.8;
@@ -277,14 +269,16 @@ devia ter feito tudo via js. teve que martelar mais
 }
 
 .helpcenter-textbox:hover .novoalerta {
-    box-shadow: 2px 2px #000, 4px 5px rgb(0, 195, 255) !important;
+    box-shadow: 2px 2px #000, 4px 5px var(--primary-title-color) !important;
     transition-duration: 250ms;
 }
 
 
-/*######################################*/
 /*###########     Icons      ###########*/
-/*######################################*/
+
+.icon-row-wrapper {
+    padding-right: 5px;
+}
 
 .phcgo-icon {
     font-size: 35px;
@@ -296,7 +290,7 @@ devia ter feito tudo via js. teve que martelar mais
 }
 
 .phcgo-icon:hover>span {
-    color: rgb(0, 195, 255) !important;
+    color: var(--primary-title-color) !important;
     font-size: 35px;
     text-shadow: 1px 1px black;
     transition-duration: 150ms;
@@ -317,10 +311,9 @@ devia ter feito tudo via js. teve que martelar mais
 
 #color-picker {
     padding-top: 15px;
+    text-align: center;
 
 }
-
-
 
 .color-pick {
     width: 35px;
@@ -363,7 +356,6 @@ devia ter feito tudo via js. teve que martelar mais
     transition-duration: 200ms;
 }
 
-
 #icon-color-1 {
     background-color: #000000;
 }
@@ -389,9 +381,7 @@ devia ter feito tudo via js. teve que martelar mais
 }
 
 
-/*######################################*/
 /*###########    Buttons     ###########*/
-/*######################################*/
 
 .phc-buttons {
     padding-top: 5px;
@@ -401,29 +391,19 @@ devia ter feito tudo via js. teve que martelar mais
     text-align: center;
     padding-top: 25px;
     cursor: pointer !important;
+    width: 20% !important;
 }
 
 .botao:hover button,
 .botao:hover div {
     transition-duration: 250ms;
-    box-shadow: 1px 1px #000, 2px 3px rgb(0, 195, 255) !important;
-}
-
-#botao5,
-#botao6,
-#botao7,
-#botao8 {
-    border-color: #fff !important;
-}
-
-#botao7 {
-    color: #fff !important;
+    box-shadow: 1px 1px #000, 2px 3px var(--primary-title-color) !important;
 }
 
 #theme-picker {
-    padding-top: 25px;
+    padding-top: 31px;
+    text-align: center;
 }
-
 
 .theme-pick {
     width: 35px;
@@ -465,7 +445,6 @@ devia ter feito tudo via js. teve que martelar mais
     transition-duration: 200ms;
 }
 
-
 #theme-1 {
     background-color: #1a237e;
 }
@@ -492,8 +471,13 @@ devia ter feito tudo via js. teve que martelar mais
     padding: 10px 0px;
 }
 
+#tabelas-wrapper {
+    text-align: center;
+}
+
 #header-listas,
 #header-tabelas {
+    text-align: center;
     color: #fff;
     padding-bottom: 20px;
     font-size: 20px;
@@ -538,11 +522,11 @@ devia ter feito tudo via js. teve que martelar mais
 }
 
 #num-linhas-input {
-    width: 30%
+    width: 35%
 }
 
 #num-colunas-input {
-    width: 30%
+    width: 35%
 }
 
 #want-links-span {
@@ -553,8 +537,53 @@ devia ter feito tudo via js. teve que martelar mais
 
 /* Row wrapper do preview + links + criarlista */
 #listas-wrapper>div:nth-child(4) {
-    padding-top: 20px;
+    padding-top: 10px;
 }
+
+#listas-wrapper>div:nth-child(4)>div:nth-child(2) {
+    text-align: center;
+}
+
+.novo-separador {
+    padding-top: 40px;
+    text-align: center;
+}
+
+.novo-separador span {
+    font-size: 20px;
+    color: #fff;
+    display: block;
+    padding: 10px 0px;
+}
+
+#cria-tabela-checkbox-wrapper {
+    padding-top: 30px;
+    color: #fff;
+}
+
+#cria-tabela-checkbox-wrapper span {
+    padding-left: 5px;
+    padding-right: 20px;
+}
+
+#preview-list-row {
+    color: #fff;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*########### Live preview         */
 #helpcenter-preview {
@@ -863,9 +892,7 @@ a.manuais:hover {
 
 /**** Notepad
 */
-#preview-list-row {
-    color: #fff;
-}
+
 
 .nova-ligacao-btn-col {
     padding-top: 20px;
@@ -944,27 +971,6 @@ a.manuais:hover {
     padding-bottom: 20px;
 }
 
-.novo-separador {
-    padding-top: 20px;
-}
-
-.novo-separador span {
-    font-size: 20px;
-    color: #fff;
-    display: block;
-    padding: 10px 0px;
-}
-
-#cria-tabela-checkbox-wrapper {
-    padding-top: 30px;
-    color: #fff;
-}
-
-#cria-tabela-checkbox-wrapper span {
-    padding-left: 5px;
-    padding-right: 20px;
-}
-
 
 #hilite-textarea {
     min-height: 100px !important;
@@ -985,68 +991,70 @@ a.manuais:hover {
 /*  Manuals Modal */
 
 #manuals-modal {
-    height:100vh;
-    background-color:#3934BE;
+    height: 100vh;
+    background-color: #3934BE;
     display: grid;
 }
+
 #modal-container {
-    background:rgba(255,255,255,0.2);
-    width:80%;
-    padding-bottom:25px;
-    margin:auto;
-    border-radius:10px;
-}
-#modal-container > thead > th {
-    font-size:16px;
-    color:var(--primary-title-color)
+    background: rgba(255, 255, 255, 0.2);
+    width: 80%;
+    padding-bottom: 25px;
+    margin: auto;
+    border-radius: 10px;
 }
 
-#modal-container > thead > th:first-child,
-#modal-container > tbody > tr > td:first-child{
-    padding-left:30px;
+#modal-container>thead>th {
+    font-size: 16px;
+    color: var(--primary-title-color)
+}
+
+#modal-container>thead>th:first-child,
+#modal-container>tbody>tr>td:first-child {
+    padding-left: 30px;
     width: 70%;
 }
 
-#modal-container > thead > th:last-child,
-#modal-container > tbody > tr > td:last-child{
-    text-align:right;
+#modal-container>thead>th:last-child,
+#modal-container>tbody>tr>td:last-child {
+    text-align: right;
     width: 30%;
 }
 
 
-#modal-container > tbody > tr {
-    color:var(--text-color-clear);
+#modal-container>tbody>tr {
+    color: var(--text-color-light);
 }
 
-#modal-container > tbody > tr > td > span {
-    padding-top:5px;
-    padding-bottom:5px;
+#modal-container>tbody>tr>td>span {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
-#modal-container > tbody > tr > td > span {
+#modal-container>tbody>tr>td>span {
     vertical-align: bottom;
 }
 
-#modal-container > tbody > tr > td:last-child:hover {
+#modal-container>tbody>tr>td:last-child:hover {
     color: var(--primary-title-color);
     transition-duration: 500ms;
     cursor: pointer;
 }
 
 .manual-par {
-    background-color:#EB8475;
+    background-color: #EB8475;
 }
 
 .manual-par:hover {
-    background-color:#e45e4a;
+    background-color: #e45e4a;
     cursor: pointer;
 }
 
 .manual-impar {
-    background-color:aquamarine;
+    background-color: aquamarine;
 }
 
 .manual-impar:hover {
-    background-color:rgb(56, 240, 178);
+    background-color: rgb(56, 240, 178);
     cursor: pointer;
 }

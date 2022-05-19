@@ -1,100 +1,97 @@
 <?php 
 
 echo "<section class='header sticky-top'>
-        <div class='container-fluid'>
-            <div class='row'>
+<div class='container-fluid'>
+    <div class='row'>
 
-                <div class='col-md-5'>
-                    <div class='col-md-5 headControls text-left'>
-                        <button type='button' class='btn btn-info' id='ancora-btn'><i class='lni lni-anchor'></i>
-                            Âncorar editor</button>
-                        <button type='button' class='btn btn-light' id='colap-btn'><i class='lni lni-layers'></i> Vista
-                            Colapsáveis</button>
-                    </div>
-                    <div class='col-md-7 headControls text-right'>
-                        <button type='button' class='btn btn-danger no-display' id='preview-btn'><i
-                                class='lni lni-save'></i>
-                            Pré-visualizar</button>
-                        <button type='button' class='btn btn-warning' id='manuals-btn'><i class='lni lni-library'></i>
-                            </button>
-                        <button type='button' class='btn btn-warning' id='image-btn'><i class='lni lni-paperclip'></i>
-                            </button>
-                        <button type='button' class='btn btn-warning' id='quicksave-btn'><i class='lni lni-save'></i>
-                            QuickSave</button>
-                            <button type='button' class='btn btn-warning' id='quickload-btn'><i class='lni lni-upload'></i>
-                            QuickLoad</button>
-                        <button type='button' class='btn btn-danger' id='logout-btn'><i class='lni lni-power-switch'></i>
-                            Logout</button>
-                    </div>
-                    <textarea id='textarea'></textarea>
-                    <div class='col-md-12 headControls2'>
-                        <button type='button' class='btn btn-light main-menu' id='textbox-btn'><i
-                                class='lni lni-text-format'></i>
-                            Caixas de Texto</button>
-                        <button type='button' class='btn btn-light main-menu' id='logos-btn'><i
-                                class='lni lni-image'></i>
-                            Icons</button>
-                        <button type='button' class='btn btn-light main-menu' id='botoes-btn'><i
-                                class='lni lni-pointer-top'></i>
-                            Botões & Etiquetas</button>
-                        <button type='button' class='btn btn-light main-menu' id='listas-tabelas-btn'><i
-                                class='lni lni-grid'></i>
-                            Listas & Tabelas</button>
-                        <button type='button' class='btn btn-light main-menu' id='titulos-ligacoes-btn'><i
-                                class='lni lni-link'></i>
-                            Títulos & Ligações</button>
-                    </div>
-                </div>
-
-                <div class='col-md-7'>
-                    <div id='app-controls-wrapper'></div>
-                </div>
-
+        <div class='col-md-5'>
+            <div class='col-md-12 headControls text-left'>
+                <button type='button' class='btn btn-info' id='ancora-btn'><i class='lni lni-anchor'></i>
+                </button>
+                <button type='button' class='btn btn-light' id='colap-btn'><i class='lni lni-layers'></i>
+                    Colapsáveis</button>
+                    <span id='headControlsSpacer'></span>
+                <button type='button' class='btn btn-warning no-opacity' id='preview-btn'><i class='lni lni-magnifier'></i>
+                    Preview</button>
+                <button type='button' class='btn btn-warning' id='save-btn'><i class='lni lni-save'></i>
+                    Guardar</button>
+                <button type='button' class='btn btn-warning' id='manuals-btn'><i class='lni lni-library'></i>
+                    Manuais</button>
+                <button type='button' class='btn btn-warning' id='quicksave-btn'><i class='lni lni-upload'></i>
+                    QuickSave</button>
+                <button type='button' class='btn btn-warning' id='quickload-btn'><i class='lni lni-download'></i>
+                    QuickLoad</button>
+                <button type='button' class='btn btn-danger' id='logout-btn'><i class='lni lni-power-switch'></i>
+                </button>
             </div>
-        </div>
-    </section>
-
-    <section class='display-preview'>
-        <div class='container-fluid'>
-            <div class='row'>
-
-                <div id='colapsables-wrapper' class='col-md-12 no-display'></div>
-
-                <div class='col-md-12 hc-preview'>
-
-                    <section class='header-hc'>
-                        <div class='container-fluid'>
-                            <div class='row'>
-                                <div class='col-md-5 header-logo'><img src='assets/img/logo_kbmon.png'></div>
-                                <div class='col-md-3'></div>
-                                <div class='col-md-4 head-slogan'><span>fast software</span> for fast comapnies</div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class='text-body-hc'>
-                        <div class='container'>
-                            <div class='row'>
-                                <div class='col-md-1'></div>
-                                <div id='helpcenter-preview' class='col-md-10'></div>
-                                <div class='col-md-1'></div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class='footer-hc'>
-                        <div class='container-fluid'>
-                            <div class='row'>
-                                <div class='col-md-5'><img src='assets/img/HC_Developers_logo_footer.svg'></div>
-                                <div class='col-md'></div>
-                                <div class='col-md-5'></div>
-                            </div>
-                        </div>
-                    </section>
-
-                </div>
+            <textarea id='textarea'></textarea>
+            <div class='col-md-12 headControls2'>
+                <button type='button' class='btn btn-light main-menu' id='textbox-btn'><i
+                        class='lni lni-text-format'></i>
+                    Caixas de Texto</button>
+                <button type='button' class='btn btn-light main-menu' id='logos-btn'><i class='lni lni-image'></i>
+                    Icons</button>
+                <button type='button' class='btn btn-light main-menu' id='botoes-btn'><i
+                        class='lni lni-pointer-top'></i>
+                    Botões & Etiquetas</button>
+                <button type='button' class='btn btn-light main-menu' id='listas-tabelas-btn'><i
+                        class='lni lni-grid'></i>
+                    Listas & Tabelas</button>
+                <button type='button' class='btn btn-light main-menu' id='titulos-ligacoes-btn'><i
+                        class='lni lni-link'></i>
+                    Títulos & Ligações</button>
             </div>
         </div>
 
-    </section>"
+        <div class='col-md-7'>
+            <div id='app-controls-wrapper'></div>
+        </div>
+
+    </div>
+</div>
+</section>
+
+<section class='display-preview'>
+<div class='container-fluid'>
+    <div class='row'>
+
+        <div id='colapsables-wrapper' class='col-md-12 no-display'></div>
+
+        <div class='col-md-12 hc-preview'>
+
+            <section class='header-hc'>
+                <div class='container-fluid'>
+                    <div class='row'>
+                        <div class='col-md-5 header-logo'><img src='assets/img/logo_kbmon.png'></div>
+                        <div class='col-md-3'></div>
+                        <div class='col-md-4 head-slogan'><span>fast software</span> for fast comapnies</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class='text-body-hc'>
+                <div class='container'>
+                    <div class='row'>
+                        <div class='col-md-1'></div>
+                        <div id='helpcenter-preview' class='col-md-10'></div>
+                        <div class='col-md-1'></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class='footer-hc'>
+                <div class='container-fluid'>
+                    <div class='row'>
+                        <div class='col-md-5'><img src='assets/img/HC_Developers_logo_footer.svg'></div>
+                        <div class='col-md'></div>
+                        <div class='col-md-5'></div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+
+</section>"
 ?>

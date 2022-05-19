@@ -9,20 +9,36 @@
     $con = mysqli_connect ('localhost', 'root', '', 'superliggera');
 
     // query
-    $query = 
-
-    // pega no nome do manual e no utilizador, e procura na BD uma linha com esse nome
-    // se encontrar, faz update a essa linha
-    // se não encontrar, adiciona uma nova linha
-
-
+    $query = "SELECT * FROM manuals WHERE (title = $manual AND author = $un)";
     $result = mysqli_query($con, $query);
+    $existemanual = mysqli_num_rows($result);
 
-    // se da query resultar 1 match (ou seja, credenciais corretas)
-    if (mysqli_affected_rows($con) == 1) {
-        echo "cookie-login-sucessfull";
-    } else {
-        echo "cookie-login-failed";
-    }   
+    if ($existemanual == 1) {
+        $query2 = "UPDATE manuals
+        SET title = $manual
+        SET author = $un
+        SET code = $code
+        SET timestamp = $timestamp
+        WHERE (title = $manual AND author = $un)";
+        $result2 = mysqli_query($con, $query2);
+        $atualizeimanual = mysqli_affected_rows($con);
+        if ($atualizeimanual = 1) {
+            echo "Manual atualizado com sucesso";
+        } else {
+            echo "Deu merda a atualizar";
+        }
+    }
+
+    if ($existemanual == 0) {
+        $query3 = "INSERT INTO manuals (title, author, code, timestamp)
+        VALUES ('$manual', '$un', '$code', '$timestamp')";
+        $result3 = mysqli_query($con, $query3);
+        $introduzimanual = mysqli_affected_rows($con);
+        if ($introduzimanual = 1) {
+            echo "Manual guardado com sucesso";
+        } else {
+            echo "Deu merda a guardar";
+        }
+    }
     mysqli_close($con);
 ?>

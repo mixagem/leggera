@@ -7,8 +7,6 @@ echo "<section class='header sticky-top'>
             <div class='col-md-6 headControls text-left'>
                 <button type='button' class='btn btn-info' id='ancora-btn'><i class='lni lni-anchor'></i>
                 </button>
-                <!--<button type='button' class='btn btn-light' id='theme-btn'><i class='lni lni-pallet'></i>
-                </button>-->
                 <button type='button' class='btn btn-light' id='colap-btn'><i class='lni lni-layers'></i>
                     Colapsáveis</button>
                 <button type='button' class='btn btn-light' id='manuals-btn'><i class='lni lni-library'></i>
@@ -21,6 +19,8 @@ echo "<section class='header sticky-top'>
                     Quicksave</button>
                 <button type='button' class='btn btn-warning' id='quickload-btn'><i class='lni lni-download'></i>
                     Quickload</button>
+                <button type='button' class='btn btn-warning' id='userstats-btn'><i class='lni lni-user'></i>
+                </button>
                 <button type='button' class='btn btn-danger' id='logout-btn'><i class='lni lni-power-switch'></i>
                 </button>
             </div>

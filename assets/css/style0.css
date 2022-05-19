@@ -484,17 +484,22 @@ body {
 
 #num-linhas-span,
 #num-colunas-span,
+#table-id-span,
 #cabecalho-span {
     display: block;
     color: var(--text-color-dark);
 }
 
 #num-linhas-input {
-    width: 35%
+    width: 65%
 }
 
 #num-colunas-input {
-    width: 35%
+    width: 65%
+}
+
+#table-id-input {
+    width: 80%;
 }
 
 #want-links-span {

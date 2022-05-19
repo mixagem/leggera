@@ -77,6 +77,8 @@ function mixWrapper() {
         codeType: 'vbnet',
         // variável com o tipo de código selecionado para a construção da tabelas
         tableType: 'normal-table',
+        // variável com o id da tabela 
+        tableID: '',
         // variável com a cor selecionada para introdução de icons 
         currentColor: '#000000',
         // variável com o tema selecionado para introdução de botões
@@ -712,13 +714,13 @@ function mixWrapper() {
         },
         backHome: function () {
             const sectionsArray = document.querySelectorAll('section');
-            if (leggeraVariables.activeTextarea.value === ''){
-            leggeraVariables.hcPreview.innerHTML = '';
-            leggeraMethods.displayUserStats();
-        }
+            if (leggeraVariables.activeTextarea.value === '') {
+                leggeraVariables.hcPreview.innerHTML = '';
+                leggeraMethods.displayUserStats();
+            }
             for (i = 0; i < sectionsArray.length; i++) { sectionsArray[i].classList.remove('no-display') }
             document.querySelector('#manuals-modal').remove();
-            
+
         },
         deleteManual: function (e) {
             let eTarget = e.target;
@@ -1054,7 +1056,7 @@ function mixWrapper() {
             let col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-8'));
             const tipoListaSpan = col.appendChild(leggeraMethods.mambo('span', 'tipo-lista-span', '', 'Tipo de lista'));
             col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-4'));
-            const numItensSpan = col.appendChild(leggeraMethods.mambo('span', 'num-itens-span', '', '# de itens'));
+            const numItensSpan = col.appendChild(leggeraMethods.mambo('span', 'num-itens-span', '', '# itens'));
             row = appControlsLists.appendChild(leggeraMethods.mambo('div', '', 'row'));
             col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-8'));
             let tipoListaDropdown = col.appendChild(leggeraMethods.mambo('select', 'tipo-lista-dropdown'));
@@ -1093,15 +1095,18 @@ function mixWrapper() {
             row = novaTabelaWrapper.appendChild(leggeraMethods.mambo('div', 'header-tabelas', 'row', '<i class="lni lni-layout gold"></i>&nbsp;&nbsp;Gerador de tabelas'));
             row = novaTabelaWrapper.appendChild(leggeraMethods.mambo('div', '', 'row'));
             col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1')); // Filler col
-            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'));
-            const numLinhasSpan = col.appendChild(leggeraMethods.mambo('span', 'num-linhas-span', '', '# de linhas'));
+            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-2'));
+            const numLinhasSpan = col.appendChild(leggeraMethods.mambo('span', 'num-linhas-span', '', '# linhas'));
             const numLinhasInput = col.appendChild(leggeraMethods.mambo('input', 'num-linhas-input'));
             numLinhasInput.setAttribute('type', 'number')
-            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'));
-            let numColunasSpan = col.appendChild(leggeraMethods.mambo('span', 'num-colunas-span', '', '# de colunas'));
+            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-2'));
+            let numColunasSpan = col.appendChild(leggeraMethods.mambo('span', 'num-colunas-span', '', '# colunas'));
             const numColunasInput = col.appendChild(leggeraMethods.mambo('input', 'num-colunas-input'));
             numColunasInput.setAttribute('type', 'number')
-            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1'));   // Filler col
+            col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'));
+            let tableIDSpan = col.appendChild(leggeraMethods.mambo('span', 'table-id-span', '', 'ID Tabela'));
+            const tableIDInput = col.appendChild(leggeraMethods.mambo('input', 'table-id-input'));
+            // col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1'));   // Filler col
             col = row.appendChild(leggeraMethods.mambo('div', 'import-table-btn', 'col-md-3'));
             let converterTabela = col.appendChild(leggeraMethods.mambo('button', '', 'btn btn-warning', '<i class="lni lni-code"></i>&nbsp;&nbsp;Importar tabela'));
             converterTabela.addEventListener('click', leggeraListsAndTables.convertTable);
@@ -1184,7 +1189,7 @@ function mixWrapper() {
             const n = document.querySelector('#num-itens-input').value;
             const wantLinks = document.querySelector('#want-links-checkbox').checked;
             // Babyproof
-            if ((isNaN(n)) === true
+            if ((isNaN(n))
                 || n <= 0) { alert('O valor para o número de itens não é válido (só aceito números positivos, acima de zero).'); return }
             // Declarar variávis para o Switch
             let novaLista = '';
@@ -1224,10 +1229,19 @@ function mixWrapper() {
                     break;
             }
         },
+
+        // id tabela para suporte de multi tabelas
+        tableID: document.querySelector('#table-id-input'),
         // Estilos a serem utilizados para formatação das tabelas
-        normalTableStyle: '<style>.phcgo-old-table>tbody>tr>td{text-align:left;background-color:#fff;padding:20px 10px;border:solid 1px #000}.phcgo-old-table>tbody>tr:nth-child(1)>td{background-color:rgb(255, 225, 189)!important;border:solid 1px #000!important;font-size:16px!important;font-weight:700}',
-        modernTableStyle: '<style>.phcgo-new-table>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:rgb(255, 225, 189);color:#000;padding:4px 20px;font-size:20px}',
-        modernTableStyleBlue: '<style>.phcgo-new-table-blue>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table-blue>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:#3fa8f6;color:#fff;padding:4px 20px;font-size:20px}',
+        normalTableStyle: function (tableID) {
+            return `<style>#${tableID}.phcgo-old-table>tbody>tr>td{text-align:left;background-color:#fff;padding:20px 10px;border:solid 1px #000}#${tableID}.phcgo-old-table>tbody>tr:nth-child(1)>td{background-color:rgb(255, 225, 189)!important;border:solid 1px #000!important;font-size:16px!important;font-weight:700}`
+        },
+        modernTableStyle: function (tableID) {
+            return `<style>#${tableID}.phcgo-new-table>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}#${tableID}.phcgo-new-table>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:rgb(255, 225, 189);color:#000;padding:4px 20px;font-size:20px}`
+        },
+        modernTableStyleBlue: function (tableID) {
+            return `<style>#${tableID}.phcgo-new-table-blue>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}#${tableID}.phcgo-new-table-blue>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:#3fa8f6;color:#fff;padding:4px 20px;font-size:20px}`
+        },
         // necessário para o injetor de estilos de largura
         colunas: 0,
         estilosExtra: '',
@@ -1236,16 +1250,22 @@ function mixWrapper() {
             // Obter os parâmetros para a ligação
             const numLinhas = document.querySelector('#num-linhas-input').value;
             const numColunas = document.querySelector('#num-colunas-input').value;
+
             // Babyproof
-            if ((isNaN(numLinhas)) === true
+            if ((isNaN(numLinhas))
                 || numLinhas <= 0) { alert('O valor para o número de linhas não é válido (só aceito números positivos, acima de zero).'); return }
-            if ((isNaN(numColunas)) === true
+            if ((isNaN(numColunas))
                 || numColunas <= 0) { alert('O valor para o número de colunas não é válido (só aceito números positivos, acima de zero).'); return }
+
+            // vai buscar o id da tabela
+            leggeraVariables.tableID = document.querySelector('#table-id-input').value.replaceAll(' ','');
+            if (leggeraVariables.tableID === '') { alert('O ID da tabela não está definido.'); return }
+
             let novaTabela;
             switch (leggeraVariables.tableType) {
-                case 'normal-table': novaTabela = leggeraMethods.mambo('table', '', 'phcgo-old-table'); break
-                case 'modern-table': novaTabela = leggeraMethods.mambo('table', '', 'phcgo-new-table'); break
-                case 'modern-table-blue': novaTabela = leggeraMethods.mambo('table', '', 'phcgo-new-table-blue'); break
+                case 'normal-table': novaTabela = leggeraMethods.mambo('table', leggeraVariables.tableID, 'phcgo-old-table'); break
+                case 'modern-table': novaTabela = leggeraMethods.mambo('table', leggeraVariables.tableID, 'phcgo-new-table'); break
+                case 'modern-table-blue': novaTabela = leggeraMethods.mambo('table', leggeraVariables.tableID, 'phcgo-new-table-blue'); break
             }
             novaTabela.style.display = 'flex';
             novaTabela.style.justifyContent = 'center';
@@ -1269,14 +1289,14 @@ function mixWrapper() {
             novaTabela.replaceAll('</tbody>', "\n" + '</tbody>');
             // gerador estilos para redimensionar larguras 
             function tableWidthLegoo(cla) {
-                let tablewidth = prompt(`Introduz as larguras das colunas ( ${numColunas} ), separadas por vírgua (20px, 400px).\n\nCaso vazio, estas ficaram adaptadas de acordo com o HelpCenter live.`);
+                let tablewidth = prompt(`Introduz as larguras das colunas ( ${numColunas} ), separadas por vírgua (20px, 400px).\n\nCaso vazio, estas terão o seu tamanho definido automaticamente.`);
                 if (tablewidth === null || tablewidth === '') { return }
                 else {
                     //transforma as medidas recebidas em  em array 
                     tablewidth = tablewidth.replaceAll(' ', '').split(',');
                     leggeraListsAndTables.estilosExtra = '';
                     for (i = 1; i <= numColunas; i++) {
-                        leggeraListsAndTables.estilosExtra = leggeraListsAndTables.estilosExtra + `.${cla}>tbody>tr>td:nth-child(${i}){width:${tablewidth[i - 1]};}`
+                        leggeraListsAndTables.estilosExtra = leggeraListsAndTables.estilosExtra + `#${leggeraVariables.tableID}.${cla}>tbody>tr>td:nth-child(${i}){width:${tablewidth[i - 1]};}`
                     }
                 }
             }
@@ -1285,20 +1305,23 @@ function mixWrapper() {
                 case 'normal-table':
                     novaTabela.classList = 'phcgo-old-table';
                     tableWidthLegoo('phcgo-old-table');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle(leggeraVariables.tableID) + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
                 case 'modern-table':
                     novaTabela.classList = 'phcgo-new-table';
                     tableWidthLegoo('phcgo-new-table');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle(leggeraVariables.tableID) + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
                 case 'modern-table-blue':
                     novaTabela.classList = 'phcgo-new-table-blue';
                     tableWidthLegoo('phcgo-new-table-blue');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue(leggeraVariables.tableID) + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
             }
             leggeraMethods.escreveNaTextarea(novaTabela);
         },
         // Função para converter tabelas
         convertTable: function () {
+            // vai buscar o id da tabela
+            leggeraVariables.tableID = document.querySelector('#table-id-input').value.replaceAll(' ','');
+            if (leggeraVariables.tableID === '') { alert('O ID da tabela não está definido.'); return }
             // publicar a tabela recebida
             let nome;
             switch (leggeraVariables.tableType) {
@@ -1313,9 +1336,9 @@ function mixWrapper() {
             leggeraMethods.escreveNaTextarea(leggeraMethods.mambo('div', 'tempTable', '', tablecode).outerHTML);
             let novaTabela;
             switch (leggeraVariables.tableType) {
-                case 'normal-table': novaTabela = leggeraMethods.mambo('table', '', 'phcgo-old-table'); break
-                case 'modern-table': novaTabela = leggeraMethods.mambo('table', '', 'phcgo-new-table'); break
-                case 'modern-table-blue': novaTabela = leggeraMethods.mambo('table', '', 'phcgo-new-table-blue'); break
+                case 'normal-table': novaTabela = leggeraMethods.mambo('table', leggeraVariables.tableID, 'phcgo-old-table'); break
+                case 'modern-table': novaTabela = leggeraMethods.mambo('table', leggeraVariables.tableID, 'phcgo-new-table'); break
+                case 'modern-table-blue': novaTabela = leggeraMethods.mambo('table', leggeraVariables.tableID, 'phcgo-new-table-blue'); break
             }
             novaTabela.style.display = 'flex';
             novaTabela.style.justifyContent = 'center';
@@ -1326,14 +1349,14 @@ function mixWrapper() {
             novaTabela = (novaTabela.toString().replaceAll('</tbody>', "\n" + '</tbody>'));
             // gerador estilos para redimensionar larguras 
             function tableWidthLegoo(cla) {
-                let tablewidth = prompt(`Introduz as larguras das colunas ( ${leggeraListsAndTables.colunas} ), separadas por vírgua (20px, 400px).\n\nCaso vazio, estas ficaram adaptadas de acordo com o HelpCenter live.`);
+                let tablewidth = prompt(`Introduz as larguras das colunas ( ${leggeraListsAndTables.colunas} ), separadas por vírgua (20px, 400px).\n\nCaso vazio, estas terão o seu tamanho definido automaticamente.`);
                 if (tablewidth === null || tablewidth === '') { return }
                 else {
                     //transforma as medidas recebidas em  em array 
                     tablewidth = tablewidth.replaceAll(' ', '').split(',');
                     leggeraListsAndTables.estilosExtra = '';
                     for (i = 1; i <= leggeraListsAndTables.colunas; i++) {
-                        leggeraListsAndTables.estilosExtra = leggeraListsAndTables.estilosExtra + `.${cla}>tbody>tr>td:nth-child(${i}){width:${tablewidth[i - 1]};}`
+                        leggeraListsAndTables.estilosExtra = leggeraListsAndTables.estilosExtra + `#${leggeraVariables.tableID}.${cla}>tbody>tr>td:nth-child(${i}){width:${tablewidth[i - 1]};}`
                     }
                     leggeraListsAndTables.estilosExtra = leggeraListsAndTables.estilosExtra + '</style>'
                 }
@@ -1343,15 +1366,15 @@ function mixWrapper() {
                 case 'normal-table':
                     novaTabela.classList = 'phcgo-old-table';
                     tableWidthLegoo('phcgo-old-table');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle(leggeraVariables.tableID) + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
                 case 'modern-table':
                     novaTabela.classList = 'phcgo-new-table';
                     tableWidthLegoo('phcgo-new-table');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle(leggeraVariables.tableID) + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
                 case 'modern-table-blue':
                     novaTabela.classList = 'phcgo-new-table-blue';
                     tableWidthLegoo('phcgo-new-table-blue');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue(leggeraVariables.tableID) + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
             }
             leggeraMethods.escreveNaTextarea(novaTabela);
         },
@@ -1622,7 +1645,7 @@ function mixWrapper() {
             const helpcenterPreviewWrapper = document.querySelector('.hc-preview');
             //babyproof - reset à activeTextarea
             leggeraVariables.activeTextarea = '';
-            if (leggeraVariables.colapHCPreview.classList.contains('no-display') === true) {
+            if (leggeraVariables.colapHCPreview.classList.contains('no-display')) {
                 leggeraVariables.botaoVistaColap.classList.replace('btn-light', 'btn-info');
                 document.querySelector('#helpcenter-preview').innerHTML = document.querySelector('#textarea').value;
                 leggeraVariables.colapHCPreview.classList.remove('no-display');
@@ -1936,6 +1959,7 @@ function mixWrapper() {
             for (menu of menus) { menu.addEventListener('click', leggeraMethods.updateWhereIAm) };
             document.querySelector('#quicksave-btn').addEventListener('click', leggeraMethods.quickSave);
             document.querySelector('#quickload-btn').addEventListener('click', leggeraMethods.quickLoad);
+            document.querySelector('#userstats-btn').addEventListener('click', function () {leggeraVariables.hcPreview.innerHTML='';leggeraMethods.displayUserStats();});
             document.querySelector('#logout-btn').addEventListener('click', leggeraMethods.logout);
             document.querySelector('#preview-btn').addEventListener('click', leggeraMethods.saveByPreviewBtn)
             document.querySelector('#ancora-btn').addEventListener('click', leggeraMethods.stickyTop);

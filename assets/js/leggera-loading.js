@@ -209,7 +209,6 @@ function leggeraLoginSucess(rsp) {
         // const rng = Math.random() * (max - min) + min+1;
         const welcomeArray = ['Mekieeee', 'Ora Boas', 'Como é que estamos', 'Vai trabalhar', 'Bora bora', 'Manuais? Aguenta', 'Grandes vidas']
         const rng = Number(Math.floor(Math.random() * 7));
-        console.log(rng)
         const userFullName = rsp[0].split(' ');
         const welcomeTitle = document.createElement('div');
         welcomeTitle.innerText = `${welcomeArray[rng]} ${userFullName[0]}`;

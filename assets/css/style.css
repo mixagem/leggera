@@ -17,20 +17,58 @@ body {
     overflow-x: clip;
 }
 
+a {
+color: #000000 !important;
+font-family: 'Neutrif Pro' !important;
+}
+
 .no-display {
     display: none !important;
 }
 
 
-/** Cabeçalho live editor **/
+/*########### Landing        */
+
+#loading {
+    width: 0px;
+    height: 20px;
+    justify-self: center;
+    background-color: red;
+}
+
+#loading-span {
+    justify-self: center;
+    background-image: url('/assets/img/mi.gif');
+    width: 278px;
+    height: 142px;
+    background-attachment: local;
+}
+
+.animate__animated.animate__fadeIn {
+    --animate-duration: 1.5s !important;
+}
+
+#landing {
+    height: 100vh;
+    background-color: #000;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+
+
+
+
+
+
+/*########### Cabeçalho Editor        */
 
 .header {
     min-height: 25vh;
     background: #333;
     background-image: url('../img/header-bg.png');
-    ;
     background-size: 3%;
-
 }
 
 .header>div {
@@ -48,10 +86,6 @@ body {
     z-index: 1;
 }
 
-.header>div>div>.col-md-5 {
-    padding-top: 20px;
-}
-
 .header textarea {
     width: 100%;
     min-height: 175px;
@@ -64,22 +98,186 @@ body {
     color: #fff;
     border-radius: 10px;
     padding: 5px 10px;
+    background-image: url('../img/mi.png');
+    background-size:10%;
+    background-repeat: no-repeat;
+    background-position: bottom right;
 }
+
+#modal {
+    text-align: center;
+}
+
+    /*paddings da text area */
+.headControls {
+    padding-bottom: 15px;
+}
+.headControls2 {
+    padding-top: 15px;
+}
+
+
+/*########### Textboxes        */
+
+.header .alerta-relaciona {
+    max-height: 114.5px;
+    overflow: clip;
+}
+
+    /*  Alinhamento Texboxes */
+#modal>div>.col-md-4 {
+    text-align: left !important;
+}
+
+.helpcenter-textbox {
+    cursor:pointer;
+}
+
+.helpcenter-textbox {
+    cursor:pointer;
+    opacity:0.8;
+}
+.helpcenter-textbox:hover{opacity: 1}
+.helpcenter-textbox:hover .novoalerta{
+   box-shadow: 2px 2px #000, 4px 5px rgb(0, 195, 255)!important;
+}
+
+
+/*########### Icons         */
 
 .phcgo-icon {
     font-size: 35px;
     color: #fff;
     text-align: center;
     padding: 10px 5px;
+    cursor:pointer;
+    text-shadow: 1px 1px black;
 }
 
-/** Live preview **/
+.phcgo-icon:hover > span {
+    color:rgb(0, 195, 255)!important;
+    font-size: 35px;
+    text-shadow: 1px 1px black;    
+}
+
+.icon-sub-row-1 {
+    padding-right: 0 !important;
+    padding-left: 30px !important;
+    padding-bottom: 0px !important;
+}
+
+.icon-sub-row-2 {
+    padding-left: 0 !important;
+    padding-right: 30px !important;
+}
+
+
+/*########### Botões         */
+
+
+.botao-label {
+    text-align: center;
+    padding-top: 25px; 
+    cursor: pointer!important;
+}
+
+  
+.botao-label:hover button,
+.botao-label:hover div{
+    
+ box-shadow: 1px 1px #000, 2px 3px rgb(0, 195, 255)!important;
+}
+
+/*########### Listas e Tabelas         */
+
+#header-listas,
+#header-tabelas {
+    color:#fff;
+    padding-bottom:20px;
+    font-size:30px;
+}
+#tipo-lista-span {
+    display:block;
+    text-align: left;
+    color:#fff;
+    padding-left:2px
+}
+#num-itens-span {
+    display:block;
+    text-align: right;
+    color:#fff;
+    padding-right:2px
+}
+#num-itens-input {
+    width:100%;
+}
+#tipo-lista-dropdown {
+    width:100%
+}
+
+#tipo-lista-dropdown {
+    width:100%
+}
+
+#cria-tabela-btn-div{
+    padding-top:50px;
+}
+#cria-lista-btn-div{
+    padding-top:50px;
+}
+
+#cria-tabela-btn-div > button,
+#cria-lista-btn-div > button{
+    width:150px;
+    height:45px;
+}
+
+#num-linhas-span,
+#num-colunas-span,
+#cabecalho-span {
+    display:block;
+    color:#fff;
+}
+#num-linhas-input {
+    width:30%
+}
+#num-colunas-input {
+    width:30%
+}
+
+
+/*########### Live preview         */
 
 .display-preview {
     min-height: 80vh;
 }
 
-/** Cabeçalho HelpCenter **/
+    /* Cursor laranja */
+    #pulse {
+        font-size: 30px;
+        color: rgb(255, 145, 0);
+        animation-name: periodicfading;
+        animation-duration: 1.3s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-delay: 0s;
+    }
+    @keyframes periodicfading {
+        0% {
+            opacity: 0.1;
+        }
+    
+        50% {
+            opacity: 1.0;
+        }
+    
+        100% {
+            opacity: 0.1;
+        }
+    }
+    
+
+    /* Cabeçalho HelpCenter */
 .header-hc {
     padding-top: 20px;
     background-color: #EB8475;
@@ -104,8 +302,7 @@ body {
     color: #F4CC91;
 }
 
-/** Body HelpCenter **/
-
+    /* Body HelpCenter */
 .text-body-hc {
     min-height: 80vh;
 }
@@ -115,8 +312,7 @@ body {
     padding-bottom: 15px;
 }
 
-/** Rodapé HelpCenter **/
-
+    /* Rodapé HelpCenter */
 .footer-hc {
     background-color: #C3751B;
     height: 94px;
@@ -133,37 +329,7 @@ body {
     color: #000 !important;
 }
 
-/** Outros estilos **/
-
-/** Cursor no preview **/
-
-#pulse {
-    font-size: 30px;
-    color: rgb(255, 145, 0);
-    animation-name: periodicfading;
-    animation-duration: 1.3s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    animation-delay: 0s;
-}
-
-@keyframes periodicfading {
-    0% {
-        opacity: 0.1;
-    }
-
-    50% {
-        opacity: 1.0;
-    }
-
-    100% {
-        opacity: 0.1;
-    }
-}
-
-
-/** Estilos HelpCenter  **/
-
+    /** Estilos utilizados em tópicos de manual HelpCenter  **/
 .alerta {
     width: 100%;
     background-color: rgb(224, 224, 224);
@@ -189,7 +355,6 @@ body {
     margin: 20px 50px 20px;
     float: left;
 }
-
 
 .dica {
     width: 100%;
@@ -289,7 +454,6 @@ h3.manuais {
     padding: 5px 15px;
 }
 
-
 .td-cabecalho {
     background-color: rgb(255, 225, 189) !important;
     border: solid 1px #000 !important;
@@ -307,19 +471,19 @@ a.manuais:hover {
     text-decoration: none;
 }
 
-/** **/ 
+    /* default helpcenter, eu acho. tenho de validar */
+.phcgo-table>tbody>tr>td {
+    text-align: left;
+    background-color: #fff;
+    padding: 20px 10px;
+    border: solid 1px #000;
+}
+
+
+/*########### Colapsáveis         */
 
 #colapsables-modal {
     padding-top: 20px;
-}
-
-#modal>.row>.col-md-3 {
-    margin-top: -45px;
-}
-
-#modal>div>.phc-buttons>div {
-    text-align: center;
-    padding-top: 25px;
 }
 
 #colapsables-modal>div>div>div>input {
@@ -358,66 +522,7 @@ a.manuais:hover {
     text-align: left;
 }
 
-.phcgo-table>tbody>tr>td {
-    text-align: left;
-    background-color: #fff;
-    padding: 20px 10px;
-    border: solid 1px #000;
-}
 
-
-.headControls {
-    padding-bottom: 15px;
-}
-
-.headControls2 {
-    padding-top: 15px;
-}
-
-.header .alerta-relaciona {
-    max-height: 114.5px;
-    overflow: clip;
-}
-
-#modal {
-    text-align: center;
-}
-
-#modal>div>.col-md-4 {
-    text-align: left !important;
-}
-
-#landing {
-    height: 100vh;
-    background-color: #000;
-    display: grid;
-    justify-content: center;
-    align-content: center;
-}
-
-.animate__animated.animate__fadeIn {
-    --animate-duration: 1.5s !important;
-}
-
-#modal .material-icons {
-    color: #fff !important;
-}
-
-.icon-sub-row-1 {
-    padding-right: 0 !important;
-    padding-left: 30px !important;
-    padding-bottom: 0px !important;
-}
-
-.icon-sub-row-2 {
-    padding-left: 0 !important;
-    padding-right: 30px !important;
-}
-#loading-span {justify-self: center;background-image: url('/assets/img/mi.gif');width:278px;height:142px;background-attachment:local;}
-
-#loading {
-    width:0px;
-    height:20px;
-    justify-self: center;
-    background-color: red;
-}
+/**** Notepad
+*/
+#preview-list-row {color:#fff;}

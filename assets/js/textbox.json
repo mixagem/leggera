@@ -17,7 +17,7 @@
     },
     {
         "desc": "Tópicos Relacionados",
-        "code" :"<div class='novoalerta alerta-relaciona'><div class='novoalerta-titulo'><img id='img_conteudo' src='../pimages/go/artigo.svg' alt='PHC GO' class='menu-top-logo-ptxview' style='margin-top:-5px;margin-right:2px;height:20px;width:auto;'>Tópicos Relacionados</div><div class='novoalerta-contido'>Texto para tópicos relacionados:</b><br><br><ul><li><a class='manuais' target='_blank' href='#'>Primeiro tópico</a></li></ul></div></div>"
+        "code" :"<div class='novoalerta alerta-relaciona'><div class='novoalerta-titulo'><i class='fa fa-file-text-o' aria-hidden='true'></i>Tópicos Relacionados</div><div class='novoalerta-contido'>Texto para tópicos relacionados:</b><br><br><ul><li><a class='manuais' target='_blank' href='#'>Primeiro tópico</a></li></ul></div></div>"
     }
 
 ]

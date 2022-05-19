@@ -177,7 +177,7 @@ function mixWrapper() {
             })
         },
         // método principal para injetar o código HTML do elemento selecionado, na última posição do cursor
-        escreveNaTextarea: function (outerHTML) {
+        escreveNaTextarea: function (outerHTML) {   
             let novoSourceCode;
             // babyproof
             if (leggeraVariables.activeTextarea === '') { alert('Coloca o cursor numa área de texto antes de adicionar conteúdos.'); return }
@@ -314,6 +314,7 @@ function mixWrapper() {
         logout: function () {
             localStorage.removeItem('bolachinha');
             localStorage.removeItem('lightTheme');
+            localStorage.removeItem('session');
             location.reload();
         },
         // método para alterar o tema da aplicação
@@ -1888,4 +1889,26 @@ function mixWrapper() {
         }
     }
     leggeraListeners.allEvents();
+
+    // ################ Session 
+    (function leggeraSession () {
+        setInterval(function(){
+            $.ajax({    //create an ajax request to display.php
+                type: "POST",
+                url: "assets/php/session.php",
+                dataType: "text",
+                data: {
+                    username: loggedinUser,
+                    sessioncookie: localStorage.getItem('session')
+                },
+                success: function (response) {
+                   if (!response.includes('OK'))  { leggeraMethods.logout(); }
+                },
+                error: function (response) {
+                    if (!response.includes('OK'))  { leggeraMethods.logout(); }
+                 }
+            });
+        },10000);
+    })();
+    
 }   

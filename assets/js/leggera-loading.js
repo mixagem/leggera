@@ -79,6 +79,7 @@ function cookieLogin() {
                 } else {
                     lightTheme = response[1];
                     loggedinUser = response[2];
+                    localStorage.setItem('session', response[3]);
                     leggeraLoginSucess(response);
                 }
             }
@@ -109,6 +110,7 @@ function leggeraLogin() {
         url: "assets/php/auth.php",
         dataType: "JSON",
         data: {
+            action: "auth",
             username: currentUsername.value,
             password: document.querySelector('#password').value
         },
@@ -122,6 +124,7 @@ function leggeraLogin() {
                 lightTheme = response[1];
                 let saveTheme2Cache = JSON.stringify(lightTheme);
                 localStorage.setItem('lightTheme', saveTheme2Cache);
+                localStorage.setItem('session', response[2]);
                 leggeraLoginSucess(response);
             }
         },
@@ -161,10 +164,12 @@ function leggeraLoginSucess(rsp) {
     document.querySelector('#theme-css').setAttribute('href', `assets/css/style${lightTheme}.css`);
     document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${lightTheme}.css`);
     document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${lightTheme}.css`);
+
+    const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);
+    const novaBolachinha = JSON.stringify(fornoBolachinha);
+
     if (wantCookie === 1) {
-        const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);
-        const novaBolachinha = JSON.stringify(fornoBolachinha);
-        $.ajax({    //create an ajax request to display.php
+        $.ajax({    
             type: "POST",
             url: "assets/php/savecookie.php",
             dataType: "text",
@@ -202,8 +207,6 @@ function leggeraLoginSucess(rsp) {
         }, 5)
     }, 800)
     setTimeout(function () {
-
-
         // const rng = Math.random() * (max - min) + min+1;
         const welcomeArray = ['Mekieeee', 'Ora Boas', 'Como é que estamos', 'Vai trabalhar', 'Bora bora', 'Manuais? Aguenta', 'Grandes vidas']
         const rng = Number(Math.floor(Math.random() * 7));

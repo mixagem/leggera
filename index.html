@@ -10,15 +10,18 @@
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
     <link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      
+
 </head>
 
 <body>
 
-    <!-- <div id="landing"><span class="animate__animated animate__fadeIn"><img src="assets/img/mi.gif"></span></div> -->
-
+    <div class="row">
+        <div id="landing"><span id="loading-span" class="animate__animated animate__fadeIn"></span>
+            <div id="loading"></div>
+        </div>
+    </div>
     <section class="header sticky-top">
         <div class="container-fluid">
             <div class="row">
@@ -28,20 +31,13 @@
                         <button type="button" class="btn btn-light" id="textbox-btn"><i class="lni lni-text-format"></i>
                             Caixas de Texto</button>
                         <button type="button" class="btn btn-light" id="logos-btn"><i class="lni lni-image"></i>
-                            Icons & Imagens</button>
+                            Icons</button>
                         <button type="button" class="btn btn-light" id="botoes-btn"><i class="lni lni-pointer-top"></i>
-                            Botões PHC GO</button>
-                        <button type="button" class="btn btn-light" id="link-btn"><i class="lni lni-link"></i>
-                            Links</button>
-                        <button type="button" class="btn btn-light" id="list-btn"><i class="lni lni-radio-button"></i>
-                            Listas</button>
-                        <!-- <button type="button" class="btn btn-light" id="listas-btn">Listas</button><br> -->
-                        <!-- Work in Progress-->
-                        <button type="button" class="btn btn-light" id="table-btn"><i class="lni lni-grid"></i>
-                            Tabelas</button>
-
-
-
+                            Botões & Etiquetas</button>
+                        <button type="button" class="btn btn-light" id="listas-tabelas-btn"><i class="lni lni-grid"></i>
+                            Listas & Tabelas</button>
+                        <button type="button" class="btn btn-light" id="titulos-ligacoes-btn"><i class="lni lni-link"></i>
+                            Títulos & Ligações</button>
                     </div>
                     <textarea id="textarea"></textarea>
                     <div class="col-md-12 headControls headControls2">
@@ -53,12 +49,9 @@
                 </div>
 
                 <div class="col-md-7">
-
-
-
                     <div id="modal"></div>
-
                 </div>
+                
             </div>
         </div>
     </section>

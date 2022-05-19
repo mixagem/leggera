@@ -66,7 +66,7 @@ body {
     padding: 5px 10px;
 }
 
-.mini-item {
+.phcgo-icon {
     font-size: 35px;
     color: #fff;
     text-align: center;
@@ -216,17 +216,6 @@ body {
     float: left;
 }
 
-
-a.glink {
-    color: #3934BE !important;
-    font-size: 15px !important;
-}
-
-a.manuais {
-    color: #3934BE !important;
-    font-size: 15px !important;
-}
-
 .novoalerta {
     width: 100%;
     line-height: 1.5;
@@ -301,165 +290,24 @@ h3.manuais {
 }
 
 
-/** Butões PHC GO **/
-
-
-@font-face {
-    font-family: 'HK Grotesk';
-    src: url('../fonts/HKGrotesk-Medium.woff2') format('woff2'),
-        url('../fonts/HKGrotesk-Medium.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+.td-cabecalho {
+    background-color: rgb(255, 225, 189) !important;
+    border: solid 1px #000 !important;
+    font-size: 16px !important;
+    font-weight: bold;
 }
 
-
-/* 
-.phcgo-mainform-primary-btn {
-    background-color: #ff8f00;
-    color: #fff;
-    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
-    box-sizing: border-box;
-    cursor: default;
-    outline: none;
-    border: none;
-    display: inline-block;
-    text-align: center;
-    margin: 0;
-    min-width: 64px;
-    line-height: 36px;
-    padding: 0 16px;
-    border-radius: 4px;
-    font-family: HK Grotesk;
-    font-size: 14px;
-    font-weight: 400;
+a.manuais {
+    color: #3934BE !important;
+    font-size: 15px !important;
+    font-weight: 600;
 }
 
-.phcgo-mainform-secondary-btn {
-    background-color: #fff;
-    color: #000;
-    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
-    box-sizing: border-box;
-    cursor: default;
-    outline: none;
-    border: none;
-    display: inline-block;
-    text-align: center;
-    margin: 0;
-    min-width: 64px;
-    line-height: 36px;
-    padding: 0 16px;
-    border-radius: 4px;
-    font-family: HK Grotesk;
-    font-size: 14px;
-    font-weight: 400;
+a.manuais:hover {
+    text-decoration: none;
 }
 
-.phcgo-action-active-btn {
-    
-    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
-    color: #1a237e ;
-    border: 1px solid rgba(0,0,0,.12);
-    box-sizing: border-box;
-    cursor: default;
-    outline: none;
-    display: inline-block;
-    text-align: center;
-    margin: 0;
-    min-width: 64px;
-    padding: 0 16px;
-    border-radius: 4px;
-    overflow: visible;
-    background: transparent;
-    font-family: HK Grotesk;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 34px;
-}
-
-.phcgo-action-danger-btn {
-    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
-    color: #b70505 ;
-    border: 1px solid rgba(0,0,0,.12);
-    box-sizing: border-box;
-    cursor: default;
-    outline: none;
-    display: inline-block;
-    text-align: center;
-    margin: 0;
-    min-width: 64px;
-    padding: 0 16px;
-    border-radius: 4px;
-    overflow: visible;
-    background: transparent;
-    font-family: HK Grotesk;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 34px;
-}
-
-
-.phcgo-action-inactive-btn {
-    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
-    color: rgba(0,0,0,.26);
-    border: 1px solid currentColor;
-    box-sizing: border-box;
-    cursor: default;
-    outline: none;
-    display: inline-block;
-    text-align: center;
-    margin: 0;
-    min-width: 64px;
-    padding: 0 16px;
-    border-radius: 4px;
-    overflow: visible;
-    background: transparent;
-    font-family: HK Grotesk;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 34px;
-}
-
-.phcgo-processing-primary-btn {
-    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
-    border: 0;
-    color: #fff;
-    box-sizing: border-box;
-    cursor: default;
-    outline: none;
-    display: inline-block;
-    text-align: center;
-    margin: 0;
-    min-width: 64px;
-    padding: 0 16px;
-    border-radius: 4px;
-    overflow: visible;
-    background: #1976d2;
-    font-family: HK Grotesk;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 34px;
-}
-.phcgo-processing-secondary-btn {
-    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
-    color: #1976d2;
-    border: 1px solid rgba(0,0,0,.12);
-    box-sizing: border-box;
-    cursor: default;
-    outline: none;
-    display: inline-block;
-    text-align: center;
-    margin: 0;
-    min-width: 64px;
-    padding: 0 16px;
-    border-radius: 4px;
-    overflow: visible;
-    background: transparent;
-    font-family: HK Grotesk;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 34px;
-} */
+/** **/ 
 
 #colapsables-modal {
     padding-top: 20px;
@@ -510,43 +358,6 @@ h3.manuais {
     text-align: left;
 }
 
-.phc-go-chip {
-    display: inline-flex;
-    padding: 7px 12px;
-    border-radius: 16px;
-    align-items: center;
-    cursor: default;
-    min-height: 32px;
-    height: 1px;
-    border: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    position: relative;
-    box-sizing: border-box;
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-    letter-spacing: normal;
-    color: #fff;
-    font-family: 'HK Grotesk';
-}
-
-.green-chip {
-    background-color: #139b25 !important;
-}
-
-.gray-chip {
-    background-color: #707070 !important;
-}
-
-.orange-chip {
-    background-color: #ff8f00 !important;
-}
-
-.red-chip {
-    background-color: #b70505 !important;
-}
-
 .phcgo-table>tbody>tr>td {
     text-align: left;
     background-color: #fff;
@@ -554,22 +365,6 @@ h3.manuais {
     border: solid 1px #000;
 }
 
-.td-cabecalho {
-    background-color: rgb(255, 225, 189) !important;
-    border: solid 1px #000 !important;
-    font-size: 16px !important;
-    font-weight: bold;
-}
-
-a.manuais {
-    color: #3934BE !important;
-    font-size: 15px !important;
-    font-weight: 600;
-}
-
-a.manuais:hover {
-    text-decoration: none;
-}
 
 .headControls {
     padding-bottom: 15px;
@@ -588,36 +383,8 @@ a.manuais:hover {
     text-align: center;
 }
 
-#modal>DIV>.col-md-4 {
+#modal>div>.col-md-4 {
     text-align: left !important;
-}
-
-
-#nome-span,
-#link-span,
-#tipo-span,
-#nItems-span,
-#col-span,
-#row-span,
-#header-span {
-    width: 100%;
-    padding-top: 15px;
-    color: #fff;
-    display: block;
-}
-
-.header input {
-    width: 50%;
-}
-
-#nList-input,
-#col-input,
-#row-input {
-    width: 5%
-}
-
-#modal .btn-success {
-    display: block;
 }
 
 #landing {
@@ -637,12 +404,20 @@ a.manuais:hover {
 }
 
 .icon-sub-row-1 {
-    padding-right:0!important;
-    padding-left:30px!important;
-    padding-bottom:0px!important;
+    padding-right: 0 !important;
+    padding-left: 30px !important;
+    padding-bottom: 0px !important;
 }
 
 .icon-sub-row-2 {
-    padding-left:0!important;
-    padding-right:30px!important;
+    padding-left: 0 !important;
+    padding-right: 30px !important;
+}
+#loading-span {justify-self: center;background-image: url('/assets/img/mi.gif');width:278px;height:142px;background-attachment:local;}
+
+#loading {
+    width:0px;
+    height:20px;
+    justify-self: center;
+    background-color: red;
 }

@@ -30,7 +30,6 @@ if (isset($_FILES['file']['name'])) {
 
     if ($uploadOk == 0) {
         echo "Sorry, your file was not uploaded.";
-
     } else {
         /* Check file extension */
         if (in_array(strtolower($imageFileType), $valid_extensions)) {
@@ -42,7 +41,7 @@ if (isset($_FILES['file']['name'])) {
             }
         }
     }
-    
+
     echo $response;
     exit;
 }

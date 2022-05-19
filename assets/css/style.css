@@ -3,7 +3,7 @@
 :root {
     --primary-title-color: gold;
     --secondary-title-color: violet;
-    --background-color: #000;
+    --background-color: #222;
     --text-color-dark: #000;
     --text-color-light: #fff;
     --alert-color: red;
@@ -76,6 +76,7 @@ a:hover {
     display: grid;
     justify-content: center;
     align-content: center;
+    background-color: #000;
 }
 
 #loading-title,
@@ -545,15 +546,14 @@ devia ter feito tudo via js. teve que martelar mais
 }
 
 .novo-separador {
-    padding-top: 40px;
     text-align: center;
 }
 
-.novo-separador span {
+.novo-separador >span {
     font-size: 20px;
     color: #fff;
-    display: block;
     padding: 10px 0px;
+    display: block;
 }
 
 #cria-tabela-checkbox-wrapper {
@@ -572,11 +572,18 @@ devia ter feito tudo via js. teve que martelar mais
 }
 
 
+#imageb64-span {
+font-size: 20px;
+color: #fff;
+display: block;
+padding: 10px 0px;
+text-align: center;
+}
 
 
-
-
-
+.nova-imagem {
+    padding-top:10px;   
+}
 
 
 
@@ -592,6 +599,7 @@ devia ter feito tudo via js. teve que martelar mais
 
 .display-preview {
     min-height: 80vh;
+    background-color: #fff;
 }
 
 /* Cursor laranja */
@@ -1009,18 +1017,6 @@ a.manuais:hover {
     color: var(--primary-title-color)
 }
 
-#modal-container>thead>th:first-child,
-#modal-container>tbody>tr>td:first-child {
-    padding-left: 30px;
-    width: 70%;
-}
-
-#modal-container>thead>th:last-child,
-#modal-container>tbody>tr>td:last-child {
-    text-align: right;
-    width: 30%;
-}
-
 
 #modal-container>tbody>tr {
     color: var(--text-color-light);
@@ -1058,3 +1054,12 @@ a.manuais:hover {
     background-color: rgb(56, 240, 178);
     cursor: pointer;
 }
+
+#modal-container > thead > th:first-child,
+#modal-container > tbody > tr > td:first-child {width:85%;padding-left: 30px;}
+
+#modal-container > thead > td:nth-child(2),
+#modal-container > tbody > tr > td:nth-child(2) {width:10%;text-align: right;}
+
+#modal-container > thead > td:last-child,
+#modal-container > tbody > tr > td:last-child {width:5%;text-align: center;}

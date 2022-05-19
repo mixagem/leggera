@@ -17,7 +17,7 @@ $result2 = mysqli_query($con, $query2);
 $temuserigual = mysqli_num_rows($result2);
 mysqli_close($con);
 
-if ($temuserigual == 0) {    
+if ($temuserigual == 0) {
     $con = mysqli_connect('localhost', 'root', '', 'superliggera');
     $query3 = "INSERT INTO users (id, username, password, name) 
     VALUES ('$totalusers'+1, '$un', '$pw', '$nome')";

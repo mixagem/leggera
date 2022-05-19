@@ -53,13 +53,6 @@ function cookieLogin() {
             dataType: "text",
             data: { cookie: bolachinha },
             success: function (response) {
-                // se vier login-failed, a cookie não é valida, por isso
-                // 1. devemos apagar a cookie da cache
-                // 2. mostrar uma mensagem a dizer que foi encontrada uma cookie inválida,
-                // por isso é que foi feito login
-                //
-                //se vier o nome de alguem, é porque correu bem, por isso
-                // é executar o resto do login de igual maneira
                 if (response.startsWith('login-failed')) {
                     localStorage.removeItem('bolachinha');
                     console.log('Token expirado')
@@ -107,7 +100,7 @@ function leggeraLogin() {
 
         },
         success: function (response) {
-            if (response.startsWith('login-failed')) {
+            if (response.startsWith('Err')) {
                 leggeraLoginFail();
             } else {
                 loggedinUser = currentUsername.value;;

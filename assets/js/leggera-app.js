@@ -143,7 +143,7 @@ function mixWrapper() {
             let inputText = leggeraVariables.textarea.value;
             leggeraVariables.hcPreview.innerHTML = inputText
             appControlsColap();
-            (this).autosave2JSON();
+            leggeraExtraFunctions.autosave2JSON();
         },
 
         // Page title auto-scroller
@@ -241,46 +241,60 @@ function mixWrapper() {
                 let inputTextString2;
                 // babyproof para quando colocamos o cursor numa tag, ele se mostrado for da tag (para não partir o prewview)
                 novoCursorPos = cursorPos;
-                if (inputText[cursorPos] === '>') {
-                    inputTextString1 = inputText.slice(0, cursorPos + 2)
-                    inputTextString2 = inputText.slice(cursorPos + 2, inputText.length)
-                } else {
-                    (function rotinaCursor() {
-                        switch (inputText[novoCursorPos]) {
-                            case '<':
-                                inputTextString1 = inputText.slice(0, novoCursorPos)
-                                inputTextString2 = inputText.slice(novoCursorPos, inputText.length)
-                                break
-                            case '>':
-                                inputTextString1 = inputText.slice(0, cursorPos)
-                                inputTextString2 = inputText.slice(cursorPos, inputText.length)
-                                break
-                            case undefined:
-                                inputTextString1 = inputText.slice(0, cursorPos)
-                                inputTextString2 = inputText.slice(cursorPos, inputText.length)
-                                break
-                            default:
-                                novoCursorPos--
-                                rotinaCursor()
-                        }
-                        // introduz o cursor laranja
-                        let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
-                        // guarda a posição do cursor 
-                        leggeraVariables.stringCursor[0] = inputTextString1;
-                        leggeraVariables.stringCursor[1] = inputTextString2;
-                        // atualiza o preview
-                        leggeraVariables.hcPreview.innerHTML = inputTextWithCursor;
-                        appControlsColap();
-                        leggeraExtraFunctions.autosave2JSON();
-                    })();
-                }
+
+                // if (inputText[cursorPos] === '>') {
+                inputTextString1 = inputText.slice(0, cursorPos + 2)
+                inputTextString2 = inputText.slice(cursorPos + 2, inputText.length)
+                // old rotina de cursor, causava muito lag
+                // } else {
+                //     (function rotinaCursor() {
+                //         switch (inputText[novoCursorPos]) {
+                //             case '<':
+                //                 inputTextString1 = inputText.slice(0, novoCursorPos)
+                //                 inputTextString2 = inputText.slice(novoCursorPos, inputText.length)
+                //                 break
+                //             case '>':
+                //                 inputTextString1 = inputText.slice(0, cursorPos)
+                //                 inputTextString2 = inputText.slice(cursorPos, inputText.length)
+                //                 break
+                //             case undefined:
+                //                 inputTextString1 = inputText.slice(0, cursorPos)
+                //                 inputTextString2 = inputText.slice(cursorPos, inputText.length)
+                //                 break
+                //             default:
+                //                 novoCursorPos--
+                //                 rotinaCursor()
+                //         }
+                //         // introduz o cursor laranja
+                let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
+                // guarda a posição do cursor 
+                leggeraVariables.stringCursor[0] = inputTextString1;
+                leggeraVariables.stringCursor[1] = inputTextString2;
+                // atualiza o preview
+                leggeraVariables.hcPreview.innerHTML = inputTextWithCursor;
+                appControlsColap();
+                leggeraExtraFunctions.autosave2JSON();
+                //     })();
+                // }
             } else {
                 if (leggeraVariables.limitExceded === 0) {
                     document.querySelector('#preview-btn').classList.remove('no-opacity');
                     alert(`Foi excedido o limite máximo de caractéres aceites pelo Autosave.\nPara pre-visualizar e guardar em cache as alterações efetuadas, carrega em "Preview", localizado ao lado direito do botão "Colapsáveis"`)
                 }
                 leggeraVariables.limitExceded = 1;
-                return
+
+                let cursorPos = leggeraExtraFunctions.getCursorPos(e);
+                // divide o tópico em duas partes (até ao cursor, e após o curos)
+                let inputTextString1 = inputText.slice(0, cursorPos);
+                let inputTextString2 = inputText.slice(cursorPos);
+                // introduz o cursor laranja
+                let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
+                // guarda a posição do cursor 
+                leggeraVariables.stringCursor[0] = inputTextString1;
+                leggeraVariables.stringCursor[1] = inputTextString2;
+                // atualiza o preview
+                leggeraVariables.hcPreview.innerHTML = inputTextWithCursor;
+                appControlsColap();
             }
         },
 
@@ -320,7 +334,20 @@ function mixWrapper() {
                     alert('Foi excedido o limite máximo de caractéres aceites pelo Autosave.\nPara pre-visualizar e guardar em cache as alterações efetuadas, carrega em "Preview", localizado ao lado direito do botão "Colapsáveis"')
                 }
                 leggeraVariables.limitExceded = 1;
-                return
+
+                let cursorPos = leggeraExtraFunctions.getCursorPos(e);
+                // divide o tópico em duas partes (até ao cursor, e após o curos)
+                let inputTextString1 = inputText.slice(0, cursorPos);
+                let inputTextString2 = inputText.slice(cursorPos);
+                // introduz o cursor laranja
+                let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
+                // guarda a posição do cursor 
+                leggeraVariables.stringCursor[0] = inputTextString1;
+                leggeraVariables.stringCursor[1] = inputTextString2;
+                // atualiza o preview
+                leggeraVariables.hcPreview.innerHTML = inputTextWithCursor;
+                appControlsColap();
+                leggeraExtraFunctions.autosave2JSON();
             }
         }
     }
@@ -349,22 +376,39 @@ function mixWrapper() {
                 if (!sectionsArray[i].classList.contains('no-display')) { sectionsArray[i].classList.add('no-display') }
             }
             const modal = document.querySelector('body').appendChild(leggeraExtraFunctions.elementGenerator('div', 'manuals-modal', '', ''));
+            const saveManualModal = modal.appendChild(leggeraExtraFunctions.elementGenerator('div', 'savemanual-container', '', 'aqui vêmos mambos para uardar'));
+            saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('h1', '', '', 'nome'));
+            saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('input', 'save-manual-input', '', ''));
+            saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-success', 'Guardar Manual'));
+            saveManualModal.lastChild.addEventListener('click', leggeraMyManualsDBConnect.saveManual)
+
+
+
             const modalTable = modal.appendChild(leggeraExtraFunctions.elementGenerator('table', 'modal-container', '', ''));
             const modalHeader = modalTable.appendChild(leggeraExtraFunctions.elementGenerator('thead', '', '', ''));
             modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', '', 'Título do Manual'))
             modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', '', 'Última atualização'))
+            modalHeader.appendChild(leggeraExtraFunctions.elementGenerator('th', '', '', ''))
             const modalBody = modalTable.appendChild(leggeraExtraFunctions.elementGenerator('tbody', '', '', ''));
             for (i = 0; i < rsp.length; i++) {
                 let modalRow = modalBody.appendChild(leggeraExtraFunctions.elementGenerator('tr', `manual-${i + 1}`, `animate__animated animate__fadeInUp`, ''))
-                modalRow.addEventListener('click', function (e) {
-                    leggeraMyManualsDBConnect.getManualCode(e, rsp);
-                });
                 if (i % 2 === 0) { modalRow.classList.add('manual-par') } else { modalRow.classList.add('manual-impar') }
                 modalRow.setAttribute('style', `--animate-delay: ${(i + 1) * 0.2}s`)
                 modalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', rsp[i].title))
+                modalRow.lastChild.addEventListener('click', function (e) {
+                    leggeraMyManualsDBConnect.getManualCode(e, rsp);
+                });
                 let data = new Date(Number(rsp[i].timestamp));
                 modalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', `${data.toLocaleDateString('pt-PT', { dateStyle: 'short' })} @ ${data.toLocaleTimeString('pt-PT', { timeStyle: 'short' })}`))
+                modalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', `<i class="lni lni-eraser"></i>`))
+                modalRow.lastChild.addEventListener('click', leggeraMyManualsDBConnect.deleteManual);
             }
+            let saveModalRow = modalBody.appendChild(leggeraExtraFunctions.elementGenerator('tr', `manual-new`, `animate__animated animate__fadeInUp`, ''))
+            if (rsp.length % 2 === 0) { saveModalRow.classList.add('manual-par') } else { saveModalRow.classList.add('manual-impar') }
+            saveModalRow.appendChild(leggeraExtraFunctions.elementGenerator('td', '', '', 'add new manual here'))
+            saveModalRow.lastChild.setAttribute('colspan', 3);
+            saveModalRow.lastChild.addEventListener('click', leggeraMyManualsDBConnect.createManual);
+
         },
 
         // Vai buscar o código HTML do código selecionado
@@ -382,6 +426,76 @@ function mixWrapper() {
             appControlsColap();
             // Guarda as alterações em cache
             leggeraExtraFunctions.autosave2JSON();
+        },
+
+        saveManual: function () {
+            $.ajax({    //create an ajax request to display.php
+                type: "POST",
+                url: "assets/php/manualsupdate.php",
+                dataType: "text",
+                data: {
+                    username: loggedinUser,
+                    manual: document.querySelector('#save-manual-input').value,
+                    timestamp: Date.now(),
+                    action: 'save',
+                    code:  document.querySelector('#textarea').value
+                },
+                success: function (rsp) {
+                    if (rsp.startsWith('Err')) { console.log('fudeu') }
+                    else if (rsp.includes('atual')) {
+                        alert('tópico atualizado com sucesso');
+                        // mostra a app
+                        const sectionsArray = document.querySelectorAll('section');
+                        for (i = 0; i < sectionsArray.length; i++) {
+                            sectionsArray[i].classList.remove('no-display')
+                        }
+                        document.querySelector('#manuals-modal').remove();
+                    } else {
+                        alert('tópico criado com sucesso');
+                        // mostra a app
+                        const sectionsArray = document.querySelectorAll('section');
+                        for (i = 0; i < sectionsArray.length; i++) {
+                            sectionsArray[i].classList.remove('no-display')
+                        }
+                        document.querySelector('#manuals-modal').remove();
+                    }
+                }
+            })
+        },
+
+        deleteManual: function (e) {
+            let eTarget = e.target;
+            if (e.target.tagName === "I") {
+                eTarget = e.target.parentElement;
+            }
+            const wantToDelete = prompt(`Para excluír o tópico ${eTarget.parentElement.firstChild.innerText}, escreve "apagar":`);
+            if (wantToDelete === 'apagar') {
+                $.ajax({    //create an ajax request to display.php
+                    type: "POST",
+                    url: "assets/php/manualsupdate.php",
+                    dataType: "text",
+                    data: {
+                        username: loggedinUser,
+                        manual: eTarget.parentElement.firstChild.innerText,
+                        timestamp: Date.now(),
+                        action: 'delete'
+                    },
+                    success: function (rsp) {
+                        if (rsp.startsWith('Err')) { console.log('fudeu') }
+                        else {
+                            alert('tópico removido com sucesso');
+                            // mostra a app
+                            const sectionsArray = document.querySelectorAll('section');
+                            for (i = 0; i < sectionsArray.length; i++) {
+                                sectionsArray[i].classList.remove('no-display')
+                            }
+                            document.querySelector('#manuals-modal').remove();
+                        }
+                    }
+                })
+            } else {
+                return
+            }
         }
     }
 
@@ -620,9 +734,9 @@ function mixWrapper() {
 
         // Função para mostrar o appControls de botoes e etiquetas
         displayControls: function (e, control = 1) {
-            leggeraVariables.currentTheme = 'horizon'
             switch (control) {
                 case 1: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.horizonButtonsFromJSON;
+                    leggeraVariables.currentTheme = 'horizon' //default quando acessamos ao menu 
                     break
                 case 2: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.forestButtonsFromJSON;
                     break
@@ -638,18 +752,18 @@ function mixWrapper() {
             let appControlsButtonWrapper = appControlsButton.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row phc-buttons'));
             // Tive de  maertelar o número de ciclos para a row das chips ter colunas mais curtas que o resto dos botões XD
             for (i = 1; i <= 10; i++) {
-                // A cada 4 buttons, cria uma nova linha
+                // A cada 5buttons, cria uma nova linha
                 if (i % 5 === 0) {
-                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[i - 1]));
+                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[i - 1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
                     appControlsButtonWrapper = appControlsButton.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row phc-buttons'));
                 } else {
-                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[i - 1]));
+                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[i - 1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
                 }
             }
             for (i = 11; i <= 15; i++) {
-                appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[i - 1]));
+                appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[i - 1]));
                 appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton);
             }
             const themePickerRow = leggeraVariables.appControls.firstChild.appendChild(leggeraExtraFunctions.elementGenerator('div', 'theme-picker', 'row'));
@@ -673,7 +787,7 @@ function mixWrapper() {
             if (button.classList.length > 0) { button = button.firstChild };
 
             // Vai buscar o número do botão e vai buscar ao array dos botões o código original 
-            button = leggeraJSONGrab.buttonsFromJSON[String(button.parentElement.id).replace('botao-', '') - 1];
+            button = leggeraJSONGrab.buttonsFromJSON[String(button.parentElement.id).replace(`botao-${leggeraVariables.currentTheme}-`, '') - 1];
             leggeraExtraFunctions.escreveNaTextarea(button);
         }
     }
@@ -722,21 +836,11 @@ function mixWrapper() {
             const wantLinksSpan = col.appendChild(leggeraExtraFunctions.elementGenerator('span', 'want-links-span', '', '&nbsp;&nbsp;&nbsp;Links?'));
             let criarListaButton = col.appendChild(leggeraExtraFunctions.elementGenerator('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir lista'));
             criarListaButton.addEventListener('click', leggeraListsAndTables.writeList)
-
-            // ########## Injetor de imagens base64 ##########
-            const novaImagemWrapper = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-12 nova-imagem'));
-            novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('span', '', '', '<i class="lni lni-hammer"></i> Carregar imagem<br>'));
-            const fileUplaodForm = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('form', 'upload-form'));
-            fileUplaodForm.setAttribute('method', 'post');
-            fileUplaodForm.setAttribute('enctype', 'multipart/form-data');
-            const file2Upload = fileUplaodForm.appendChild(leggeraExtraFunctions.elementGenerator('input', 'file-upload-input', '', ''));
-            file2Upload.setAttribute('type', 'file')
-            file2Upload.setAttribute('name', 'file-upload-input')
-            const fileUploadBtn = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'nova-quebra-btn', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir imagem'));
-            fileUploadBtn.addEventListener('click', leggeraListsAndTables.writeImage);
-            const imagemCentradaCheckbox = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('input', 'imagem-centrada', '', ''));
-            imagemCentradaCheckbox.setAttribute('type', 'checkbox');
-            const imagemCentradaLabel = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('label', '', '', '&nbsp;&nbsp;&nbsp;Centrada?'));
+            // ########## Separador Horizontal ##########
+            const novoSeparadorWrapper = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-12 novo-separador'));
+            novoSeparadorWrapper.appendChild(leggeraExtraFunctions.elementGenerator('span', '', '', '<i class="lni lni-hammer"></i> Separador horizontal<br>'));
+            const novaQuebraBtn = novoSeparadorWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'nova-quebra-btn', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir separador horizontal'));
+            novaQuebraBtn.addEventListener('click', leggeraListsAndTables.writeHR);
 
 
             // ########## Tabelas ##########
@@ -779,11 +883,22 @@ function mixWrapper() {
             criarTabela.addEventListener('click', leggeraListsAndTables.writeTable);
             col = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-1')); //  Filler Col
 
-            // ########## Separador Horizontal ##########
-            const novoSeparadorWrapper = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-12 novo-separador'));
-            novoSeparadorWrapper.appendChild(leggeraExtraFunctions.elementGenerator('span', '', '', '<i class="lni lni-hammer"></i> Separador horizontal<br>'));
-            const novaQuebraBtn = novoSeparadorWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'nova-quebra-btn', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir separador horizontal'));
-            novaQuebraBtn.addEventListener('click', leggeraListsAndTables.writeHR);
+            // ########## Injetor de imagens base64 ##########
+            const novaImagemWrapper = row.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-12 nova-imagem'));
+            novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('span', 'imageb64-span', '', '<i class="lni lni-hammer"></i> Carregar imagem<br>'));
+            const fileUplaodForm = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('form', 'upload-form'));
+            fileUplaodForm.setAttribute('method', 'post');
+            fileUplaodForm.setAttribute('enctype', 'multipart/form-data');
+            const file2Upload = fileUplaodForm.appendChild(leggeraExtraFunctions.elementGenerator('input', 'file-upload-input', '', ''));
+            file2Upload.setAttribute('type', 'file')
+            file2Upload.setAttribute('name', 'file-upload-input')
+            const imagemCentradaCheckbox = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('input', 'imagem-centrada', '', ''));
+            imagemCentradaCheckbox.setAttribute('type', 'checkbox');
+            const imagemCentradaLabel = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('label', '', '', '&nbsp;&nbsp;&nbsp;Centrada?'));
+            const fileUploadBtn = novaImagemWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'nova-quebra-btn', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir imagem'));
+            fileUploadBtn.addEventListener('click', leggeraListsAndTables.writeImage);
+
+
         },
 
         // Função para atualizar com o tipo de lista selecionada
@@ -973,7 +1088,7 @@ function mixWrapper() {
             const itemsParaConverter = [];
             const numLinhas = document.querySelectorAll('#tempTable tr').length
             itemsParaConverter.push(document.querySelectorAll(`#tempTable th`));
-            for (i = 1; i < numLinhas; i++) {
+            for (i = 1; i <= numLinhas; i++) {
                 itemsParaConverter.push(document.querySelectorAll(`#tempTable tr:nth-child(${i}) td`))
             }
             const tabelaConvertida = leggeraExtraFunctions.elementGenerator('table')
@@ -1532,10 +1647,11 @@ function mixWrapper() {
             let h2Link = newCollapColTitulo.appendChild(leggeraExtraFunctions.elementGenerator('a'));
             h2Link.setAttribute('href', `#${newCollapseArray[0][i - 1]}`)
             h2Link.setAttribute('data-toggle', 'collapse');
-            h2Link.style.fontWeight = 'normal';
+
 
             //h2
             let newtituloH2 = h2Link.appendChild(leggeraExtraFunctions.elementGenerator('h2', '', 'manuais', newCollapseArray[1][i - 1]))
+            newtituloH2.style.fontWeight = 'normal';
 
             //abrir/fechar
             let newCollapCol1 = newCollap.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-xs-4 text-right'))

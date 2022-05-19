@@ -1,5 +1,4 @@
 <?php 
-
 echo "<section class='header sticky-top'>
 <div class='container-fluid'>
     <div class='row'>

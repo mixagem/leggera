@@ -1,16 +1,14 @@
 <?php
 
 $un = trim($_POST['username']);
-$userInfo = [];
-
-// ligação à BD
 $con = mysqli_connect('localhost', 'root', '', 'superliggera');
-$query = "SELECT name, email, cookie, totallogins, image from users WHERE username = '$un'";
 
-
+// vai buscar os dados do utilizador
+$query = "SELECT * from users WHERE username = '$un'";
 $result = mysqli_query($con, $query);
 if (mysqli_num_rows($result) == 1) {
     while ($row = mysqli_fetch_array($result)) {
+        // guarda os dados do utilizador necessários
         $nome = $row['name'];
         $email = $row['email'];
         $cookie = $row['cookie'];
@@ -19,6 +17,7 @@ if (mysqli_num_rows($result) == 1) {
     }
 }
 
+// vai buscar os manuais do utilizador
 $query = "SELECT * from manuals where author='$un'";
 $result = mysqli_query($con, $query);
 if (mysqli_num_rows($result) !== 0) {
@@ -26,19 +25,12 @@ if (mysqli_num_rows($result) !== 0) {
 } else {
     $totalmanuals = 0;
 }
-
 echo "<br><div class='container-fluid'>
         <div style='padding-top:20px;' class='row'>
-
             <div style='display: flex;justify-content: center;' class='col-md-4'>
-
                 <img id='user-pic' style='max-height: 200px;border-radius: 50%;' src='" . $img . "'>
-
             </div>
-
-
             <div id='user-info-wrapper' class='col-md-8'>
-
                 <div id='user-info'>
                     <div style='width:100%;font-size:35px;font-weight: bold;'>" . $nome . "</div>
                     <div style='width:100%;font-size:20px'><span class='material-icons' style='vertical-align:sub;font-size:22px'>contact_mail</span>&nbsp;&nbsp;&nbsp;" . $email . "</div>
@@ -52,9 +44,4 @@ echo "<br><div class='container-fluid'>
                         <div style='padding:5px;;width:100%;font-size:30px;font-weight: bold;'>" . $totalmanuals . "</div>
                     </div>
                 </div>
-
-
-
-
-
             </div>";

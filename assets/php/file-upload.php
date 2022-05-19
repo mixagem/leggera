@@ -1,47 +1,38 @@
 <?php
 
 if (isset($_FILES['file']['name'])) {
-
     $uploadOk = 1;
-    /* Getting file name */
+    // obtem o nome do ficheiro
     $filename = $_FILES['file']['name'];
-
-    /* Location */
+    // dir onde guardar o ficheiro
     $location = "uploads/" . $filename;
     $imageFileType = pathinfo($location, PATHINFO_EXTENSION);
     $imageFileType = strtolower($imageFileType);
-
-    /* Valid extensions */
+    // extensões suportadas
     $valid_extensions = array("jpg", "jpeg", "png");
-
-    // Check if file already exists
+    // verifica se o ficheiro já existe
     if (file_exists($location)) {
-        echo "Sorry, file already exists.";
+        echo "Desculpa, já existe um ficheiro com esse nome.";
         $uploadOk = 0;
     }
-
-    // Check file size
-    if ($_FILES["file"]["size"] > 500000) {
-        echo "Sorry, your file is too large.";
+    // verifica o tamanho do ficheiro (5MB max)
+    if ($_FILES["file"]["size"] > 5242880) {
+        echo "Desculpa, o tamanho máximo suportado para imagens é 5MB.";
         $uploadOk = 0;
     }
-
-    $response = 0;
-
-    if ($uploadOk == 0) {
-        echo "Sorry, your file was not uploaded.";
-    } else {
-        /* Check file extension */
+    if ($uploadOk != 0) {
+        // verifica se o ficheiro tem uma das extensões suportadas
         if (in_array(strtolower($imageFileType), $valid_extensions)) {
-            /* Upload file */
+            // faz upload do icheiro
             if (move_uploaded_file($_FILES['file']['tmp_name'], $location)) {
-                $response = 'data:image/' . $imageFileType . ';base64,' . base64_encode(file_get_contents($location));
+                // devolve a imagem
+                echo 'data:image/' . $imageFileType . ';base64,' . base64_encode(file_get_contents($location));
+                // apaga o ficheiro
                 unlink($location);
-                // $response = $location;
             }
+        } else {
+            echo "Desculpa, o ficheiro não tem uma das extensões suportadas (.jpg, .jpeg, e .png)";
         }
     }
-
-    echo $response;
     exit;
 }

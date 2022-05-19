@@ -1,25 +1,21 @@
 <?php
-// obtem os valores do formulário
-$un = trim($_POST['username']);
 
-// ligação à BD
+$un = trim($_POST['username']);
 $con = mysqli_connect('localhost', 'root', '', 'superliggera');
 
-// query
-$query = "SELECT title, code, timestamp FROM manuals WHERE author = '$un' ORDER BY timestamp DESC";
+// seleciona todos os manuais do utilizador
+$query = "SELECT * FROM manuals WHERE author = '$un' ORDER BY timestamp DESC";
 $result = mysqli_query($con, $query);
-
+// array para guardar todos os manuais
 $jsonarray = [];
-// se da query resultar 1 match (ou seja, credenciais corretas)
-if (mysqli_num_rows($result) !== 0) {
 
+if (mysqli_num_rows($result) !== 0) {
+    // envia para o array todos os manuais encontrados
     while ($row = mysqli_fetch_assoc($result)) {
         $jsonarray[] = $row;
     };
-
-
     echo json_encode($jsonarray);
 } else {
-    echo "you have no manuals";
+    echo "Não existem manuais para este utilizador";
 }
 mysqli_close($con);

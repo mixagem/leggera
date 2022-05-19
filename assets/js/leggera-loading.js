@@ -91,7 +91,7 @@ function cookieLogin() {
             dataType: "JSON",
             data: { cookie: bolachinha },
             success: function (response) {
-                if (response.includes('login-failed')) {
+                if (response.includes('Erro')) {
                     localStorage.removeItem('bolachinha');
                 } else {
                     darktheme = response[1];
@@ -135,7 +135,7 @@ function leggeraLogin() {
 
         },
         success: function (response) {
-            if (response.includes('Erro:')) {
+            if (response.includes('Erro')) {
                 leggeraLoginFail();
             } else {
                 loggedinUser = currentUsername.value;
@@ -202,12 +202,11 @@ function leggeraLoginSucess(rsp) {
                 cookie: novaBolachinha
             },
             success: function (response) {
-                if (response.startsWith('cookie-login-sucessfull')) {
-                    localStorage.setItem('bolachinha', novaBolachinha)
-                } else {
-                }
+                if (response.includes('Erro')) { console.log('Erro ao gerar cookie, login automático inativo.') }
+                else { localStorage.setItem('bolachinha', novaBolachinha) }
             }
-        });
+        }
+        );
     }
 
 

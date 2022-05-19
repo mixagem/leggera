@@ -1,32 +1,30 @@
 <?php
-// obtem os valores do formulário
-$cookie = trim($_POST['cookie']);
 
-if ($cookie !== '') {
-// ligação à BD
+$cookie = trim($_POST['cookie']);
 $con = mysqli_connect('localhost', 'root', '', 'superliggera');
 
-// query
-$query = "SELECT name, username, totallogins, darktheme FROM users WHERE cookie = '$cookie'";
+// caso exista cookie em cache
+if ($cookie !== '') {
+// procura algum user com esta cookie
+$query = "SELECT * FROM users WHERE cookie = '$cookie'";
 $result = mysqli_query($con, $query);
-
-// se da query resultar 1 match (ou seja, credenciais corretas)
+// caso encontre algum user
 if (mysqli_num_rows($result) == 1) {
-
+    // vai buscar as informações do user
     while ($row = mysqli_fetch_array($result)) {
         $name = $row['name'];
         $un = $row['username'];
         $darktheme = $row['darktheme'];
         $numlogins = $row['totallogins'];
     }
-
+    // devolve o nome, o tema e o utilizador ativo
     echo json_encode(array($name,$darktheme,$un));
-
+    // incrementa o número de logins
     $novoNumLogins = $numlogins + 1;
     $query = "UPDATE users SET totallogins = '$novoNumLogins' WHERE cookie = '$cookie'";
     $result = mysqli_query($con, $query);
 } else {
-    echo "Erro: login-failed";
+    echo "Erro: Cookie inválida.";
 }
 mysqli_close($con);
 }

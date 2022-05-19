@@ -1,4 +1,3 @@
-
 @font-face {
     font-family: 'Neutrif Pro';
     src: local('Neutrif Pro Regular'), local('Neutrif-Pro-Regular'),
@@ -10,35 +9,36 @@
 }
 
 body {
-    font-size:14.5px!important;
-    font-family:'Neutrif Pro'!important;
-    background:#111;
+    font-size: 14.5px !important;
+    font-family: 'Neutrif Pro' !important;
+    background: #111;
     color: #000;
-    line-height:1.42857143;
-    overflow-x: clip;   
+    line-height: 1.42857143;
+    overflow-x: clip;
 }
 
 .no-display {
-    display:none!important;
+    display: none !important;
 }
 
 
-/** Cabeçalho live editor **/ 
+/** Cabeçalho live editor **/
 
 .header {
     min-height: 25vh;
-    background:#333;
-    background-image: url('../img/header-bg.png');;
+    background: #333;
+    background-image: url('../img/header-bg.png');
+    ;
     background-size: 3%;
 
 }
 
 .header > div {
-    padding-top:10px;
+    padding-top: 10px;
 }
 
 .header .novoalerta {
-    margin-top:60px;
+    margin-top: 0px;
 }
 
 .sticky-top {
@@ -49,17 +49,26 @@ body {
 }
 
 .header > div > div > .col-md-5 {
-    padding-top:20px;
+    padding-top: 20px;
 }
 
-textarea {
-    width:100%;
-    min-height:175px;
+.header textarea {
+    width: 100%;
+    min-height: 175px;
+    overflow: auto;
+    background-color: transparent;
+    color: #fff;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background-color: transparent;
+    color: #fff;
+    border-radius: 10px;
+    padding: 5px 10px;
 }
 
 .mini-item {
-    font-size:35px;
-    color:#fff;
+    font-size: 35px;
+    color: #fff;
     text-align: center;
     padding: 10px 5px;
 }
@@ -67,188 +76,230 @@ textarea {
 /** Live preview **/
 
 .display-preview {
-    min-height:80vh;
+    min-height: 80vh;
 }
 
-    /** Cabeçalho HelpCenter **/
-    .header-hc {
-        padding-top:20px;
-        background-color:#EB8475;
-        height:90px;
-    }
+/** Cabeçalho HelpCenter **/
+.header-hc {
+    padding-top: 20px;
+    background-color: #EB8475;
+    height: 90px;
+}
 
-    .header-hc img {
-        padding-left:16px;
-        margin-top:-2px;
-    }
+.header-hc img {
+    padding-left: 16px;
+    margin-top: -2px;
+}
 
-    .head-slogan {
-        font-size:13px;
-        color:#fff;
-        text-align: right;
-        padding-right:20px!important;
-        padding-top:30px;
-        letter-spacing: 0px;
-    }
+.head-slogan {
+    font-size: 13px;
+    color: #fff;
+    text-align: right;
+    padding-right: 20px !important;
+    padding-top: 30px;
+    letter-spacing: 0px;
+}
 
-    .head-slogan span {
-        color:#F4CC91;
-    }
+.head-slogan span {
+    color: #F4CC91;
+}
 
-    /** Body HelpCenter **/
+/** Body HelpCenter **/
 
-    .text-body-hc {
-        min-height:80vh;
-    }
+.text-body-hc {
+    min-height: 80vh;
+}
 
-    #main-div {
-        padding-top:40px;
-        padding-bottom:15px;
-    }
+#main-div {
+    padding-top: 40px;
+    padding-bottom: 15px;
+}
 
-    /** Rodapé HelpCenter **/
+/** Rodapé HelpCenter **/
 
-    .footer-hc {
-        background-color:#C3751B;
-        height:94px;
-    }
+.footer-hc {
+    background-color: #C3751B;
+    height: 94px;
+}
 
-    .footer-hc img{
-        padding-left:25px;
-        padding-top:20px;
-    }
+.footer-hc img {
+    padding-left: 25px;
+    padding-top: 20px;
+}
 
-    .hc-preview {
-        background-color:#fff;
-        padding: 0 !important;
-        color:#000!important;
-    }
+.hc-preview {
+    background-color: #fff;
+    padding: 0 !important;
+    color: #000 !important;
+}
 
 /** Outros estilos **/
 
-    /** Cursor no preview **/
+/** Cursor no preview **/
 
-    #pulse {
-        font-size:30px; 
-        color:rgb(255, 145, 0);
-        animation-name: periodicfading;
-        animation-duration: 1.3s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-        animation-delay: 0s;
+#pulse {
+    font-size: 30px;
+    color: rgb(255, 145, 0);
+    animation-name: periodicfading;
+    animation-duration: 1.3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+}
+
+@keyframes periodicfading {
+    0% {
+        opacity: 0.1;
     }
-    
-    @keyframes periodicfading {
-        0% {
-            opacity: 0.1;
-        }
-        50% {
-            opacity: 1.0;
-        }
-        100% {
-            opacity: 0.1;
-        } 
+
+    50% {
+        opacity: 1.0;
     }
+
+    100% {
+        opacity: 0.1;
+    }
+}
 
 
 /** Estilos HelpCenter  **/
 
 .alerta {
-    width: 100%; 
-    background-color: rgb(224, 224, 224); 
-    line-height: 1.5; float: left; 
-    text-align: justify; 
+    width: 100%;
+    background-color: rgb(224, 224, 224);
+    line-height: 1.5;
+    float: left;
+    text-align: justify;
     border-radius: 5px;
-    margin: 30px 0px;}
-    
+    margin: 30px 0px;
+}
+
 .alerta-titulo {
-    width: 59%; 
-    margin-left: 50px; 
-    margin-top: 20px; 
-    margin-right: 50px; 
-    font-size: 16px; float: left; 
-    font-style: italic;}
-    
+    width: 59%;
+    margin-left: 50px;
+    margin-top: 20px;
+    margin-right: 50px;
+    font-size: 16px;
+    float: left;
+    font-style: italic;
+}
+
 .alerta-contido {
-    font-size: 14px; 
-    margin: 20px 50px 20px; 
-    float: left;}
-    
-    
+    font-size: 14px;
+    margin: 20px 50px 20px;
+    float: left;
+}
+
+
 .dica {
-    width: 100%; 
-    background-color: rgb(255, 225, 189); 
-    line-height: 1.5; 
-    float: left;  
+    width: 100%;
+    background-color: rgb(255, 225, 189);
+    line-height: 1.5;
+    float: left;
     border-radius: 5px;
-    margin: 30px 0px;}
-    
+    margin: 30px 0px;
+}
+
 .dica-titulo {
-    width: 59%; 
-    margin-left: 50px; 
-    margin-top: 20px; 
-    margin-right: 50px; 
-    font-size: 16px; 
-    float: left; 
-    font-style: italic;}
-    
+    width: 59%;
+    margin-left: 50px;
+    margin-top: 20px;
+    margin-right: 50px;
+    font-size: 16px;
+    float: left;
+    font-style: italic;
+}
+
 .dica-contido {
-    font-size: 14px; 
-    margin: 20px 50px 20px; 
-    float: left; }
-    
-    
-a.glink{
-        color:#3934BE!important;
-        font-size:15px!important;
-    }
-    
+    font-size: 14px;
+    margin: 20px 50px 20px;
+    float: left;
+}
+
+
+a.glink {
+    color: #3934BE !important;
+    font-size: 15px !important;
+}
+
 a.manuais {
-    color:#3934BE!important;
-    font-size:15px!important;
+    color: #3934BE !important;
+    font-size: 15px !important;
 }
 
 .novoalerta {
-        width: 100%; 
-        line-height: 1.5;
-        float: left;
-        border-radius: 5px;
-        margin: 30px 0px
-    }
-    
+    width: 100%;
+    line-height: 1.5;
+    float: left;
+    border-radius: 5px;
+    margin: 30px 0px
+}
+
 .novoalerta-titulo {
-        margin: 25px 50px 20px 50px;
-        font-size: 18px;
-        float: left;
-        font-weight:bold;
-        width: 100%;
-    }
-    
+    margin: 25px 50px 20px 50px;
+    font-size: 18px;
+    float: left;
+    font-weight: bold;
+    width: 100%;
+}
+
 .novoalerta-contido {
-        font-size: 15px;
-        margin: 0px 35px 20px 35px;
-        float: left;
-        }
-    
-.novoalerta-titulo > i {padding-right:10px;}
-    
-.alerta-notas {background-color: rgb(255, 225, 189);}
-.alerta-dicas {background-color: rgb(255, 248, 200);}
-.alerta-info {background-color: rgb(232, 239, 249);}
-.boas-praticas {background-color: rgb(210, 251, 200);}
-.alerta-relaciona {background-color: rgb(245, 245, 245);}
+    font-size: 15px;
+    margin: 0px 35px 20px 35px;
+    float: left;
+}
+
+.novoalerta-titulo > i {
+    padding-right: 10px;
+}
+
+.alerta-notas {
+    background-color: rgb(255, 225, 189);
+}
+
+.alerta-dicas {
+    background-color: rgb(255, 248, 200);
+}
+
+.alerta-info {
+    background-color: rgb(232, 239, 249);
+}
+
+.boas-praticas {
+    background-color: rgb(210, 251, 200);
+}
+
+.alerta-relaciona {
+    background-color: rgb(245, 245, 245);
+}
 
 .seccao-phcgo {
-    background:rgb(245, 245, 245);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-bottom:10px;}
-    
-h1.manuais {font-size:28px;text-transform:uppercase;font-weight:bold;}
-h2.manuais {font-size:20px;font-weight: bold;margin:0;padding:10px;}
-h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
-    
+    background: rgb(245, 245, 245);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+h1.manuais {
+    font-size: 28px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+h2.manuais {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    padding: 10px;
+}
+
+h3.manuais {
+    font-size: 18px;
+    text-transform: none;
+    padding: 5px 15px;
+}
+
 
 /** Butões PHC GO **/
 
@@ -410,36 +461,37 @@ h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
     line-height: 34px;
 } */
 
-#colapsables-modal{
-    padding-top:20px;
+#colapsables-modal {
+    padding-top: 20px;
 }
 
 #modal > .row > .col-md-3 {
-    margin-top:-45px;
+    margin-top: -45px;
 }
 
 #modal > div > .phc-buttons > div {
-    text-align:center;
-    padding-top:25px;
+    text-align: center;
+    padding-top: 25px;
 }
 
 .header > div > div > div > button {
-	margin-top: 5px;
+    margin-top: 5px;
 }
 
 #colapsables-modal > div > div > div > input {
-    width:100%;
-    padding:5px 10px;
+    width: 100%;
+    padding: 5px 10px;
     margin: 5px;
     padding: 2px 2px;
 }
 
 #colapsables-modal > div > div > div > textarea {
-    min-height:200px;
-    width:100%;
-    padding:5px 10px;
+    min-height: 200px;
+    width: 100%;
+    padding: 5px 10px;
     margin: 5px;
     padding: 2px 2px;
+    overflow: auto;
 }
 
 #colapsables-modal > div > div > div > span {
@@ -454,13 +506,14 @@ h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
 
 #colapsables-modal > div > div > .col-md-7 > div:first-child {
     background-color: rgb(245, 245, 245);
-    margin-bottom:10px;
-    font-size:20px;
+    margin-bottom: 10px;
+    font-size: 20px;
     font-weight: bold;
-    margin:0;
-    padding:10px 0px 10px 30px;
-    text-align:left;}
-  
+    margin: 0;
+    padding: 10px 0px 10px 30px;
+    text-align: left;
+}
+
 .phc-go-chip {
     display: inline-flex;
     padding: 7px 12px;
@@ -478,16 +531,27 @@ h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
     font-weight: 500;
     white-space: nowrap;
     letter-spacing: normal;
-    color:#fff;
+    color: #fff;
     font-family: 'HK Grotesk';
 }
 
-.green-chip {background-color: #139b25 !important;}
-.gray-chip {background-color: #707070  !important;}
-.orange-chip {background-color: #ff8f00  !important;}
-.red-chip {background-color: #b70505 !important;}
+.green-chip {
+    background-color: #139b25 !important;
+}
 
-.phcgo-table > tbody > tr > td  {
+.gray-chip {
+    background-color: #707070 !important;
+}
+
+.orange-chip {
+    background-color: #ff8f00 !important;
+}
+
+.red-chip {
+    background-color: #b70505 !important;
+}
+
+.phcgo-table > tbody > tr > td {
     text-align: left;
     background-color: #fff;
     padding: 20px 10px;
@@ -495,8 +559,18 @@ h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
 }
 
 .td-cabecalho {
-    background-color: rgb(255,225, 189)!important;
-    border: solid 1px #000!important;
-    font-size: 16px!important;
+    background-color: rgb(255, 225, 189) !important;
+    border: solid 1px #000 !important;
+    font-size: 16px !important;
     font-weight: bold;
+}
+
+a.manuais {
+    color: #3934BE !important;
+    font-size: 15px !important;
+    font-weight: 600;
+}
+
+a.manuais:hover {
+    text-decoration: none;
 }

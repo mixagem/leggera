@@ -1,19 +1,23 @@
 [
     {
         "desc": "Textbox Notas",
-        "code": " <br><div class='novoalerta alerta-notas'><div class='novoalerta-titulo'><i class='fa fa-sticky-note-o'></i>Notas</div><br><div class='novoalerta-contido'>Texto para notas.</div></div> "
+        "code": "<div class='novoalerta alerta-notas'><div class='novoalerta-titulo'><i class='fa fa-sticky-note-o'></i>Notas</div><br><div class='novoalerta-contido'>Texto para notas.</div></div>"
     },
     {
         "desc": "Textbox Dicas",
-        "code": " <br><div class='novoalerta alerta-dicas'><div class='novoalerta-titulo'><i class='fa fa-bullhorn'></i>Dicas</div><br><div class='novoalerta-contido'>Texto para dicas.</div></div> "
+        "code": "<div class='novoalerta alerta-dicas'><div class='novoalerta-titulo'><i class='fa fa-bullhorn'></i>Dicas</div><br><div class='novoalerta-contido'>Texto para dicas.</div></div>"
     },
     {
         "desc": "Textbox Info",
-        "code": " <br><div class='novoalerta alerta-info'><div class='novoalerta-titulo'><i class='fa fa-info-circle'></i>Info</div><br><div class='novoalerta-contido'>Texto para informações.</div></div> "
+        "code": "<div class='novoalerta alerta-info'><div class='novoalerta-titulo'><i class='fa fa-info-circle'></i>Info</div><br><div class='novoalerta-contido'>Texto para informações.</div></div>"
     },
     {
         "desc": "Textbox Boas Práticas",
-        "code": " <br><div class='novoalerta boas-praticas'><div class='novoalerta-titulo'><i class='fa fa-thumbs-o-up'></i>Boas práticas</div><br><div class='novoalerta-contido'>Texto para boas práticas.</div></div> "
+        "code": "<div class='novoalerta boas-praticas'><div class='novoalerta-titulo'><i class='fa fa-thumbs-o-up'></i>Boas práticas</div><br><div class='novoalerta-contido'>Texto para boas práticas.</div></div>"
+    },
+    {
+        "desc": "Tópicos Relacionados",
+        "code" :"<div class='novoalerta alerta-relaciona'><div class='novoalerta-titulo'><img id='img_conteudo' src='../pimages/go/artigo.svg' alt='PHC GO' class='menu-top-logo-ptxview' style='margin-top:-5px;margin-right:2px;height:20px;width:auto;'>Tópicos Relacionados</div><div class='novoalerta-contido'>Texto para tópicos relacionados:</b><br><br><ul><li><a class='manuais' target='_blank' href='#'>Primeiro tópico</a></li></ul></div></div>"
     }
 
 ]

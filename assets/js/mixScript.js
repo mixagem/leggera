@@ -12,13 +12,46 @@ function mixWrapper() {
     const colapModal = document.querySelector('#colapsables-modal');
     const hcPreview = document.querySelector('.hc-preview');
     const numeroImagens = 36;
-    const numeroTextBoxes = 4;
+    const numeroTextBoxes = 5;
     const numeroButoes = 12;
     const iconsFromJSON = [];
     const textBoxesFromJSON = [];
     const buttonsFromJSON = [];
     let cursorPosInfo = [];
 
+       
+    document.addEventListener("click", function(evnt){
+        console.log(evnt.target);
+    });
+
+    (function JSON2Input() {
+        try {
+            const getTextareaFromJSON = localStorage.getItem('textarea');                 // Obter o string do localstorage
+            textarea.value = JSON.parse(getTextareaFromJSON);
+        }
+        catch { }
+    })();
+
+    textarea.addEventListener('keyup', autoSave);
+    textarea.addEventListener('keydown', stopAutoSave);
+
+    function autoSave(e) {
+        let autoSaveTimer = updateCursorPos(e);
+        return autoSaveTimer
+    }
+
+    function stopAutoSave() {
+        try {
+            clearTimeout(autoSaveTimer);
+        } catch {}
+    }
+
+
+    function saveIntoJSON() {
+        let textarea2JSON = JSON.stringify(textarea.value);
+        localStorage.setItem('textarea', textarea2JSON);
+        console.log('cache saved, you welcome');
+    }
 
 
     function stickyTop() {                                                      // função para ancorar o header do live editor
@@ -53,6 +86,7 @@ function mixWrapper() {
         cursorPosInfo[2] = inputTextString2;
         iconTopicRelacionado(fixedText);
         getCollapsables();
+        saveIntoJSON();
     }
 
     function newRow(pag) {                                      // função geradora <div row> primeira página
@@ -72,7 +106,7 @@ function mixWrapper() {
 
     function newItem(i) {
         const newItem = document.createElement('div');          // Função geradora <div col> para Caixas de texto
-        newItem.classList.add('col-md-3');
+        newItem.classList.add('col-md-4');
         newItem.classList.add(`item-${i}`);
         newItem.innerHTML = `${i}`;
         return newItem
@@ -101,6 +135,7 @@ function mixWrapper() {
         let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"'); // o texto corrigido
         maindiv.innerHTML = fixedText2;
         getCollapsables();
+        saveIntoJSON();
     }
 
     function grabJSONIcons() {
@@ -163,7 +198,7 @@ function mixWrapper() {
 
         function appendData(data) {
             for (let i = 0; i < data.length; i++) {
-                textBoxesFromJSON[i] = document.querySelector(`.col-md-3` + `.item-${i + 1}`);
+                textBoxesFromJSON[i] = document.querySelector(`.col-md-4` + `.item-${i + 1}`);
                 textBoxesFromJSON[i].innerHTML = data[i].code;
             }
         }
@@ -287,7 +322,7 @@ function mixWrapper() {
         (function () {
             let eventArray = [];
             for (i = 1; i <= numeroTextBoxes; i++) {
-                eventArray[i] = document.querySelector('.col-md-3' + `.item-${i}`);
+                eventArray[i] = document.querySelector('.col-md-4' + `.item-${i}`);
                 eventArray[i].addEventListener('click', (e) => {
                     eTarget = e.target;
                     eTargetLenght = eTarget.classList.length;
@@ -333,11 +368,13 @@ function mixWrapper() {
     function toogleColapsablesModal() {
         let colapModalClasses = colapModal.classList;
         if (colapModalClasses.length === 2) {
+            colapBtn.classList.replace('btn-light', 'btn-info');
             colapModal.classList.remove('no-display');
             hcPreview.classList.add('no-display');
             getCollapsables();
             oldColapsContent2JSON();
         } else {
+            colapBtn.classList.replace('btn-info', 'btn-light');
             oldColapsContent2JSON();
             getCollapsables();
             colapModalClasses = colapModal.classList.add('no-display');
@@ -532,7 +569,7 @@ function mixWrapper() {
         return newSpan
     }
 
-    // colapBtn.addEventListener('click', toogleColapsablesModal);
+    colapBtn.addEventListener('click', toogleColapsablesModal);
 
     function tableGenerator(header, nRow, nCol) {
         const newTable = document.createElement('table');
@@ -561,7 +598,7 @@ function mixWrapper() {
     }
 
 
-    // tabelasBtn.addEventListener('click', getTables);
+    tabelasBtn.addEventListener('click', getTables);
 
     function getTables() {                                    // função construtora <div> para todos os Icons
         modaldiv.innerHTML = '';
@@ -597,14 +634,139 @@ function mixWrapper() {
         let nCol = document.querySelector('#col-input').value;
         let wantHeader = document.querySelector('#header-input').checked;
         let newTable = tableGenerator(wantHeader, nRow, nCol);
-        // let newTable2String = String(newTable);
         let fixedText = `${cursorPosInfo[1]}${newTable.outerHTML}${cursorPosInfo[2]}`;
         textarea.value = fixedText;
         let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"'); // o texto corrigido
         maindiv.innerHTML = fixedText2;
         getCollapsables();
+        saveIntoJSON();
+    }
+
+    const linkBtn = document.querySelector('#link-btn');
+    linkBtn.addEventListener('click', getLink);
+
+    function getLink() {
+        modaldiv.innerHTML = '';
+        let pag = 1;
+        modaldiv.appendChild(newRow(pag));
+        const linkInputWrapper = document.createElement('div');
+        linkInputWrapper.appendChild(document.createElement('span'));
+        linkInputWrapper.lastChild.innerText = 'Nome da ligação:'
+        linkInputWrapper.lastChild.id = 'nome-span';
+        linkInputWrapper.appendChild(document.createElement('input'));
+        linkInputWrapper.lastChild.id = 'nome-input';
+        linkInputWrapper.appendChild(document.createElement('span'));
+        linkInputWrapper.lastChild.innerText = 'URL:'
+        linkInputWrapper.lastChild.id = 'link-span';
+        linkInputWrapper.appendChild(document.createElement('input'));
+        linkInputWrapper.lastChild.id = 'link-input';
+        linkInputWrapper.appendChild(document.createElement('button'));
+        linkInputWrapper.lastChild.classList = 'btn btn-success';
+        linkInputWrapper.lastChild.innerText = 'Dá-lhe gás';
+        linkInputWrapper.lastChild.addEventListener('click', linkGenerator);
+        modaldiv.lastChild.appendChild(linkInputWrapper)
+    }
+
+    function linkGenerator() {
+        let nome = document.querySelector('#nome-input').value;
+        let link = document.querySelector('#link-input').value;
+        const newLink = document.createElement('a');
+        newLink.classList.add('manuais');
+        newLink.setAttribute('href', link);
+        newLink.setAttribute('target', '_blank');
+        newLink.innerText = nome;
+        let fixedText = `${cursorPosInfo[1]}${newLink.outerHTML}${cursorPosInfo[2]}`;
+        textarea.value = fixedText;
+        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"'); // o texto corrigido
+        maindiv.innerHTML = fixedText2;
+        getCollapsables();
+        saveIntoJSON();
     }
 
 
+    const listBtn = document.querySelector('#list-btn');
+    listBtn.addEventListener('click', getLists);
+
+    function getLists() {
+        modaldiv.innerHTML = '';
+        let pag = 1;
+        modaldiv.appendChild(newRow(pag));
+        const listInputWrapper = document.createElement('div');
+        listInputWrapper.appendChild(document.createElement('span'));
+        listInputWrapper.lastChild.innerText = 'Tipo de lista';
+        listInputWrapper.appendChild(document.createElement('select'));
+        listInputWrapper.lastChild.id = 'list-dropdown'
+        listInputWrapper.lastChild.appendChild(document.createElement('option'));
+        listInputWrapper.lastChild.lastChild.value = 'ul'
+        listInputWrapper.lastChild.lastChild.innerText = 'Não ordenada ( • Item )'
+        listInputWrapper.lastChild.appendChild(document.createElement('option'));
+        listInputWrapper.lastChild.lastChild.value = 'ol-1'
+        listInputWrapper.lastChild.lastChild.innerText = 'Ordenada ( 1. Item )'
+        listInputWrapper.lastChild.appendChild(document.createElement('option'));
+        listInputWrapper.lastChild.lastChild.value = 'ol-a'
+        listInputWrapper.lastChild.lastChild.innerText = 'Ordenada ( a) Item )'
+        listInputWrapper.appendChild(document.createElement('span'));
+        listInputWrapper.lastChild.innerText = 'Número de Itens';
+        listInputWrapper.appendChild(document.createElement('input'));
+        listInputWrapper.lastChild.id = 'nList-input'
+        listInputWrapper.appendChild(document.createElement('button'));
+        listInputWrapper.lastChild.classList = 'btn btn-success';
+        listInputWrapper.lastChild.innerText = 'Dá-lhe gás'
+        listInputWrapper.lastChild.addEventListener('click', writeList)
+        modaldiv.lastChild.appendChild(listInputWrapper);
+    }
+
+
+
+    function writeList() {
+        const tipo = document.querySelector('#list-dropdown').value;
+        const n = document.querySelector('#nList-input').value;
+        let newList = '';
+        let fixedText = '';
+        let fixedText2 = '';
+        switch (tipo) {
+            case 'ul':
+                newList = document.createElement('ul');
+                for (i = 1; i <= n; i++) {
+                    newList.appendChild(document.createElement('li'));
+                    newList.lastChild.innerHTML = `<b>Item ${i}:</b> Lorem ipsum`;
+                }
+                fixedText = `${cursorPosInfo[1]}${newList.outerHTML}${cursorPosInfo[2]}`;
+                textarea.value = fixedText;
+                fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"'); // o texto corrigido
+                maindiv.innerHTML = fixedText2;
+                getCollapsables();
+                saveIntoJSON();
+                break;
+            case 'ol-1':
+                newList = document.createElement('ol');
+                newList.setAttribute('type', '1')
+                for (i = 1; i <= n; i++) {
+                    newList.appendChild(document.createElement('li'));
+                    newList.lastChild.innerHTML = `<b>Item ${i}:</b> Lorem ipsum`;
+                }
+                fixedText = `${cursorPosInfo[1]}${newList.outerHTML}${cursorPosInfo[2]}`;
+                textarea.value = fixedText;
+                fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"'); // o texto corrigido
+                maindiv.innerHTML = fixedText2;
+                getCollapsables();
+                saveIntoJSON();
+                break;
+            case 'ol-a':
+                newList = document.createElement('ol');
+                newList.setAttribute('type', 'a');
+                for (i = 1; i <= n; i++) {
+                    newList.appendChild(document.createElement('li'));
+                    newList.lastChild.innerHTML = `<b>Item ${i}:</b> Lorem ipsum`;
+                }
+                fixedText = `${cursorPosInfo[1]}${newList.outerHTML}${cursorPosInfo[2]}`;
+                textarea.value = fixedText;
+                fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="assets/img/artigo.svg"'); // o texto corrigido
+                maindiv.innerHTML = fixedText2;
+                getCollapsables();
+                saveIntoJSON();
+                break;
+        }
+    }
 }
 mixWrapper();

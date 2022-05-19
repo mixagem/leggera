@@ -45,7 +45,8 @@ function leggeraSignup() {
             
             username: document.querySelector('#username').value,
             password: document.querySelector('#password').value,
-            nome: document.querySelector('#nome').value
+            nome: document.querySelector('#nome').value,
+            email: document.querySelector('#email').value
 
         },
         success: function (response) {

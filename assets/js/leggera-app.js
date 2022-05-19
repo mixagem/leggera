@@ -364,12 +364,16 @@ function mixWrapper() {
                 data: { username: loggedinUser },
                 success: function (rsp) {
                     leggeraMyManualsDBConnect.myManuals(rsp);
+                },
+                error: function (rsp) {
+                    leggeraMyManualsDBConnect.myManuals(rsp);
                 }
             })
         },
 
         // Constroi a modal com os manuais recebidos da DB
         myManuals: function (rsp) {
+            console.log('here?')
             // oculta a app
             const sectionsArray = document.querySelectorAll('section');
             for (i = 0; i < sectionsArray.length; i++) {
@@ -438,7 +442,7 @@ function mixWrapper() {
                     manual: document.querySelector('#save-manual-input').value,
                     timestamp: Date.now(),
                     action: 'save',
-                    code:  document.querySelector('#textarea').value
+                    code: document.querySelector('#textarea').value
                 },
                 success: function (rsp) {
                     if (rsp.startsWith('Err')) { console.log('fudeu') }
@@ -523,6 +527,7 @@ function mixWrapper() {
                 for (let i = 0; i < data.length; i++) {
                     array[i] = data[i].code;
                 }
+                // serve para atualizar a datalength de acordo com a função que chamou este metodo
                 if (array === leggeraJSONGrab.textboxesFromJSON) { leggeraJSONGrab.numeroTextboxes = data.length }
                 if (array === leggeraJSONGrab.iconsFromJSON) { leggeraJSONGrab.numeroIcons = data.length }
             }
@@ -1731,7 +1736,7 @@ function mixWrapper() {
 
     function novoColapsavel() {
         if (leggeraVariables.colapList.length === 0) {
-            const abrirTodosDiv = '<br><a id="colapse-all-a" style="display: block;text-align: right;" data-toggle="collapse" data-target=".multi-collapse" href="#" role="button" aria-expanded="false"">Abrir Todos</a></p></div>'
+            const abrirTodosDiv = '<br><a id="colapse-all-a" style="display: block;text-align: right;" data-toggle="collapse" data-target=".multi-collapse" href="#" role="button" aria-expanded="false"">Abrir Todos</a></p>'
             leggeraVariables.textarea.value = leggeraVariables.textarea.value + "\n" + abrirTodosDiv + "\n" + '<!-- Início do Colapsável #1 -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #1 -->');
             leggeraVariables.textarea.value = leggeraVariables.textarea.value.replaceAll('<div class="collapse', "\n" + "\n" + '<div class="collapse')
             leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;

@@ -12,8 +12,6 @@ echo "<section class='header sticky-top'>
                     <span id='headControlsSpacer'></span>
                 <button type='button' class='btn btn-warning no-opacity' id='preview-btn'><i class='lni lni-magnifier'></i>
                     Preview</button>
-                <button type='button' class='btn btn-warning' id='save-btn'><i class='lni lni-save'></i>
-                    Guardar</button>
                 <button type='button' class='btn btn-warning' id='manuals-btn'><i class='lni lni-library'></i>
                     Manuais</button>
                 <button type='button' class='btn btn-warning' id='quicksave-btn'><i class='lni lni-upload'></i>

@@ -25,7 +25,7 @@ if ($action === 'delete') {
     } else {
         echo "Err: não encontrei esse tópico para esse user chico, aperta contigo";
     }
-} 
+}
 
 if ($action === 'save') {
     // buscar o nome
@@ -51,8 +51,5 @@ if ($action === 'save') {
             echo "Err: Deu merda ao criar";
         }
     }
-} 
-
-
-
-
+}
+mysqli_close($con);

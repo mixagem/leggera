@@ -3,11 +3,20 @@
 $un = trim($_POST['username']);
 $pw = trim($_POST['password']);
 
+
+$data = $pw;
+$method = "AES-256-CTR";
+$ivlength = openssl_cipher_iv_length($method);
+$iv = "6543210987654321";
+$key = "2855";
+$options = 0;
+$newpw = openssl_encrypt($data, $method, $key, $options, $iv);
+
 // ligação à BD
 $con = mysqli_connect('localhost', 'root', '', 'superliggera');
 
 // query
-$query = "SELECT username, password, name, active, loginattempts, totallogins FROM users WHERE (username = '$un' AND password = '$pw')";
+$query = "SELECT username, password, name, active, loginattempts, totallogins FROM users WHERE (username = '$un' AND password = '$newpw')";
 $result = mysqli_query($con, $query);
 
 // se da query resultar 1 match (ou seja, credenciais corretas)
@@ -26,7 +35,7 @@ if (mysqli_num_rows($result) == 1) {
     } else {
 
         // incrementa o total login
-        $query = "UPDATE users SET totallogins = $numlogins+1, loginattempts=0 WHERE (username = '$un' AND password = '$pw')";
+        $query = "UPDATE users SET totallogins = $numlogins+1, loginattempts=0 WHERE (username = '$un' AND password = '$newpw')";
         $result = mysqli_query($con, $query);
         echo $name;
     }

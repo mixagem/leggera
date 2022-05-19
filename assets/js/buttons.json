@@ -1,11 +1,11 @@
 [
     {
         "desc": "Botão Mainform Principal",
-        "code": "<button style='background-color:#ff8f00;color:#fff;box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);box-sizing:border-box;cursor:default;outline:0;border:none;display:inline-block;text-align:center;margin:0;min-width:64px;line-height:36px;padding:0 16px;border-radius:4px;font-family:/'HK Grotesk/';font-size:14px;font-weight:400'>Introduza</button>"
+        "code": "<button style='background-color:#ff8f00;color:#fff;box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);box-sizing:border-box;cursor:default;outline:0;border:none;display:inline-block;text-align:center;margin:0;min-width:64px;line-height:36px;padding:0 16px;border-radius:4px;';font-size:14px;font-weight:400'>Introduza</button>"
     },
     {
         "desc" : "Botão Mainform Secundário",
-        "code" : "<button style='background-color:#fff;color:#000;box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);box-sizing:border-box;cursor:default;outline:0;border:none;display:inline-block;text-align:center;margin:0;min-width:64px;line-height:36px;padding:0 16px;border-radius:4px;font-family:/'HK Grotesk/';font-size:14px;font-weight:400'>Ações</button>"
+        "code" : "<button style='background-color:#fff;color:#000;box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);box-sizing:border-box;cursor:default;outline:0;border:none;display:inline-block;text-align:center;margin:0;min-width:64px;line-height:36px;padding:0 16px;border-radius:4px;font-size:14px;font-weight:400'>Ações</button>"
     },
     {
         "desc" : "Botão processamentos principal",
@@ -33,15 +33,15 @@
     },
     {
         "desc" : "PHC GO Chip Verde",
-        "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;cursor:default;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#139b25;font-family:/'HK Grotesk/'>Assinado</div>"
+        "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;cursor:default;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#139b25;'>Assinado</div>"
     },{
         "desc" : "PHC GO Chip Laranja",
-        "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;cursor:default;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#ff8f00;font-family:/'HK Grotesk/'>Em edição</div>"
+        "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;cursor:default;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#ff8f00;'>Em edição</div>"
     },{
         "desc" : "PHC GO Chip Vermelho",
-        "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;cursor:default;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#b70505;font-family:/'HK Grotesk/'>Anulado</div>"
+        "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;cursor:default;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#b70505;'>Anulado</div>"
     },{
         "desc" : "PHC GO Chip Cinza",
-        "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;cursor:default;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#707070;font-family:/'HK Grotesk/'>Rascunho</div>"
+        "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;cursor:default;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#707070;'>Rascunho</div>"
     }
 ]

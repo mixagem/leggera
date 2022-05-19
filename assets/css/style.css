@@ -588,36 +588,61 @@ a.manuais:hover {
     text-align: center;
 }
 
-#modal > DIV >.col-md-4 {
-    text-align:left!important;
-}
-#modal > div > div {
-	margin-top:10px;
+#modal>DIV>.col-md-4 {
+    text-align: left !important;
 }
 
-#nome-span, 
-#link-span, 
-#tipo-span, 
+
+#nome-span,
+#link-span,
+#tipo-span,
 #nItems-span,
 #col-span,
 #row-span,
-#header-span { 
-	width:100%;
-	padding-top:15px;
-	color:#fff;
-    display:block;
+#header-span {
+    width: 100%;
+    padding-top: 15px;
+    color: #fff;
+    display: block;
 }
 
 .header input {
-    width:50%;
+    width: 50%;
 }
 
 #nList-input,
 #col-input,
 #row-input {
-    width:5%
+    width: 5%
 }
 
 #modal .btn-success {
-    display:block;
+    display: block;
+}
+
+#landing {
+    height: 100vh;
+    background-color: #000;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+.animate__animated.animate__fadeIn {
+    --animate-duration: 1.5s !important;
+}
+
+#modal .material-icons {
+    color: #fff !important;
+}
+
+.icon-sub-row-1 {
+    padding-right:0!important;
+    padding-left:30px!important;
+    padding-bottom:0px!important;
+}
+
+.icon-sub-row-2 {
+    padding-left:0!important;
+    padding-right:30px!important;
 }

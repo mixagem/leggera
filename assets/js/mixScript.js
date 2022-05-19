@@ -11,7 +11,7 @@ function mixWrapper() {
     const colapBtn = document.querySelector('#colap-btn');
     const colapModal = document.querySelector('#colapsables-modal');
     const hcPreview = document.querySelector('.hc-preview');
-    const numeroImagens = 48;
+    const numeroImagens = 70;
     const numeroTextBoxes = 5;
     const numeroButoes = 12;
     const iconsFromJSON = [];
@@ -50,7 +50,6 @@ function mixWrapper() {
     function saveIntoJSON() {
         let textarea2JSON = JSON.stringify(textarea.value);
         localStorage.setItem('textarea', textarea2JSON);
-        console.log('cache saved, you welcome');
     }
 
 
@@ -140,7 +139,7 @@ function mixWrapper() {
 
     function grabJSONIcons() {
 
-        fetch('assets/js/imagens.json')
+        fetch('assets/js/imagens2.json')
             .then(function (response) {
                 return response.json();
             })
@@ -164,21 +163,40 @@ function mixWrapper() {
         modaldiv.innerHTML = '';
         let pag = 1;
         let row = 1;
+        let preRow = 1;
         modaldiv.appendChild(newRow(pag));
-        modaldiv.lastChild.appendChild(document.createElement('div'));
-        modaldiv.lastChild.lastChild.classList.classList = `row icon-row-${row}`;
+        let divPaginador = modaldiv.lastChild;
+        divPaginador.appendChild(document.createElement('div'));
+        let divPrimeiraRow = divPaginador.lastChild;
+        divPrimeiraRow.classList = `row icon-row-${preRow}`;
+        divPrimeiraRow.appendChild(document.createElement('div'));
+        let divSegundaRow = divPrimeiraRow.lastChild;
+        divSegundaRow.classList = `col-md-6 icon-sub-row-${row}`;
+        
         for (i = 1; i <= numeroImagens; i++) {
-            if ((i % 12) === 0) {
-                modaldiv.lastChild.lastChild.appendChild(newMiniItem(i));
-                modaldiv.lastChild.appendChild(document.createElement('div'));
+
+            if ((i % 24) === 0) {
+                divSegundaRow.appendChild(newMiniItem(i));
+                row = 1;
+                preRow++;
+                divPaginador.appendChild(document.createElement('div'));
+                divPaginador.lastChild.classList = `row icon-row-${preRow}`;
+                divPaginador.lastChild.appendChild(document.createElement('div'));
+                divPaginador.lastChild.lastChild.classList = `col-md-6 icon-sub-row-${row}`;
+                divPrimeiraRow = divPaginador.lastChild;
+                divSegundaRow = divPaginador.lastChild.lastChild;
+            } else if ((i % 12) === 0) {
+                divSegundaRow.appendChild(newMiniItem(i));
                 row++;
-                modaldiv.lastChild.lastChild.classList.classList = `row icon-row-${row}`;
-            } else if ((i % 48) === 0) {
-                modaldiv.lastChild.lastChild.appendChild(newMiniItem(i));
-                pag++;
-                modaldiv.appendChild(newHiddenRow(pag));
+                divPrimeiraRow.appendChild(document.createElement('div'));
+                divPrimeiraRow.lastChild.classList = `col-md-6 icon-sub-row-${row}`;
+                divSegundaRow = divPrimeiraRow.lastChild;
+            //  else if ((i % 48) === 0) {
+            //     modaldiv.lastChild.lastChild.appendChild(newMiniItem(i));
+            //     pag++;
+            //     modaldiv.appendChild(newHiddenRow(pag));
             } else {
-                modaldiv.lastChild.lastChild.appendChild(newMiniItem(i));
+                divSegundaRow.appendChild(newMiniItem(i));
             }
         }
         // modaldiv.appendChild(newPagiRow());
@@ -779,5 +797,16 @@ function mixWrapper() {
                 break;
         }
     }
+
+    // window.onload = function () {
+    //     let rng = Math.floor(Math.random() * (3000 - 1200)) + 1200;
+    //     const landingTimer = setTimeout(function () {
+    //         document.querySelector('#landing').classList.add('no-display');
+    //     }, rng);
+    //     return landingTimer;
+    // }
+
 }
+
+
 mixWrapper();

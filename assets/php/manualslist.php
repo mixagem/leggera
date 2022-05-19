@@ -1,7 +1,7 @@
 <?php
 
 $un = trim($_POST['username']);
-$con = mysqli_connect('localhost', 'root', '', 'superliggera');
+$con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 // seleciona todos os manuais do utilizador
 $query = "SELECT * FROM manuals WHERE author = '$un' ORDER BY timestamp DESC";

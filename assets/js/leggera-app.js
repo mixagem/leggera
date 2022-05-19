@@ -73,7 +73,7 @@ function mixWrapper() {
         // variável com o tema atual do leggera (lightTheme vem do leggera-loading.js)
         currentLeggeraTheme: lightTheme,
         // variável com a resposta do servidor com as estatísticas do utilizador
-        userInfo: ''
+        userInfo: '',
     }
 
 
@@ -82,9 +82,11 @@ function mixWrapper() {
     const leggeraPreviewAdjustments = {
         // método principal, executa todos os métodos seguintes
         execute: function (convertedPreview) {
-            convertedPreview = leggeraPreviewAdjustments.oldRelatedTopics(convertedPreview);
-            convertedPreview = leggeraPreviewAdjustments.oldFontawesomeIcons(convertedPreview);
-            convertedPreview = leggeraPreviewAdjustments.topicLinkAlert(convertedPreview);
+            if (Number(userWantAlerts) === 1) {
+                convertedPreview = leggeraPreviewAdjustments.oldRelatedTopics(convertedPreview);
+                convertedPreview = leggeraPreviewAdjustments.oldFontawesomeIcons(convertedPreview);
+                convertedPreview = leggeraPreviewAdjustments.topicLinkAlert(convertedPreview);
+            }
             convertedPreview = leggeraPreviewAdjustments.lightThemePreview(convertedPreview);
             return convertedPreview
         },
@@ -160,13 +162,18 @@ function mixWrapper() {
             $.ajax({
                 type: "POST",
                 url: "assets/php/userinfo.php",
-                dataType: "HTML",
-                data: { username: loggedinUser },
+                dataType: "JSON",
+                data: {
+                    action: 'userstats',
+                    username: loggedinUser
+                },
                 success: function (rsp) {
-                    leggeraVariables.userInfo = rsp;
+                    leggeraVariables.userInfo = rsp[0];
+                    userWantAlerts = rsp[1];
                 },
                 error: function (rsp) {
-                    leggeraVariables.userInfo = rsp;
+                    leggeraVariables.userInfo = rsp[0];
+                    userWantAlerts = rsp[1];
                 }
             })
         },
@@ -251,18 +258,12 @@ function mixWrapper() {
         }, 500),
         // método para atualizar o tipo de código selecionado (Hilite.me API)
         updateCodeType: function (e) {
-            document.querySelector('#ts').checked = false
-            document.querySelector('#vbnet').checked = false
-            document.querySelector('#json').checked = false
-            e.target.checked = true
+
             leggeraVariables.codeType = e.target.id
+            console.log(leggeraVariables.codeType)
         },
         // método para atualizar o tipo de tabela selecionado
         updateTableType: function (e) {
-            document.querySelector('#normal-table').checked = false
-            document.querySelector('#modern-table').checked = false
-            document.querySelector('#modern-table-blue').checked = false
-            e.target.checked = true
             leggeraVariables.tableType = e.target.id
         },
         // método para guardar o tópico num segundo slot da chache
@@ -270,16 +271,25 @@ function mixWrapper() {
             const textarea2JSON = JSON.stringify(leggeraVariables.textarea.value);
             localStorage.setItem('quickSave', textarea2JSON);
             leggeraVariables.textarea.value = '';
+            // caso a textarea esteja vazia, adiciona o cartão com estatísticas do utilizador
             leggeraVariables.hcPreview.innerHTML = '';
+            leggeraMethods.displayUserStats();
             appControlsColap();
-            leggeraVariables.stringCursor = ['', '']
+            leggeraVariables.stringCursor = ['', ''];
+            // Guarda as alterações em cache
+            leggeraMethods.autosave2JSON();
         },
         // método para carregar o tópico presente no segundo slot da chache
         quickLoad: function () {
             const getTextareaFromJSON = localStorage.getItem('quickSave');
+            // Atualiza a textarea
             leggeraVariables.textarea.value = JSON.parse(getTextareaFromJSON);
+            // Atualiza o preview
             leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
+            // Atualiza a vista de colapsáveis
             appControlsColap();
+            // Guarda as alterações em cache
+            leggeraMethods.autosave2JSON();
         },
         // método para limpar a área de controlos, e iniciar o contador de páginas da área selecionada
         appControlsChange: function () {
@@ -313,18 +323,132 @@ function mixWrapper() {
             document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${lightTheme}.css`);
             document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${lightTheme}.css`);
             if (!document.querySelector('.hc-preview').classList.contains('no-display')) {
-            leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);}
+                leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
+            }
             // caso a textarea esteja vazia, adiciona o cartão com estatísticas do utilizador
-            if (leggeraVariables.hcPreview.innerHTML == '') { leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('div', 'container', '', leggeraVariables.userInfo)) };
+            if (leggeraVariables.hcPreview.innerHTML == '') {
+                leggeraMethods.displayUserStats();
+            }
+            // atualiza o appControls do menu ativo, para mostrar as alterações de contraste 
+            if (document.querySelector('.btn.btn-info.main-menu') !== null) { document.querySelector('.btn.btn-info.main-menu').click(); };
+            // atualiza o tema do utilizador
+            $.ajax({
+                type: "POST",
+                url: "assets/php/userinfo.php",
+                dataType: "JSON",
+                data: {
+                    action: 'theme-update',
+                    username: loggedinUser,
+                    theme: lightTheme
+                },
+                success: function (rsp) {
+                    leggeraVariables.hcPreview.innerHTML = '';
+                    leggeraMethods.displayUserStats();
+                },
+                error: function (rsp) {
+                    leggeraVariables.hcPreview.innerHTML = '';
+                    leggeraMethods.displayUserStats();
+                }
+            })
+        },
+        updateWantAlerts: function () {
+            if (Number(userWantAlerts) === 1) {
+                console.log(`só lá, eu tinha o want alerts a: ${userWantAlerts}`)
+                userWantAlerts = 0;
+                console.log(`só lá, eu agora tenho o want alerts a: ${userWantAlerts}`)
+                $.ajax({
+                    type: "POST",
+                    url: "assets/php/userinfo.php",
+                    dataType: "JSON",
+                    data: {
+                        action: 'alerts-update',
+                        username: loggedinUser,
+                        alerts: userWantAlerts
+                    },
+                    success: function (rsp) {
+                        leggeraVariables.hcPreview.innerHTML = '';
+                        leggeraMethods.displayUserStats();
+                    },
+                    error: function (rsp) {
+                        leggeraVariables.hcPreview.innerHTML = '';
+                        leggeraMethods.displayUserStats();
+                    }
+                })
+            } else {
+                console.log(`só lá, eu tinha o want alerts a: ${userWantAlerts}`)
+                userWantAlerts = 1;
+                console.log(`só lá, eu agora tenho o want alerts a: ${userWantAlerts}`)
+                $.ajax({
+                    type: "POST",
+                    url: "assets/php/userinfo.php",
+                    dataType: "JSON",
+                    data: {
+                        action: 'alerts-update',
+                        username: loggedinUser,
+                        alerts: userWantAlerts
+                    },
+                    success: function (rsp) {
+                        leggeraVariables.hcPreview.innerHTML = '';
+                        leggeraMethods.displayUserStats();
+                    },
+                    error: function (rsp) {
+                        leggeraVariables.hcPreview.innerHTML = '';
+                        leggeraMethods.displayUserStats();
+                    }
+                })
+            }
+        },
+        displayUserStats: function () {
+            // caso a textarea esteja vazia, adiciona o cartão com estatísticas do utilizador
+            const userPanelWrapper = leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('div', 'user-panel-container', '', `${leggeraVariables.userInfo}`));
+            const userOptions = userPanelWrapper.appendChild(leggeraMethods.mambo('div', 'user-options', '', 'Alerta conteúdos antigos&nbsp;&nbsp;&nbsp;&nbsp;'));
+            let alertToggle;
+            let wantAlertsOption;
+            let wantAlertsOptionBG;
+
+            switch (Number(userWantAlerts)) {
+                case 0:
+                    alertToggle = userOptions.appendChild(leggeraMethods.mambo('span', 'alerts-toggle', `mix-toggle-${userWantAlerts}`));
+                    wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option', 'material-icons animate__animated animate__slideInRight', 'cancel'));
+                    wantAlertsOption.style.color = 'rgb(104, 1, 1)'
+                    wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg', 'animate__animated animate__slideInRight'));
+                    alertToggle.addEventListener('click', leggeraMethods.updateWantAlerts)
+                    break;
+                case 1:
+                    alertToggle = userOptions.appendChild(leggeraMethods.mambo('span', 'alerts-toggle', `mix-toggle-${userWantAlerts}`));
+                    wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option', 'material-icons animate__animated animate__slideInLeft', 'check_circle'));
+                    wantAlertsOption.style.color = 'rgb(1, 100, 1)'
+                    wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg', 'animate__animated animate__slideInLeft'));
+                    alertToggle.addEventListener('click', leggeraMethods.updateWantAlerts)
+                    break;
+            }
+
+            const userOptions2 = userPanelWrapper.appendChild(leggeraMethods.mambo('div', 'user-options-2', '', 'Tema escuro&nbsp;&nbsp;&nbsp;&nbsp;'));
+
+            switch (Number(lightTheme)) {
+                case 1:
+                    alertToggle = userOptions2.appendChild(leggeraMethods.mambo('span', 'darktheme-toggle', `mix-toggle-0`));
+                    wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-2', 'material-icons animate__animated animate__slideInRight', 'cancel'));
+                    wantAlertsOption.style.color = 'rgb(104, 1, 1)'
+                    wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg-2', 'animate__animated animate__slideInRight'));
+                    alertToggle.addEventListener('click', leggeraMethods.changeLeggeraTheme)
+                    break;
+                case 0:
+                    alertToggle = userOptions2.appendChild(leggeraMethods.mambo('span', 'darktheme-toggle', `mix-toggle-1`));
+                    wantAlertsOption = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-2', 'material-icons animate__animated animate__slideInLeft', 'check_circle'));
+                    wantAlertsOption.style.color = 'rgb(1, 100, 1)'
+                    wantAlertsOptionBG = alertToggle.appendChild(leggeraMethods.mambo('span', 'wantalerts-radio-option-bg-2', 'animate__animated animate__slideInLeft'));
+                    alertToggle.addEventListener('click', leggeraMethods.changeLeggeraTheme)
+                    break;
+            }
         }
     }
 
 
     // ################ métodos para atualizar o preview com o cursor laranja/azul
     const leggeraUpdatePreviews = {
-        // a ser utilizado quando é feito click
-        full: function (e) {
-            // babyproof alterações pendentes
+        execute: function (e) {
+            // babyproof caso existam alterações pendentes na vista colapsáveis
             if (botaoVistaColap.classList.contains('btn-info')) {
                 leggeraVariables.colapList = document.querySelectorAll('.row .seccao-phcgo');
                 for (i = 1; i <= leggeraVariables.colapList.length; i++) {
@@ -334,8 +458,10 @@ function mixWrapper() {
                     }
                 }
             }
+            // obtem a textarea selecionada
             leggeraVariables.activeTextarea = e.target;
             let inputText = leggeraVariables.textarea.value;
+            // caso o tópico seja curto, atualiza on-the-fly o preview, e guarda em cache
             if (inputText.length <= 100000) {
                 document.querySelector('#preview-btn').classList.add('no-display')
                 leggeraVariables.limitExceded = 0;
@@ -348,50 +474,9 @@ function mixWrapper() {
                 leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(inputTextWithCursor);
                 appControlsColap();
                 leggeraMethods.autosave2JSON();
+                // caso contrário, não atualiza on-the-fly o preview, nem guarda em cache
             } else {
-                if (leggeraVariables.limitExceded === 0) {
-                    document.querySelector('#preview-btn').classList.remove('no-display');
-                    alert(`Foi excedido o limite máximo de caractéres aceites pelo Autosave.\nPara pre-visualizar e guardar em cache as alterações efetuadas, carrega em "Preview", localizado ao lado esquerdo do botão "QuickSave".`)
-                }
-                leggeraVariables.limitExceded = 1;
-                let cursorPos = leggeraMethods.getCursorPos(e);
-                let inputTextString1 = inputText.slice(0, cursorPos);
-                let inputTextString2 = inputText.slice(cursorPos);
-                let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
-                leggeraVariables.stringCursor[0] = inputTextString1;
-                leggeraVariables.stringCursor[1] = inputTextString2;
-                leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(inputTextWithCursor);
-                appControlsColap();
-                leggeraMethods.autosave2JSON();
-            }
-        },
-        // a ser utilizado quando é feito keyup (não atualiza o preview nem guarda em cache )
-        slim: function (e) {
-            // babyproof alterações pendentes
-            if (botaoVistaColap.classList.contains('btn-info')) {
-                leggeraVariables.colapList = document.querySelectorAll('.row .seccao-phcgo');
-                for (i = 1; i <= leggeraVariables.colapList.length; i++) {
-                    let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
-                    if (saveBtn.classList.contains('no-display') == false) {
-                        alert(`Não é possível aceder à textarea principal, enquanto existirem alterações pendentes.`); return
-                    }
-                }
-            }
-            leggeraVariables.activeTextarea = e.target;
-            let inputText = leggeraVariables.textarea.value;
-            if (inputText.length <= 100000) {
-                document.querySelector('#preview-btn').classList.add('no-display')
-                leggeraVariables.limitExceded = 0;
-                let cursorPos = leggeraMethods.getCursorPos(e);
-                let inputTextString1 = inputText.slice(0, cursorPos)
-                let inputTextString2 = inputText.slice(cursorPos, inputText.length)
-                let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
-                leggeraVariables.stringCursor[0] = inputTextString1;
-                leggeraVariables.stringCursor[1] = inputTextString2;
-                leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(inputTextWithCursor);
-                appControlsColap();
-                leggeraMethods.autosave2JSON();
-            } else {
+                // on-time warning
                 if (leggeraVariables.limitExceded === 0) {
                     document.querySelector('#preview-btn').classList.remove('no-display');
                     alert(`Foi excedido o limite máximo de caractéres aceites pelo Autosave.\nPara pre-visualizar e guardar em cache as alterações efetuadas, carrega em "Preview", localizado ao lado esquerdo do botão "QuickSave".`)
@@ -645,6 +730,8 @@ function mixWrapper() {
             // Babyproof
             if (document.querySelector('#hilite-textarea').value.length <= 0) { alert('A textarea para o código hilite.me está vazia.'); return }
             const code = document.querySelector('#hilite-textarea').value.toString();
+            let wantLines;
+            if (document.querySelector('#line-numbers').checked) { wantLines = 'true'; }
             $.ajax({
                 type: "POST",
                 url: "http://hilite.me/api",
@@ -653,7 +740,8 @@ function mixWrapper() {
                     code: code,
                     style: 'monokai',
                     lexer: leggeraVariables.codeType,
-                    divstyles: 'border:solid #eb8475;border-width:.1em .1em .1em .8em;padding:.2em .6em;'
+                    divstyles: 'border:solid #eb8475;border-width:.1em .1em .1em .8em;padding:.2em .6em;',
+                    linenos: wantLines
                 },
                 success: function (response) { leggeraHiliteAPI.hiliteFormater(response); }
             })
@@ -666,7 +754,9 @@ function mixWrapper() {
             // tab
             fixedHilite = fixedHilite.replaceAll('	', '<div style="display:inline-block;width:20px;"></div>')
             // compatibilidade helpcenter
-            fixedHilite = fixedHilite.replace('<pre style="', '<pre style="background:transparent;border:0px;');
+            fixedHilite = fixedHilite.replaceAll('<pre style="', '<pre style="background:transparent;border:0px;');
+            fixedHilite = fixedHilite.replaceAll('<tr><td><pre style="background:transparent;border:0px;', '<tr><td><pre style="background:transparent;border:0px;color:#eb8475; ');
+
             leggeraMethods.escreveNaTextarea(fixedHilite);
         }
     }
@@ -688,7 +778,7 @@ function mixWrapper() {
         // atualiza o hcPreview, conforme tenha encontrado ou não cache 
         if (leggeraVariables.textarea.value === '') {
             setTimeout(function () {
-                leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('div', 'container', '', leggeraVariables.userInfo));
+                leggeraMethods.displayUserStats();
             }, 200);
         } else {
             leggeraVariables.hcPreview.appendChild(leggeraMethods.mambo('span', '', '', 'Encontrei um tópico em cache. A carregar...'));
@@ -825,7 +915,7 @@ function mixWrapper() {
         // Função para alterar os botões de acordo com o tema selecionado
         changeCurrentTheme: function (e) {
             let eTarget = e.target
-            if (eTarget.tagName === 'I') {eTarget = eTarget.parentElement}
+            if (eTarget.tagName === 'I') { eTarget = eTarget.parentElement }
             leggeraVariables.currentTheme = eTarget.value;
             switch (eTarget.id) {
                 case 'theme-1': leggeraButtons.displayControls(e, 1);
@@ -974,16 +1064,19 @@ function mixWrapper() {
             col = row.appendChild(leggeraMethods.mambo('div', '', 'col-md-1')); //  Filler Col
             col = row.appendChild(leggeraMethods.mambo('div', 'cria-tabela-checkbox-wrapper', 'col-md-7'));
             const checkbox1 = col.appendChild(leggeraMethods.mambo('input', 'normal-table'));
-            checkbox1.setAttribute('type', 'checkbox');
+            checkbox1.type = 'radio'
+            checkbox1.name = 'tablestyle'
             checkbox1.setAttribute('checked', 'true'); // Ativa a checkbox por omissão
             checkbox1.addEventListener('click', leggeraMethods.updateTableType)
             const checkboxLabel1 = col.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;Normal'));
             const checkbox2 = col.appendChild(leggeraMethods.mambo('input', 'modern-table'));
-            checkbox2.setAttribute('type', 'checkbox');
+            checkbox2.type = 'radio'
+            checkbox2.name = 'tablestyle'
             checkbox2.addEventListener('click', leggeraMethods.updateTableType)
             const checkboxLabel2 = col.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;Moderna'));
             const checkbox3 = col.appendChild(leggeraMethods.mambo('input', 'modern-table-blue'));
-            checkbox3.setAttribute('type', 'checkbox');
+            checkbox3.type = 'radio'
+            checkbox3.name = 'tablestyle'
             checkbox3.addEventListener('click', leggeraMethods.updateTableType)
             const checkboxLabel3 = col.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;Moderna Azul'));
             col = row.appendChild(leggeraMethods.mambo('div', 'cria-tabela-btn-div', 'col-md-3'));
@@ -1140,7 +1233,6 @@ function mixWrapper() {
                     for (i = 1; i <= numColunas; i++) {
                         leggeraListsAndTables.estilosExtra = leggeraListsAndTables.estilosExtra + `.${cla}>tbody>tr>td:nth-child(${i}){width:${tablewidth[i - 1]};}`
                     }
-                    leggeraListsAndTables.estilosExtra = leggeraListsAndTables.estilosExtra + '</style>'
                 }
             }
             // Anexar o <style> necessário, de acordo com a tabela selecionada
@@ -1148,15 +1240,15 @@ function mixWrapper() {
                 case 'normal-table':
                     novaTabela.classList = 'phcgo-old-table';
                     tableWidthLegoo('phcgo-old-table');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle + leggeraListsAndTables.estilosExtra + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
                 case 'modern-table':
                     novaTabela.classList = 'phcgo-new-table';
                     tableWidthLegoo('phcgo-new-table');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle + leggeraListsAndTables.estilosExtra + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
                 case 'modern-table-blue':
                     novaTabela.classList = 'phcgo-new-table-blue';
                     tableWidthLegoo('phcgo-new-table-blue');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue + leggeraListsAndTables.estilosExtra + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
             }
             leggeraMethods.escreveNaTextarea(novaTabela);
         },
@@ -1206,15 +1298,15 @@ function mixWrapper() {
                 case 'normal-table':
                     novaTabela.classList = 'phcgo-old-table';
                     tableWidthLegoo('phcgo-old-table');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle + leggeraListsAndTables.estilosExtra + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.normalTableStyle + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
                 case 'modern-table':
                     novaTabela.classList = 'phcgo-new-table';
                     tableWidthLegoo('phcgo-new-table');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle + leggeraListsAndTables.estilosExtra + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyle + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
                 case 'modern-table-blue':
                     novaTabela.classList = 'phcgo-new-table-blue';
                     tableWidthLegoo('phcgo-new-table-blue');
-                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue + leggeraListsAndTables.estilosExtra + "\n" + novaTabela); break
+                    novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + leggeraListsAndTables.modernTableStyleBlue + leggeraListsAndTables.estilosExtra + '</style>' + "\n" + novaTabela); break
             }
             leggeraMethods.escreveNaTextarea(novaTabela);
         },
@@ -1272,10 +1364,10 @@ function mixWrapper() {
                                 uploadedImagem = `<img style="max-width:100%;height:auto;"\nsrc="${response}">`
                             }
                             leggeraMethods.escreveNaTextarea(uploadedImagem)
-                        } else {alert('file not uploaded');}
+                        } else { alert('file not uploaded'); }
                     },
                 });
-            } else {alert("Please select a file.");}
+            } else { alert("Please select a file."); }
         }
     }
 
@@ -1373,22 +1465,35 @@ function mixWrapper() {
         const hiliteTextarea = hiliteWrapper.appendChild(leggeraMethods.mambo('textarea', 'hilite-textarea'));
         const novaHiliteCheckboxesRow = hiliteWrapper.appendChild(leggeraMethods.mambo('div', 'hilite-checkboxes-row', 'row'));
         leggeraVariables.codeType = 'vbnet' //reset ao trocar de página
-        let miniWrapper1 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-4'))
+        let miniWrapper1 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
         miniWrapper1.appendChild(leggeraMethods.mambo('input', 'vbnet'));
-        miniWrapper1.lastChild.type = 'checkbox'
+        miniWrapper1.lastChild.type = 'radio'
+        miniWrapper1.lastChild.name = 'hilite'
         miniWrapper1.lastChild.setAttribute('checked', 'true');
         miniWrapper1.addEventListener('change', leggeraMethods.updateCodeType)
-        miniWrapper1.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;VB.NET'));
-        let miniWrapper2 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-4'))
+        miniWrapper1.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;VB'));
+        let miniWrapper2 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
         miniWrapper2.appendChild(leggeraMethods.mambo('input', 'ts'));
-        miniWrapper2.lastChild.type = 'checkbox'
+        miniWrapper2.lastChild.type = 'radio'
+        miniWrapper2.lastChild.name = 'hilite'
         miniWrapper2.addEventListener('change', leggeraMethods.updateCodeType)
-        miniWrapper2.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;TypeScript'));
-        let miniWrapper3 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-4'))
+        miniWrapper2.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;TS'));
+        let miniWrapper3 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
         miniWrapper3.appendChild(leggeraMethods.mambo('input', 'json'));
-        miniWrapper3.lastChild.type = 'checkbox'
+        miniWrapper3.lastChild.type = 'radio'
+        miniWrapper3.lastChild.name = 'hilite'
         miniWrapper3.addEventListener('change', leggeraMethods.updateCodeType)
         miniWrapper3.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;JSON'));
+        let miniWrapper4 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-3'))
+        miniWrapper4.appendChild(leggeraMethods.mambo('input', 'sql'));
+        miniWrapper4.lastChild.type = 'radio'
+        miniWrapper4.lastChild.name = 'hilite'
+        miniWrapper4.addEventListener('change', leggeraMethods.updateCodeType)
+        miniWrapper4.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;SQL'));
+        let miniWrapper5 = novaHiliteCheckboxesRow.appendChild(leggeraMethods.mambo('div', '', 'col-md-12'))
+        miniWrapper5.appendChild(leggeraMethods.mambo('input', 'line-numbers'));
+        miniWrapper5.lastChild.type = 'checkbox'
+        miniWrapper5.appendChild(leggeraMethods.mambo('span', '', '', '&nbsp;&nbsp;Linhas numeradas ?'));
         const novaHiliteBtn = hiliteWrapper.appendChild(leggeraMethods.mambo('button', '', 'btn btn-warning', '<i class="lni lni-code"></i>&nbsp;&nbsp;Introduzir código'));
         novaHiliteBtn.addEventListener('click', leggeraHiliteAPI.post);
     }
@@ -1781,7 +1886,6 @@ function mixWrapper() {
     // Atualizar o botão dos menus conforme o menu onde estamos 
     const menus = document.querySelectorAll('.main-menu');
     for (menu of menus) { menu.addEventListener('click', leggeraMethods.updateWhereIAm) };
-    document.addEventListener("keyup", leggeraMethods.newBr);
     document.querySelector('#quicksave-btn').addEventListener('click', leggeraMethods.quickSave);
     document.querySelector('#quickload-btn').addEventListener('click', leggeraMethods.quickLoad);
     document.querySelector('#logout-btn').addEventListener('click', leggeraMethods.logout);
@@ -1793,7 +1897,9 @@ function mixWrapper() {
     document.querySelector('#listas-tabelas-btn').addEventListener('click', leggeraListsAndTables.displayControls);
     document.querySelector('#titulos-ligacoes-btn').addEventListener('click', appControlsTitulosELigacoes);
     document.querySelector('#manuals-btn').addEventListener('click', leggeraManuais.getManuals);
-    document.querySelector('#theme-btn').addEventListener('click', leggeraMethods.changeLeggeraTheme);
-    leggeraVariables.textarea.addEventListener('keyup', leggeraUpdatePreviews.slim);
-    leggeraVariables.textarea.addEventListener('click', leggeraUpdatePreviews.full);
+    // document.querySelector('#theme-btn').addEventListener('click', leggeraMethods.changeLeggeraTheme);
+    document.addEventListener("keyup", leggeraMethods.newBr);
+    leggeraVariables.textarea.addEventListener('keyup', leggeraUpdatePreviews.execute);
+    leggeraVariables.textarea.addEventListener('click', leggeraUpdatePreviews.execute);
+
 }

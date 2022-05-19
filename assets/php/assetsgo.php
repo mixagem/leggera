@@ -1,7 +1,7 @@
 <?php
 
 $action = trim($_POST['action']);
-$con = mysqli_connect('localhost', 'root', '', 'superliggera');
+$con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 if ($action == 'icons') {
     // seleciona todos os icons

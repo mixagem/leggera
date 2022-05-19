@@ -25,14 +25,73 @@
 
 .alerta-replaceme {
     background-color: rgb(183, 5, 5);
-    color:#fff;
+    color: #fff;
     padding: 5px;
-    border-radius:5px;
+    border-radius: 5px;
     animation-name: periodicfading;
     animation-duration: 1.0s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-delay: 0s;
+}
+
+/* user options */
+#user-options,
+#user-options-2 {
+    display: flex;
+    justify-content: end;
+    padding-top: 20px;
+    color: var(--secondary-title-color);
+    font-weight: bold;
+}
+
+#wantalerts-radio-option,
+#wantalerts-radio-option-2 {
+    position: absolute;
+    font-size: 30px;
+    margin-top: -5px;
+    margin-right: -5px;
+    margin-left: -5px;
+    color: rgb(104, 1, 1);
+    z-index: 3;
+}
+
+#wantalerts-radio-option-bg,
+#wantalerts-radio-option-bg-2 {
+    position: relative;
+    background-color: #fff;
+    width: 30px;
+    height: 20px;
+    z-index: 2;
+    margin-right: -5px;
+    margin-left: -5px;
+    border-radius: 50%;
+    border-right: 3px solid transparent;
+    border-left: 3px solid transparent;
+    background-clip: content-box;
+}
+
+.mix-toggle-0,
+.mix-toggle-1 {
+    width: 50px;
+    border-radius: 25px;
+    height: 20px;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.mix-toggle-0 {
+    background-color: rgb(253, 135, 135);
+    transition-duration: .5s;
+    display: flex;
+    justify-content: left;
+}
+
+.mix-toggle-1 {
+    background-color: rgb(44, 214, 44);
+    transition-duration: .5s;
+    display: flex;
+    justify-content: right;
 }
 
 
@@ -47,9 +106,9 @@
 
 #helpcenter-preview a,
 #helpcenter-preview a:hover {
-    text-decoration: none ;
+    text-decoration: none;
     color: #fff;
-    font-size: 15px ;
+    font-size: 15px;
     font-weight: 600;
 }
 

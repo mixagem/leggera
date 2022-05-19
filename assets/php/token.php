@@ -2,7 +2,7 @@
 
 $usermail = trim($_POST['usermail']);
 $un = trim($_POST['username']);
-$con = mysqli_connect('localhost', 'root', '', 'superliggera');
+$con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 // Import PHPMailer classes into the global namespace 
 use PHPMailer\PHPMailer\PHPMailer;

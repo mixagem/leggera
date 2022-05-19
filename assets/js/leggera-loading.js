@@ -3,6 +3,7 @@
 /* mambosinfinitos, 2022            */
 /************************************/
 let lightTheme = 1;
+let userWantAlerts;
 
 const getThemeFromCache = localStorage.getItem('lightTheme');
 if (getThemeFromCache !== null) {

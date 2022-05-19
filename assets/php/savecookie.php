@@ -2,7 +2,7 @@
 
 $un = trim($_POST['username']);
 $bolacha = trim($_POST['cookie']);
-$con = mysqli_connect('localhost', 'root', '', 'superliggera');
+$con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 // guarda a cookie gerada no registo do utilizador
 $query = "UPDATE users SET cookie = '$bolacha' WHERE username = '$un'";

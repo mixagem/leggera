@@ -5,7 +5,7 @@ $manual = trim($_POST['manual']);
 $action = trim($_POST['action']);
 $timestamp = trim($_POST['timestamp']);
 $code = trim($_POST['code']);
-$con = mysqli_connect('localhost', 'root', '', 'superliggera');
+$con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 if ($action === 'delete') {
     // buscar o manual escrito pelo utilizador 

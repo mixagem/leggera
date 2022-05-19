@@ -2,7 +2,7 @@
 
 $un = trim($_POST['username']);
 $pw = trim($_POST['password']);
-$con = mysqli_connect('localhost', 'root', '', 'superliggera');
+$con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 // AES
 $data = $pw;
@@ -24,7 +24,7 @@ if (mysqli_num_rows($result) == 1) {
         $active = $row['active'];
         $numtenta = $row['loginattempts'];
         $numlogins = $row['totallogins'];
-        $darktheme = $row['darktheme'];
+        $darktheme = $row['theme'];
     }
 
     if ($active == 0) {

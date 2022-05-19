@@ -2,7 +2,7 @@
 
 $pw = trim($_POST['password']);
 $token = trim($_POST['token']);
-$con = mysqli_connect('localhost', 'root', '', 'superliggera');
+$con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 // AES
 $data = $pw;

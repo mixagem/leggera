@@ -1,7 +1,7 @@
 <?php
 
 $cookie = trim($_POST['cookie']);
-$con = mysqli_connect('localhost', 'root', '', 'superliggera');
+$con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 // caso exista cookie em cache
 if ($cookie !== '') {
@@ -14,7 +14,7 @@ if (mysqli_num_rows($result) == 1) {
     while ($row = mysqli_fetch_array($result)) {
         $name = $row['name'];
         $un = $row['username'];
-        $darktheme = $row['darktheme'];
+        $darktheme = $row['theme'];
         $numlogins = $row['totallogins'];
     }
     // devolve o nome, o tema e o utilizador ativo

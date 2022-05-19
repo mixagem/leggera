@@ -4,7 +4,7 @@ $un = trim($_POST['username']);
 $pw = trim($_POST['password']);
 $nome = trim($_POST['nome']);
 $email = trim($_POST['email']);
-$con = mysqli_connect('localhost', 'root', '', 'superliggera');
+$con = mysqli_connect('localhost', 'root', '', 'superleggera');
 
 // AES
 $data = $pw;

@@ -4,7 +4,7 @@ echo "<section class='header sticky-top'>
     <div class='row'>
 
         <div class='col-md-5'>
-            <div class='col-md-5 headControls text-left'>
+            <div class='col-md-6 headControls text-left'>
                 <button type='button' class='btn btn-info' id='ancora-btn'><i class='lni lni-anchor'></i>
                 </button>
                 <button type='button' class='btn btn-light' id='theme-btn'><i class='lni lni-pallet'></i>
@@ -14,13 +14,13 @@ echo "<section class='header sticky-top'>
                 <button type='button' class='btn btn-light' id='manuals-btn'><i class='lni lni-library'></i>
                     Manuais</button>
                 </div>
-                <div class='col-md-7 headControls text-right'>
+                <div class='col-md-6 headControls text-right'>
                 <button type='button' class='btn btn-warning no-display' id='preview-btn'><i class='lni lni-magnifier'></i>
-                Preview</button>
+                Prever</button>
                 <button type='button' class='btn btn-warning' id='quicksave-btn'><i class='lni lni-upload'></i>
-                    QuickSave</button>
+                    Quicksave</button>
                 <button type='button' class='btn btn-warning' id='quickload-btn'><i class='lni lni-download'></i>
-                    QuickLoad</button>
+                    Quickload</button>
                 <button type='button' class='btn btn-danger' id='logout-btn'><i class='lni lni-power-switch'></i>
                 </button>
             </div>
@@ -64,7 +64,7 @@ echo "<section class='header sticky-top'>
                     <div class='row'>
                         <div class='col-md-5 header-logo'><img src='assets/img/logo_kbmon.png'></div>
                         <div class='col-md-3'></div>
-                        <div class='col-md-4 head-slogan'><span>fast software</span> for fast comapnies</div>
+                        <div class='col-md-4 head-slogan'><span>fast software</span> for fast companies</div>
                     </div>
                 </div>
             </section>

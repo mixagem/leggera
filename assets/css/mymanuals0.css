@@ -1,7 +1,7 @@
 #manuals-modal {
     height: 100vh;
-    background-color: #111;
-    background-image: url('../img/manuals-bg.png');
+    background-color: #eee;
+    background-image: url('../img/manuals-bg-w.png');
 }
 
 #modal-container {
@@ -14,14 +14,14 @@
 
 #modal-container>thead>th {
     font-size: 16px;
-    color: var(--text-color-dark);
+    color: var(--text-color-light);
     height: 50px;
-    border-bottom: 2px solid var(--text-color-dark);
+    border-bottom: 2px solid var(--text-color-light);
 }
 
 
 #modal-container>tbody>tr {
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
 }
 
 #modal-container>tbody>tr>td>span {
@@ -46,23 +46,23 @@
 }
 
 #modal-container i {
-    background: var(--text-color-dark);
+    background: var(--text-color-light);
     padding: 5px;
     border-radius: 25%;
     margin-bottom: 1px;
 }
 
 .manual-par {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .manual-impar {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .manual-par:hover,
 .manual-impar:hover {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
 }
 
@@ -101,12 +101,16 @@
     align-items: end;
 }
 
+#savemanual-container>.col-md-2 {
+    margin-bottom: 29px;
+}
+
 #savemanual-container h1 {
     padding-left: 5%;
     color: var(--primary-title-color);
 }
 
-#savemanual-container input {
+#savemanual-container>div>input {
     border-radius: 5px;
     width: 95%;
     margin-left: 5%;
@@ -118,4 +122,10 @@
 
 pre {
     white-space: normal;
+}
+
+#contida-wrapper {
+    padding-left: 50px;
+    color: var(--text-color-dark);
+    padding-top: 10px;
 }

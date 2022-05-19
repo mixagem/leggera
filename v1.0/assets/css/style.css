@@ -1,0 +1,944 @@
+/*######################################*/
+/*###########    Globais     ###########*/
+/*######################################*/
+
+:root {
+    --primary-title-color: gold;
+    --secondary-title-color: violet;
+    --background-color: #000;
+    --text-color-dark: #000;
+    --text-color-clear: #fff;
+    --alert-color: red;
+    --success-color: rgb(0, 189, 0);
+}
+
+html {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+}
+
+@font-face {
+    font-family: 'Neutrif Pro';
+    src: local('Neutrif Pro Regular'), local('Neutrif-Pro-Regular'),
+        url('../fonts/NeutrifPro-Regular.woff2') format('woff2'),
+        url('../fonts/NeutrifPro-Regular.woff') format('woff'),
+        url('../fonts/NeutrifPro-Regular.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    /*!important for bootstrap overide*/
+    font-size: 14px !important;
+    font-family: 'Neutrif Pro' !important;
+    background: var(--background-color) !important;
+    color: var(--text-color-dark) !important;
+    overflow-x: clip;
+}
+
+pre {
+    white-space: normal;
+}
+
+a {
+    color: var(--secondary-title-color);
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.no-display {
+    display: none !important;
+}
+
+.no-opacity {
+    opacity: 0;
+}
+
+.alert-label {
+    color: var(--alert-color) !important;
+}
+
+/*######################################*/
+/*###########    Landing     ###########*/
+/*######################################*/
+
+#loading-wrapper {
+    height: 100vh;
+    margin-top:-20px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+#loading-title,
+#welcome-text {
+    padding-top: 10px;
+    justify-self: center;
+    letter-spacing: 5px;
+}
+
+#loading-title {
+    color: var(--primary-title-color);
+}
+
+#welcome-text {
+    color: var(--success-title-color);
+}
+
+.margin-animation-complete{
+  margin-left:-160%;
+}
+
+#loading-gif,
+#loading-gif-red {
+    justify-self: center;
+    width: 278px;
+    height: 142px;
+    background-attachment: local;
+}
+
+#loading-gif {
+    background-image: url('../img/mi.gif');
+    position: relative;
+    bottom: -100%;
+    z-index: 2;
+}
+
+#loading-gif-red {
+    background-image: url('../img/mi-red.gif');
+    z-index: 1;
+}
+
+/* velocidade fadein gif + titulo */
+.animate__animated.animate__fadeIn {
+    /*bootstrap overide*/
+    --animate-duration: 1.5s !important;
+}
+
+#login-wrapper {
+    margin-top: -68.5%;
+    width: 350px;
+    margin-left: 60%;
+}
+
+#login-wrapper>input,
+#login-wrapper>span,
+#login-wrapper>button {
+    width: 100%;
+}
+
+#login-wrapper>span {
+    color: var(--text-color-clear);
+    font-size: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#login-wrapper>input {
+    margin-bottom: 20px;
+}
+
+#login-btn {
+    /* bootstrap overide */
+    background-color: var(--primary-title-color) !important;
+    margin-top:10px;
+}
+
+/*######################################*/
+/*###########     Editor     ###########*/
+/*######################################*/
+
+
+.sticky-top {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Cabeçalho */
+.header {
+    min-height: 330px;
+    background: #1D1D1D;
+    background-image: url('../img/header-bg.png');
+    background-size: 2%;
+}
+
+/* primeiro div, para dar espaçamento do topo */
+.header>div {
+    padding-top: 10px;
+}
+
+/* estilo das textareas do cabeçalho do editor (principal + hilite.me)*/
+.header textarea {
+    width: 100%;
+    min-height: 200px;
+    background-color: transparent;
+    color: #fff;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background-color: transparent;
+    color: #fff;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background-image: url('../img/mi.png');
+    background-size: 10%;
+    background-repeat: no-repeat;
+    background-position: bottom right;
+}
+
+#app-controls-wrapper {
+    text-align: center;
+    padding-top: 10px;
+}
+
+/*paddings para a textarea principal */
+.headControls {
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+.headControls2 {
+    padding-top: 10px;
+}
+
+/*######################################*/
+/*###########   Textboxes    ###########*/
+/*######################################*/
+
+/* ajustamento de margem para todas as textboxes */
+.header .novoalerta {
+    margin-top: 0px;
+}
+
+/* serve para dar clip nos tópicos relacionados */
+.header .alerta-relaciona {
+    max-height: 114.5px;
+    overflow: clip;
+}
+
+.helpcenter-textbox {
+    cursor: pointer;
+    opacity: 0.8;
+    text-align: left !important;
+}
+
+.helpcenter-textbox:hover {
+    opacity: 1
+}
+
+.helpcenter-textbox:hover .novoalerta {
+    box-shadow: 2px 2px #000, 4px 5px rgb(0, 195, 255) !important;
+    transition-duration: 250ms;
+}
+
+
+/*######################################*/
+/*###########     Icons      ###########*/
+/*######################################*/
+
+.phcgo-icon {
+    font-size: 35px;
+    color: #fff;
+    text-align: center;
+    padding-bottom: 20px;
+    cursor: pointer;
+    text-shadow: 1px 1px black;
+}
+
+.phcgo-icon:hover>span {
+    color: rgb(0, 195, 255) !important;
+    font-size: 35px;
+    text-shadow: 1px 1px black;
+    transition-duration: 150ms;
+}
+
+/* sub-wrappers icons do lado esquerdo */
+.icon-sub-row-1 {
+    padding-right: 0 !important;
+    padding-left: 30px !important;
+    padding-bottom: 0px !important;
+}
+
+/* sub-wrappers icons do lado direito*/
+.icon-sub-row-2 {
+    padding-left: 0 !important;
+    padding-right: 30px !important;
+}
+
+#color-picker {
+    padding-top: 15px;
+
+}
+
+
+
+.color-pick {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: inline-block;
+    background-clip: padding-box;
+    margin-left: 5px;
+    margin-right: 5px;
+    opacity: .4;
+}
+
+.color-pick>i {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    align-content: center;
+    margin-top: 25%;
+    opacity: 0;
+}
+
+.selected-color {
+    opacity: 1;
+}
+
+.selected-color>i {
+    opacity: 1;
+    color: orange;
+    font-size: 18px;
+}
+
+#icon-color-2.selected-color>i,
+#icon-color-5.selected-color>i {
+    color: black;
+}
+
+.color-pick:hover {
+    cursor: pointer;
+    opacity: 1;
+    transition-duration: 200ms;
+}
+
+
+#icon-color-1 {
+    background-color: #000000;
+}
+
+#icon-color-2 {
+    background-color: #e0e0e0;
+}
+
+#icon-color-3 {
+    background-color: #1a237e;
+}
+
+#icon-color-4 {
+    background-color: #b70505;
+}
+
+#icon-color-5 {
+    background-color: #ff8f00;
+}
+
+#icon-color-6 {
+    background-color: #004d40;
+}
+
+
+/*######################################*/
+/*###########    Buttons     ###########*/
+/*######################################*/
+
+.phc-buttons {
+    padding-top: 5px;
+}
+
+.botao {
+    text-align: center;
+    padding-top: 25px;
+    cursor: pointer !important;
+}
+
+.botao:hover button,
+.botao:hover div {
+    transition-duration: 250ms;
+    box-shadow: 1px 1px #000, 2px 3px rgb(0, 195, 255) !important;
+}
+
+#botao5,
+#botao6,
+#botao7,
+#botao8 {
+    border-color: #fff !important;
+}
+
+#botao7 {
+    color: #fff !important;
+}
+
+#theme-picker {
+    padding-top: 25px;
+}
+
+
+.theme-pick {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: inline-block;
+    background-clip: padding-box;
+    margin-left: 5px;
+    margin-right: 5px;
+    opacity: .4;
+}
+
+.theme-pick>i {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    align-content: center;
+    margin-top: 25%;
+    opacity: 0;
+}
+
+.selected-theme {
+    opacity: 1;
+}
+
+.selected-theme>i {
+    opacity: 1;
+    color: orange;
+    font-size: 18px;
+}
+
+#theme-4.selected-theme>i {
+    color: black;
+}
+
+.theme-pick:hover {
+    cursor: pointer;
+    opacity: 1;
+    transition-duration: 200ms;
+}
+
+
+#theme-1 {
+    background-color: #1a237e;
+}
+
+#theme-2 {
+    background-color: #004d40;
+}
+
+#theme-3 {
+    background-color: #000000;
+}
+
+#theme-4 {
+    background-color: #e0e0e0;
+}
+
+/*########################################*/
+/*########### Listas & Tabelas ###########*/
+/*########################################*/
+
+#preview-list-row {
+    color: #fff;
+    min-height: 80px;
+    padding: 10px 0px;
+}
+
+#header-listas,
+#header-tabelas {
+    color: #fff;
+    padding-bottom: 20px;
+    font-size: 20px;
+}
+
+#tipo-lista-span {
+    display: block;
+    text-align: left;
+    color: #fff;
+    padding-left: 2px;
+    font-size: 14.5px;
+}
+
+#num-itens-span {
+    display: block;
+    text-align: right;
+    color: #fff;
+    padding-right: 2px
+}
+
+#num-itens-input {
+    width: 100%;
+}
+
+#tipo-lista-dropdown {
+    width: 100%
+}
+
+#tipo-titulo-dropdown {
+    width: 100%
+}
+
+#cria-tabela-btn-div {
+    padding-top: 20px;
+}
+
+#num-linhas-span,
+#num-colunas-span,
+#cabecalho-span {
+    display: block;
+    color: #fff;
+}
+
+#num-linhas-input {
+    width: 30%
+}
+
+#num-colunas-input {
+    width: 30%
+}
+
+#want-links-span {
+    color: #fff;
+    display: inline-block;
+    padding: 10px 10px 10px 0px;
+}
+
+/* Row wrapper do preview + links + criarlista */
+#listas-wrapper>div:nth-child(4) {
+    padding-top: 20px;
+}
+
+/*########### Live preview         */
+#helpcenter-preview {
+    padding-top: 40px;
+}
+
+.display-preview {
+    min-height: 80vh;
+}
+
+/* Cursor laranja */
+#pulse {
+    font-size: 30px;
+    color: rgb(255, 145, 0);
+    animation-name: periodicfading;
+    animation-duration: 1.3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+}
+
+@keyframes periodicfading {
+    0% {
+        opacity: 0.1;
+    }
+
+    50% {
+        opacity: 1.0;
+    }
+
+    100% {
+        opacity: 0.1;
+    }
+}
+
+
+/* Cabeçalho HelpCenter */
+.header-hc {
+    padding-top: 20px;
+    background-color: #EB8475;
+    height: 90px;
+}
+
+.header-hc img {
+    padding-left: 16px;
+    margin-top: -2px;
+}
+
+.head-slogan {
+    font-size: 13px;
+    color: #fff;
+    text-align: right;
+    padding-right: 20px !important;
+    padding-top: 30px;
+    letter-spacing: 0px;
+}
+
+.head-slogan span {
+    color: #F4CC91;
+}
+
+/* Body HelpCenter */
+.text-body-hc {
+    min-height: 80vh;
+}
+
+#main-div {
+    padding-top: 40px;
+    padding-bottom: 15px;
+}
+
+/* Rodapé HelpCenter */
+.footer-hc {
+    background-color: #C3751B;
+    height: 94px;
+}
+
+.footer-hc img {
+    padding-left: 25px;
+    padding-top: 20px;
+}
+
+.hc-preview {
+    background-color: #fff;
+    padding: 0 !important;
+    color: #000 !important;
+}
+
+/** Estilos utilizados em tópicos de manual HelpCenter  **/
+.alerta {
+    width: 100%;
+    background-color: rgb(224, 224, 224);
+    line-height: 1.5;
+    float: left;
+    text-align: justify;
+    border-radius: 5px;
+    margin: 30px 0px;
+}
+
+.alerta-titulo {
+    width: 59%;
+    margin-left: 50px;
+    margin-top: 20px;
+    margin-right: 50px;
+    font-size: 16px;
+    float: left;
+    font-style: italic;
+}
+
+.alerta-contido {
+    font-size: 14px;
+    margin: 20px 50px 20px;
+    float: left;
+}
+
+.dica {
+    width: 100%;
+    background-color: rgb(255, 225, 189);
+    line-height: 1.5;
+    float: left;
+    border-radius: 5px;
+    margin: 30px 0px;
+}
+
+.dica-titulo {
+    width: 59%;
+    margin-left: 50px;
+    margin-top: 20px;
+    margin-right: 50px;
+    font-size: 16px;
+    float: left;
+    font-style: italic;
+}
+
+.dica-contido {
+    font-size: 14px;
+    margin: 20px 50px 20px;
+    float: left;
+}
+
+.novoalerta {
+    width: 100%;
+    line-height: 1.5;
+    float: left;
+    border-radius: 5px;
+    margin: 30px 0px
+}
+
+.novoalerta-titulo {
+    margin: 25px 50px 20px 50px;
+    font-size: 18px;
+    float: left;
+    font-weight: bold;
+    width: 100%;
+}
+
+.novoalerta-contido {
+    font-size: 15px;
+    margin: 0px 35px 20px 35px;
+    float: left;
+}
+
+.novoalerta-titulo>i {
+    padding-right: 10px;
+}
+
+.alerta-notas {
+    background-color: rgb(255, 225, 189);
+}
+
+.alerta-dicas {
+    background-color: rgb(255, 248, 200);
+}
+
+.alerta-info {
+    background-color: rgb(232, 239, 249);
+}
+
+.boas-praticas {
+    background-color: rgb(210, 251, 200);
+}
+
+.alerta-relaciona {
+    background-color: rgb(245, 245, 245);
+}
+
+.seccao-phcgo {
+    background: rgb(245, 245, 245);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+h1.manuais {
+    font-size: 28px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+h2.manuais {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    padding: 10px;
+}
+
+h3.manuais {
+    font-size: 18px;
+    text-transform: none;
+    padding: 5px 15px;
+}
+
+a.manuais {
+    color: #3934BE !important;
+    font-size: 15px !important;
+    font-weight: 600;
+}
+
+a.manuais:hover {
+    text-decoration: none;
+}
+
+
+
+/*########### Colapsáveis         */
+
+#colapsables-wrapper {
+    background-color: #fff;
+}
+
+/* todos os inputs */
+#colapsables-wrapper>div>div>div>input {
+    width: 100%;
+    padding: 5px 10px;
+    margin: 5px;
+    padding: 2px 2px;
+    border-radius: 5px;
+}
+
+/* todas as textareas */
+#colapsables-wrapper>div>div>div>textarea {
+    min-height: 200px;
+    width: 100%;
+    padding: 5px 10px;
+    margin: 5px;
+    padding: 2px 2px;
+    /* overflow: auto; */
+    border-radius: 10px;
+}
+
+/* tod os spans*/
+#colapsables-wrapper>div>div>div>span {
+    display: block;
+    width: 100%;
+    padding: 20px 50px 5px 30px;
+}
+
+/* div para pading depois do save */
+.save-padding {
+    width: 100%;
+    height: 5px;
+}
+
+/* todos os  save buttosn  */
+#colapsables-wrapper>div>div>div>button {
+    margin-left: 2%;
+}
+
+#colapsables-wrapper>div>div>.col-md-7 {
+    padding-right: 0px;
+}
+
+/* todos os h2 preview */
+#colapsables-wrapper>div>div>.col-md-7>div:first-child {
+    background-color: #333;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    padding: 10px 0px 10px 30px;
+    text-align: left;
+    border-left: 1px solid #333;
+    color: #fff;
+}
+
+.row.impar {
+    background: rgb(218, 227, 251);
+    background: linear-gradient(180deg, rgba(218, 227, 251, 1) 0%, rgba(176, 184, 209, 1) 100%);
+    border-top: 2px solid #333;
+}
+
+.row.par {
+    background: rgb(251, 228, 218);
+    background: linear-gradient(180deg, rgba(251, 228, 218, 1) 0%, rgba(209, 188, 176, 1) 100%);
+    border-top: 2px solid #333;
+}
+
+/* todos os body preview  */
+#colapsables-wrapper>div>div>.col-md-7>div:last-child {
+    background-color: #fff;
+    padding: 20px 20px;
+    border-left: 2px solid #333;
+    min-height: 420px;
+}
+
+/**** Notepad
+*/
+#preview-list-row {
+    color: #fff;
+}
+
+.nova-ligacao-btn-col {
+    padding-top: 20px;
+}
+
+#preview-heading-row {
+    color: #fff;
+    padding: 10px 0px;
+    min-height: 60px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#preview-heading-row>* {
+    padding: 0px;
+    margin: 0px;
+}
+
+
+.gerador-links-wrapper {
+    color: #fff;
+}
+
+.gerador-links-wrapper>div>input {
+    width: 90%;
+    border-radius: 5px;
+    color: #000;
+}
+
+.gerador-links-wrapper .col-md-7 {
+    display: flex;
+}
+
+#gerador-titulos {
+    color: #fff;
+    font-size: 20px;
+}
+
+#gerador-titulos select {
+    color: #000;
+}
+
+.gerador-links-wrapper .col-md-12 {
+    font-size: 20px;
+}
+
+#header-outros {
+    font-size: 20px;
+    color: #fff;
+    padding-bottom: 20px;
+}
+
+#add-new-collap {
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 4px solid #333;
+    background: #333;
+}
+
+#add-new-collap>button {
+    max-height: 34px;
+}
+
+#gerador-colaps-wrapper {
+    text-align: center;
+}
+
+
+.gerador-colaps-1 {
+    padding-top: 20px;
+    font-size: 30px;
+    padding-bottom: 20px;
+}
+
+.novo-separador {
+    padding-top: 20px;
+}
+
+.novo-separador span {
+    font-size: 20px;
+    color: #fff;
+    display: block;
+    padding: 10px 0px;
+}
+
+#cria-tabela-checkbox-wrapper {
+    padding-top: 30px;
+    color: #fff;
+}
+
+#cria-tabela-checkbox-wrapper span {
+    padding-left: 5px;
+    padding-right: 20px;
+}
+
+
+#hilite-textarea {
+    min-height: 100px !important;
+    font-size: 12px;
+}
+
+#hilite-checkboxes-row {
+    padding: 15px 0px;
+    color: #fff;
+}
+
+#novo-hilitecode-btn {
+    color: rgb(0, 255, 13);
+}

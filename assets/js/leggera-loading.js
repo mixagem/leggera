@@ -2,8 +2,17 @@
 /* helpcenter+ supperliggera        */
 /* mambosinfinitos, 2022            */
 /************************************/
+let darktheme = 1;
 
-let darktheme;
+const getThemeFromCache = localStorage.getItem('darktheme');
+if (getThemeFromCache !== null) {
+    darktheme = JSON.parse(getThemeFromCache);
+}
+
+document.querySelector('#theme-css').setAttribute('href', `assets/css/style${darktheme}.css`);
+document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${darktheme}.css`);
+document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${darktheme}.css`);
+
 let loggedinUser;
 let currentUsername = document.querySelector('#username');
 
@@ -13,8 +22,6 @@ let currentUsername = document.querySelector('#username');
 (function randomBG() {
 
     const rng = Math.floor(Math.random() * 1) + 1;
-    console.log(rng);
-    console.log(document.querySelector('#loading-wrapper'));
 
     document.querySelector('#loading-wrapper').style.backgroundImage = `url(assets/img/loading-bg-` + rng + `.png)`;
 })();
@@ -62,7 +69,7 @@ function wantMeToShowPassword() {
 }
 
 document.addEventListener("keyup", enterPress);
-function enterPress (e) {
+function enterPress(e) {
     if (e.target.tagName === 'INPUT' && e.key === 'Enter') {
         leggeraLogin();
     }
@@ -81,25 +88,19 @@ function cookieLogin() {
         $.ajax({    //create an ajax request to display.php
             type: "POST",
             url: "assets/php/cookie.php",
-            dataType: "text",
+            dataType: "JSON",
             data: { cookie: bolachinha },
             success: function (response) {
-                if (response.startsWith('login-failed')) {
+                if (response.includes('login-failed')) {
                     localStorage.removeItem('bolachinha');
-                    console.log('Token expirado')
                 } else {
-                    const splitPos = response.indexOf("/")
-                    const splitUser = response.slice(0, splitPos)
-                    const splitName = response.slice(splitPos + 1, response.length)
-                    loggedinUser = splitUser;
-                    leggeraLoginSucess(splitName);
+                    darktheme = response[1];
+                    loggedinUser = response[2];
+                    leggeraLoginSucess(response);
                 }
             }
-
         });
-
     }
-
 }
 
 // ############ SUBMIT LOGIN ############
@@ -112,11 +113,14 @@ function cookieCheckbox() {
     if (wantCookie === 0) {
         wantCookie = 1;
         wantCookieCheckbox.innerText = 'check_box';
-        wantCookieCheckbox.style.color = 'gold'
+        console.log(darktheme)
+        if (Number(darktheme) === 0) { wantCookieCheckbox.style.color = 'rgb(81, 63, 255)' }
+        else { wantCookieCheckbox.style.color = 'gold' }
     } else {
         wantCookie = 0
         wantCookieCheckbox.innerText = 'check_box_outline_blank';
-        wantCookieCheckbox.style.color = 'white'
+        if (Number(darktheme) === 0) { wantCookieCheckbox.style.color = 'black' }
+        else { wantCookieCheckbox.style.color = 'white' }
     }
 }
 
@@ -135,9 +139,16 @@ function leggeraLogin() {
                 leggeraLoginFail();
             } else {
                 loggedinUser = currentUsername.value;
+                darktheme = response[1];
+                let saveTheme2Cache = JSON.stringify(darktheme);
+                localStorage.setItem('darktheme', saveTheme2Cache);
                 leggeraLoginSucess(response);
             }
+        },
+        error: function (response) {
+            leggeraLoginFail();
         }
+
 
     });
 }
@@ -145,7 +156,6 @@ function leggeraLogin() {
 
 function leggeraLoginFail() {
     document.querySelector('#loading-gif').classList = 'animate__animated animate__fadeOut margin-animation-complete';
-
     const newTitle = document.createElement('div');
     newTitle.classList = 'animate__animated animate__fadeIn animate__delay-1s alert-label';
     newTitle.id = 'loading-title';
@@ -176,6 +186,10 @@ function leggeraLoginSucess(rsp) {
 
     darktheme = rsp[1];
 
+    document.querySelector('#theme-css').setAttribute('href', `assets/css/style${darktheme}.css`);
+    document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${darktheme}.css`);
+    document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${darktheme}.css`);
+
     if (wantCookie === 1) {
         const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);
         const novaBolachinha = JSON.stringify(fornoBolachinha);
@@ -189,15 +203,11 @@ function leggeraLoginSucess(rsp) {
             },
             success: function (response) {
                 if (response.startsWith('cookie-login-sucessfull')) {
-                    console.log('token gerado com sucesso')
                     localStorage.setItem('bolachinha', novaBolachinha)
                 } else {
-                    console.log('Problema ao gerar um novo token de acesso direto')
                 }
             }
-
         });
-
     }
 
 

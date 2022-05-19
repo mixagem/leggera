@@ -1,0 +1,292 @@
+É no ecrã <b>Artigos e Serviços</b> onde será feita a gestão de todos os artigos comercializados e serviços prestados pela sua empresa.<br><br>
+ 
+Nele pode configurar os campos que irão caracterizar cada artigo/serviço, definindo as suas referências, designações, bem como outros detalhes como o valor do stock atual, a categoria do produto/serviço, a família do artigo/serviço, preços de venda, descrições técnicas, entre outros.<br><br>
+
+Tem ainda disponível ferramentas que permitem ver e analisar em tempo real a evolução da atividade de cada conta, através de <b>Listagens</b> e <b>Análises</b>.<br><br>
+
+Para visitar este ecrã, aceda ao menu localizado no lado esquerdo da página, e navegue até <b>Artigos e Serviços</b> ( <i class="fa fa-bars"></i> Menu > Artigos e Serviços > Artigos e Serviços ).<br><br>
+
+Para conhecer todas as funcionalidade inerentes a este ecrã, iremos começar por explicar os campos que compõem a área da <b>Informação Principal</b> e o tabulador de <b>Dados Gerais</b>.<br>&nbsp;
+
+<div class="novoalerta alerta-relaciona" >
+<div class="novoalerta-titulo"><img id="img_conteudo" src="../pimages/go/artigo.svg" alt="PHC GO" class="menu-top-logo-ptxview" style="margin-top:-5px;margin-right:2px;height:20px;width:auto;">Tópicos Relacionados</div>
+<div class="novoalerta-contido">Para obter outras informações sobre campos ou áreas relacionadas com o ecrã de Artigos e Serviços, clique abaixo no tópico pretendido:</b><br><br>
+
+<ul>
+<li><%= TopicLink([Opções disponíveis à entrada do ecrã Artigos e Serviços],[Opções disponíveis à entrada de ecrãs]) %></li>
+<li><%= TopicLink([Ações genéricas disponíveis à entrada do ecrã Artigos e Serviços],[Ações genéricas disponíveis à entrada do ecrã]) %></li>
+<li><%= TopicLink([Ações genéricas disponíveis ao consultar registos de artigos e serviços],[Ações genéricas disponíveis ao consultar registos]) %></li>
+<li><%= TopicLink([Listagens de artigos e serviços],[Listagens de Artigos e Serviços]) %></li>
+<li><%= TopicLink([Análises de artigos e serviços],[Análises de Artigos e Serviços]) %></li>
+<li><%= TopicLink([Anexos nos artigos e serviços],[Anexos nos registos]) %></li></ul>
+
+
+</div></div>
+
+<br>&nbsp;<br>
+
+<h1 class="manuais"><b>INFORMAÇÃO PRINCIPAL</b></h1>
+<hr style="height:3px;margin-top:0px;">
+
+<br>
+
+Esta área do ecrã é composta pelos seguintes campos:<br><br>
+
+<b>Referência:</b> Identificação da referência do produto/serviço.<br> <br>
+
+<b>Designação:</b> Designação do produto/serviço.<br><br>
+
+<b>É um serviço:</b> Por defeito, ao introduzir um novo registo neste ecrã, este é considerado um artigo. Ao ativar esta opção, o registo passa a ser identificado como um serviço.<br><br>
+
+<b>Inativo:</b> Esta opção serve para inativar o artigo/serviço, de modo a não surgir nas opções de alguns ecrãs. Por exemplo, na realização de um movimento de stock ou na emissão de uma fatura, deixa de ser possível selecionar artigos/serviços que estejam inativos.<br><br><br>
+
+<h1 class="manuais">DADOS GERAIS</h1>
+<hr style="height:3px;margin-top:0px;"><br>
+
+O tabulador de <b>Dados Gerais</b> é composto por vários separadoes, os quais iremos detalhar individualmente. Para obter mais informações sobre os campos de um separador, carregue em <b>Mostrar/Ocultar</b> referente ao separador específico (ou em alternativa, pode carregar em <b>Abrir todos</b>).<br>&nbsp;<br>&nbsp;<br>
+
+<div id="colapse-all"><p style="text-align:right;padding-right:15px;"><a id="colapse-all-a" data-toggle="collapse" data-target=".multi-collapse" href="#detalhes" role="button" aria-expanded="false" aria-controls="detalhes precos outras-configs peso-volumes contabilidade componentes obra">Abrir Todos</a></p></div>
+
+
+	<div class="row seccao-phcgo">
+		<div class="col-xs-9"><h2 class="manuais">Detalhes</h2></div>
+		<div class="col-xs-3 text-right"><a data-toggle="collapse" href="#detalhes" role="button" aria-expanded="false" aria-controls="detalhes" style="width:100%;font-size:14px;padding-right:15px;">Mostrar/Ocultar</a></div>
+	</div>
+
+
+<div class="collapse multi-collapse" id="detalhes">
+<br>
+
+<b>Stock Atual:</b> Este campo exibe a quantidade de stock atual da referência do artigo. Este valor inclui o stock total da referência em todos os armazéns em que a mesma esteja presente. <br><br>
+
+<b>Preço de Custo Ponderado:</b> Valor do preço de custo ponderado. Para o cálculo deste preço é feita uma média entre as unidades que entram do artigo e o respetivo preço.<br><br>
+
+<b>Encomendado de Clientes:</b> Campo informativo com a quantidade do artigo já reservada por clientes.<br><br>
+
+<b>Encomendado a Fornecedores:</b> Campo informativo com a quantidade do artigo já encomendada a fornecedores.<br><br>
+
+<b>Categoria:</b> Este campo serve para identificar a categoria do artigo para efeitos de comunicação anual de inventário à Autoridade Tributária.<br>
+
+<div class="novoalerta alerta-notas">
+<div class="novoalerta-titulo"><i class="fa fa-sticky-note-o"></i></i>Notas</div><br>
+<div class="novoalerta-contido">Quando a categoria selecionada para o artigo é <b>Outros</b>, o artigo não é englobado na comunicação de inventários à Autoridade Tributária.</div></div><br>
+
+<b>Família de Artigo:</b> Identificação da família do artigo.<br>
+
+<div class="novoalerta alerta-dicas">
+<div class="novoalerta-titulo"><i class="fa fa-bullhorn" aria-hidden="true"></i></i>Dicas</div><br>
+<div class="novoalerta-contido">Caso não encontre na lista nenhuma família relacionada com o artigo, poderá adicionar uma nova família à lista, operação esta efetuada no ecrã <%= TopicLink([Família de Artigos],[Como configurar e usar famílias de artigos]) %>.</div></div><br>
+
+<b>Designação da Família:</b> Campo informativo preenchido automaticamente em função da família de artigo selecionada no campo anterior.<br><br>
+
+<b>Marca:</b> Identificação da marca do artigo.
+
+<div class="novoalerta alerta-dicas">
+<div class="novoalerta-titulo"><i class="fa fa-bullhorn" aria-hidden="true"></i></i>Dicas</div><br>
+<div class="novoalerta-contido">Caso não encontre na lista a marca a associar ao produto, o utilizador poderá adicionar a esta lista uma nova marca, bastando para tal preencher o campo com o texto desejado seguido de clique no botão  &nbsp;<i class="fa fa-plus"></i>&nbsp;. Este procedimento também se aplica para os campos seguintes, <b>Modelo</b> e <b>Unidade</b>.</div></div><br>
+
+<b>Modelo:</b> Identificação do modelo do artigo. <br><br>
+
+<b>Unidade:</b> Identificação da unidade de medida a utilizar pelo artigo (Por exemplo: Kg, Un., Litros, ...).<br><br>
+
+<b>Referência do Fornecedor:</b> Identificação da referência utilizada pelo fornecedor para o artigo.<br><br>
+
+<b>Data da Última Saída:</b> Campo informativo com a data da última saída do artigo.<br><br>
+
+<b>Data da Última Entrada:</b> Campo informativo com a data da última entrada do artigo.<br><br>
+
+<b>Artigo bloqueado para saídas:</b> Esta opção serve para definir o artigo como bloqueado para saída, impossibilitando as operações de saída em outros ecrãs. <br>
+
+<div class="novoalerta alerta-info">
+<div class="novoalerta-titulo"><i class="fa fa-info-circle" aria-hidden="true"></i>Informação</div><br>
+<div class="novoalerta-contido">O campo <b>Artigo bloqueado para saídas</b>, bem como o campo <b>Artigo bloqueado para entradas</b>, estão disponíveis nos planos <b>Pro</b> e <b>Expert.</b></div></div><br>
+
+<b>Artigo bloqueado para entradas:</b> Esta opção serve para definir o artigo como bloqueado para entrada, impossibilitando as operações de entrada em outros ecrãs. <br><br><br>
+
+</div>
+
+	<div class="row seccao-phcgo">
+		<div class="col-xs-9"><h2 class="manuais">Preços</h2></div>
+		<div class="col-xs-3 text-right"><a data-toggle="collapse" href="#precos" role="button" aria-expanded="false" aria-controls="precos" style="width:100%;font-size:14px;padding-right:15px;">Mostrar/Ocultar</a></div>
+	</div>
+
+
+<div class="collapse multi-collapse" id="precos"><br>
+
+<b>Preço de Venda:</b> Campo a preencher com o valor do preço de venda.<br><br>
+
+<b>Iva incluído no preço de venda:</b> Por defeito esta opção não vem selecionada, no entanto, caso o preço de venda já tenha o IVA incluído, o utilizador deverá selecionar esta opção.<br><br>
+
+<b>Tipo para descontos:</b> Este campo serve para o utilizador identificar (caso se aplique) o grupo/família de descontos a que o artigo está associado (Por exemplo: <i>Lançamento</i>, <i>Novidade</i>, <i>Promoção de Verão</i>, ...).<br>
+
+<div class="novoalerta alerta-dicas">
+<div class="novoalerta-titulo"><i class="fa fa-bullhorn" aria-hidden="true"></i></i>Dicas</div><br>
+<div class="novoalerta-contido">Caso as opções disponíveis não satisfaçam as necessidades do utilizador, este poderá criar um novo tipo de descontos, bastando para tal preencher o campo com o texto desejado seguido de clique no botão  &nbsp;<i class="fa fa-plus"></i>&nbsp;.</div></div><br>
+
+<b>Preço Custo Tabela:</b> Este preço é definido pelo utilizador tendo como base a tabela de preços acordada com o fornecedor. Este campo é de preenchimento manual.
+Ao emitir um documento de compra o preço unitário é preenchido com o valor atribuído a este campo. 
+Pode sempre alterar este valor no documento. 
+O preço de custo de tabela é também utilizado nos documentos de venda, como base de cálculo da rentabilidade do documento.<br>
+
+<div class="dica" ><div class="dica-titulo" > <i class="fa fa-book fa-fw"></i>  Nota</div><br>
+<div class="dica-contido" >Este campo só está disponível para consulta e edição caso o parâmetro <b>Opções avançadas</b> para a entidade de <b>Artigos e Serviços</b> esteja ativado nas <%= TopicLink([definições do perfil do utilizador],[Como configurar e alterar utilizadores]) %>.</div></div><br>
+
+<b>Iva Incluído Preço Custo Tabela:</b> Por defeito esta opção não vem selecionada, no entanto, caso o preço de custo já tenha o IVA incluído, o utilizador deverá selecionar esta opção.<br>
+
+<b>Preço do Custo Ponderado:</b> Campo informativo com o resultado do cálculo do preço de custo ponderado.<br>
+
+<div class="novoalerta alerta-info">
+<div class="novoalerta-titulo"><i class="fa fa-info-circle" aria-hidden="true"></i>Informação</div><br>
+<div class="novoalerta-contido">Para o cálculo deste preço é feita uma média entre as unidades que entram de um artigo e o respetivo preço. Ou seja, ao efetuar várias entradas, para o stock, para o mesmo armazém, é utilizada a fórmula normal do preço de custo médio ponderado.</div></div><br>
+
+<b>Último preço de custo:</b> Campo informativo preenchido automaticamente com o valor do último preço de custo.<br><br>
+
+<b>Tabela de IVA:</b> Identificação da taxa de IVA associada ao artigo/serviço.<br><br>
+
+<b>Motivo de isenção de imposto:</b> Este campo serve para identificar o motivo de isenção de imposto. Este campo só é editável quando o artigo/serviço está identificado como sendo isento ou não sujeito a IVA.<br><br>
+
+<b>IRS:</b> Esta opção serve para identificar o artigo/serviço como sendo sujeito a retenção de IRS.<br><br>
+
+<b>Valor da Comissão:</b> Campo a preencher com o valor da comissão (caso se aplique) para o artigo/serviço.<br><br><br>
+
+</div>
+
+
+	<div class="row seccao-phcgo">
+		<div class="col-xs-9"><h2 class="manuais">Outras Configurações</h2></div>
+		<div class="col-xs-3 text-right"><a data-toggle="collapse" href="#outras-configs" role="button" aria-expanded="false" aria-controls="outras-configs" style="width:100%;font-size:14px;padding-right:15px;">Mostrar/Ocultar</a></div>
+	</div>
+
+
+<div class="collapse multi-collapse" id="outras-configs"><br>
+
+<b>Código de Barras:</b> Identificação do código de barras.<br><br>
+
+<b>Localização:</b><br>
+
+
+<div class="novoalerta alerta-info">
+<div class="novoalerta-titulo"><i class="fa fa-info-circle" aria-hidden="true"></i>Informação</div><br>
+<div class="novoalerta-contido">A <b>Localização</b> de artigo está disponível nos planos <b>Star</b>, <b>Pro</b> e <b>Expert</b>.</div></div><br>
+
+<b>É uma amostra:</b> Esta opção serve para identificar o artigo como sendo uma amostra.<br>
+
+<div class="novoalerta alerta-info">
+<div class="novoalerta-titulo"><i class="fa fa-info-circle" aria-hidden="true"></i>Informação</div><br>
+<div class="novoalerta-contido">As <b>Amostras</b> estão disponíveis nos planos <b>Pro</b> e <b>Expert</b>.</div></div><br>
+
+<b>Usa Lotes:</b> Quando esta opção se encontra ativa, o stock do artigo passa a ser controlado por armazém e lote. Nos documentos de compra, a aplicação passa a obrigar o preenchimento do lote. Nos documentos de faturação, a aplicação sugere o lote consoante o seu método de valorização e stock, existentes à data. <br>
+
+<div class="novoalerta alerta-info">
+<div class="novoalerta-titulo"><i class="fa fa-info-circle" aria-hidden="true"></i>Informação</div><br>
+<div class="novoalerta-contido">O ecrã <b>Lotes</b> está disponível nos planos <b>Pro</b> e <b>Expert</b>.</div></div><br>
+
+<b>Valorização do Lote:</b> Valorização do lote: Neste campo, o utilizador poderá definir o método de valorização do lote. Ficará determinada a ordem de saída do lote de cada artigo conforme o método selecionado. <br><br>
+
+<b>Usa Número de série principal:</b> Este campo ao ser ativo, determina que o artigo passa a estar associado a números de série.<br>
+Na introdução de <b>documentos de faturação, dossiers ou compras</b>, e também em <b>entidades</b> que movimentam stock, será necessário preencher os números de série dos artigos com esta configuração.<br>
+O título deste campo é determinado pelo preenchimento no parâmetro <b>Nome do campo Número de série principal</b>, que por omissão tem o valor <b>Número de série</b>.<br><br>
+
+<b>Usa Número de série secundário:</b> Este campo depende da ativação do campo <b>Usa Número de série principal</b> e, ao ser ativo, determina que o artigo passa a estar associado a números de série secundários.<br>
+Na introdução de <b>documentos de faturação, dossiers ou compras</b>, e também em <b>entidades</b> que movimentam stock, poderá preencher os números de série secundários dos artigos com esta configuração.<br>
+O título deste campo é determinado pelo preenchimento no parâmetro <b>Nome do campo Número de série secundário</b>, que por omissão tem o valor <b>Número de série 2</b>.<br><br>
+
+<div class="novoalerta alerta-notas">
+<div class="novoalerta-titulo"><i class="fa fa-sticky-note-o"></i>Nota</div><br>
+<div class="novoalerta-contido">Apenas é possível ativar qualquer destes 2 campos, em artigos novos, não é possível ativar para artigos já com movimentos de stock registados na base de dados.</div></div>
+
+<b>Descrição Técnica:</b> Campo a preencher com a descrição técnica do artigo/serviço.<br><br>
+
+<b>Observações:</b> Neste campo, o utilizador poderá colocar observações, chamando a atenção a informações relevantes.<br><br>
+
+<b>Imagem:</b> Neste campo, o utilizador poderá definir uma imagem para o artigo, devendo para isso efetuar o carregamento de uma imagem ou utilizar uma imagem já existente em galeria.<br><br><br>
+
+</div>
+
+	<div class="row seccao-phcgo">
+		<div class="col-xs-9"><h2 class="manuais">Detalhes</h2></div>
+		<div class="col-xs-3 text-right"><a data-toggle="collapse" href="#peso-volumes" role="button" aria-expanded="false" aria-controls="peso-volumes" style="width:100%;font-size:14px;padding-right:15px;">Mostrar/Ocultar</a></div>
+	</div>
+
+
+<div class="collapse multi-collapse" id="peso-volumes">
+
+<div class="novoalerta alerta-info">
+<div class="novoalerta-titulo"><i class="fa fa-info-circle" aria-hidden="true"></i>Informação</div><br>
+<div class="novoalerta-contido">A secção <b>Pesos e Volumes</b> está disponível nos planos <b>Pro</b> e <b>Expert</b>.</div></div><br>
+
+<b>Peso Líquido:</b> Campo a preencher com o peso líquido unitário.<br><br>
+
+<b>Peso Bruto:</b> Campo a preencher com o peso bruto unitário.<br><br>
+
+<b>Nº de Itens:</b> Número de unidades que compõem o artigo.<br><br>
+
+<b>Volume:</b> Valor do volume, expresso em unidades cúbicas.<br><br><br>
+
+</div>
+
+	<div class="row seccao-phcgo">
+		<div class="col-xs-9"><h2 class="manuais">Contabilidade</h2></div>
+		<div class="col-xs-3 text-right"><a data-toggle="collapse" href="#contabilidade" role="button" aria-expanded="false" aria-controls="contabilidade" style="width:100%;font-size:14px;padding-right:15px;">Mostrar/Ocultar</a></div>
+	</div>
+
+
+<div class="collapse multi-collapse" id="contabilidade"><br>
+
+<b>Código SNC:</b> Identificação do Código SNC que permite a integração do artigo na Contabilidade.<br><br>
+
+<b>Conta para C.E.V.:</b> Identificação da conta para o custo de existências vendidas.<br><br>
+
+<b>Código SNC Inventário:</b> dentificação da conta SNC de inventário para integrações.<br>
+
+<div class="novoalerta alerta-info">
+<div class="novoalerta-titulo"><i class="fa fa-info-circle" aria-hidden="true"></i>Informação</div><br>
+<div class="novoalerta-contido">As <b>Integrações</b> estão disponíveis nos planos <b>Star</b>, <b>Pro</b> e <b>Expert</b>.</div></div><br>
+
+<b>Não Movimenta Inventário Permanente:</b> Ao selecionar esta opção, o artigo deixará de movimentar inventário permanente nas integrações.<br><br><br>
+
+</div>
+
+	<div class="row seccao-phcgo">
+		<div class="col-xs-9"><h2 class="manuais">Componentes</h2></div>
+		<div class="col-xs-3 text-right"><a data-toggle="collapse" href="#componentes" role="button" aria-expanded="false" aria-controls="componentes" style="width:100%;font-size:14px;padding-right:15px;">Mostrar/Ocultar</a></div>
+	</div>
+
+
+<div class="collapse multi-collapse" id="componentes">
+
+<div class="novoalerta alerta-info">
+<div class="novoalerta-titulo"><i class="fa fa-info-circle" aria-hidden="true"></i>Informação</div><br>
+<div class="novoalerta-contido">A secção <b>Componentes</b> está disponível nos planos <b>Pro</b> e <b>Expert</b>.</i></div></div><br>
+
+<b>Cálculo do Custo para as Vendas:</b> Identificação do modo de cálculo para custo das vendas do produto composto.<br><br>
+
+<b>Tabela de componentes:</b> Por defeito, esta tabela vem sem componentes associados ao artigo. Para adicionar um componente à tabela, baste um clique em <img alt="" border="0" height="42" hspace="0" src="data:image/jpeg;base64,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" style="width:178px;height:42px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px;border:0px solid black;" vspace="0" width="178" />. Ao efetuar esta ação, o utilizador será encaminhado para a tabela de componentes (em modo de introdução), na qual pode introduzir múltiplos registos, com os seguintes campos a preencher:<br><br>
+
+<ul><li><b>Referência:</b> Identificação da referência do artigo.</li><br>
+<li><b>Designação:</b> Campo de preenchimento automático em função da referência de artigo selecionada.</li><br>
+<li><b>Quantidade:</b> Valor da quantidade do artigo.</li><br>
+<li><b>Observações:</b> Campo a preencher com observações que o utilizador ache relevantes.</li><br>
+<li><b>Quantidade Fixa:</b> Opção que permite definir a quantidade do artigo como fixa.</li></ul><br>
+
+Caso pretenda adicionar outro registo à tabela, basta um clique no botão &nbsp;<i class="fa fa-plus"></i>&nbsp;, situado no lado esquerdo da tabela.<br><br>
+Para remover um registo, basta um clique no botão <img alt="" border="0" height="26" hspace="0" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4QBaRXhpZgAATU0AKgAAAAgABQMBAAUAAAABAAAASgMDAAEAAAABAAAAAFEQAAEAAAABAQAAAFERAAQAAAABAAAOw1ESAAQAAAABAAAOwwAAAAAAAYagAACxj//bAEMAAgEBAgEBAgICAgICAgIDBQMDAwMDBgQEAwUHBgcHBwYHBwgJCwkICAoIBwcKDQoKCwwMDAwHCQ4PDQwOCwwMDP/bAEMBAgICAwMDBgMDBgwIBwgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/AABEIABoAFgMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/AP2Y/a1/bCP7KC6Ft+Fnxh+JZ10XGB4F8N/2wNPMXl/8fP7xPL3+Z8nXd5cn93n5Y8C/8Fqfi3qHi+OHxN+xL8f9I0E7/MvNM0291G8XAO3FvJZQIcnGf3wxk/exg4X/AAdI/wDJgfhD/sfrP/036jX4J18Hm/EGIwuNlRg9I27dUn/K3+J/UvhZ4T5Rn/DscwxcVzyco3ftLqzeq5asFtbeLWnqf1x/AP4v/wDC+fhPpXiv/hF/GHgz+1PN/wCJP4p03+ztWs9krx/voNzbN2zcvzHKsp70VyH/AAT3/wCTDPgt/wBiNov/AKQw0V+g16fs6sqfZtfcfzNmNOFPF1adNWipSSXZXdl8jw7/AILsfsX+PP24v2NtM8N/DrT7bV/EOi+JrbWvsMt3FatdRLb3MDKjyssYYG4VvmZRhWwc4B/IOL/ggH+1rJKqn4UqgJALN4n0fC+5xdk/kK/pNor5nHcNYXFV3iKkpXdtmraK3Y/T+DvGbPOG8tWV4GnSlBNtOcZN67/DOKt8jgv2V/hlf/BX9mT4eeD9UeCXUvCvhrT9Iu3gYtE0sFtHE5UkAldynFFd7RX0lSo5zc5bt3PyitVlVqSqz3k236s//9k=" style="width:22px;height:26px;margin-top:0px;margin-bottom:5px;margin-left:0px;margin-right:0px;border:0px solid black;" vspace="0" width="22" />
+, botão situado no lado direito da tabela.
+
+</div>
+
+	<div class="row seccao-phcgo">
+		<div class="col-xs-9"><h2 class="manuais">Obra</h2></div>
+		<div class="col-xs-3 text-right"><a data-toggle="collapse" href="#obra" role="button" aria-expanded="false" aria-controls="obra" style="width:100%;font-size:14px;padding-right:15px;">Mostrar/Ocultar</a></div>
+	</div>
+
+<div class="collapse multi-collapse" id="obra">
+
+<div class="novoalerta alerta-notas">
+<div class="novoalerta-titulo"><i class="fa fa-sticky-note-o"></i>Nota</div><br>
+<div class="novoalerta-contido">Este <b>separador</b> e respetivo <b>campo</b> apenas são exibidos se possuir o <i>add-on</i> <b>Obras e Orçamentos</b>.</div></div><br><br><br>
+
+<br>
+<b>Tipo de custo:</b> Este campo permite escolher da lista apresentada um <b>tipo de custo</b>, ou adicionar novos, associando aos seus artigos.<br>
+
+</div>

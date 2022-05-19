@@ -35,8 +35,8 @@ if (mysqli_num_rows($result) == 1) {
         echo "Erro: Conta bloqueada. Chora agora.";
     } else {
 
-        // incrementa o total login
-        $query = "UPDATE users SET totallogins = $numlogins+1, loginattempts=0 WHERE (username = '$un' AND password = '$newpw')";
+        // incrementa o total login + reseta a cookie
+        $query = "UPDATE users SET totallogins = $numlogins+1, loginattempts=0, cookie='' WHERE (username = '$un' AND password = '$newpw')";
         $result = mysqli_query($con, $query);
         echo json_encode(array($name,$darktheme));
     }

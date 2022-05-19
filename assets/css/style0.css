@@ -1,15 +1,15 @@
 /*###########    Globais     ###########*/
 
 :root {
-    --primary-title-color: gold;
-    --secondary-title-color: rgb(81, 63, 255);
-    --background-color: #000;
-    --text-color-dark: #000;
+    --primary-title-color: rgb(81, 63, 255);
+    --secondary-title-color: gold;
+    --background-color: #fff;
     --text-color-light: #fff;
+    --text-color-dark: #000;
     --alert-color: red;
     --success-color: green;
-    --border-picker: inset 3px rgba(255, 255, 255, 0.5);
-    --border-picker-active: inset 3px var(--primary-title-color);
+    --border-picker: outset 3px rgba(0, 0, 0, 0.5);
+    --border-picker-active: outset 3px var(--primary-title-color);
 }
 
 html {
@@ -58,12 +58,12 @@ body {
 
 .gold {
     color:var(--primary-title-color)!important;
-};
+}
 
 /* Cursor laranja */
 #pulse {
     font-size: 30px;
-    color: rgb(255, 145, 0);
+    color: rgb(0, 110, 255);
     animation-name: periodicfading;
     animation-duration: 1.3s;
     animation-iteration-count: infinite;
@@ -93,6 +93,7 @@ body {
     justify-content: center;
     align-content: center;
     background-color: var(--background-color);
+    overflow-y: clip;
 }
 
 #loading-title,
@@ -120,14 +121,14 @@ body {
 }
 
 #loading-gif {
-    background-image: url('../img/mi.gif');
+    background-image: url('../img/mi-w.gif');
     position: relative;
     bottom: -100%;
     z-index: 2;
 }
 
 #loading-gif-red {
-    background-image: url('../img/mi-red.gif');
+    background-image: url('../img/mi-red-w.gif');
     z-index: 1;
 }
 
@@ -150,7 +151,7 @@ body {
 
 /* labels */
 #login-wrapper>span {
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     font-size: 40px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -163,14 +164,14 @@ body {
 
 /* show password toggle */
 #show-password {
-    color: var(--text-color-dark);
-    position: absolute;
-    margin-left: -34px;
+    color: var(--text-color-light);
+    position: relative;
+    top: -52px;
+    left: 317px;
     font-size: 22px;
     padding: 4px;
     background: var(--primary-title-color);
     border-radius: 25%;
-    margin-top: -6px;
     border: solid 4px var(--background-color);
 }
 
@@ -178,21 +179,22 @@ body {
 .show-password-active {
     cursor: pointer;
     background: var(--secondary-title-color) !important;
-    color: var(--text-color-light) !important;
+    color: var(--text-color-dark) !important;
 }
 
 /*login btn*/
 #login-btn {
     width: 100%;
     background-color: var(--primary-title-color) !important;
-    margin-top: 10px;
+    margin-top: -50px;
+    color: var(--text-color-light);
 }
 
 /* cookie checkbox wrapper */
 #cookie {
     width: 100%;
     text-align: center;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     padding-top: 5px;
     display: flex;
     justify-content: center;
@@ -229,7 +231,7 @@ body {
 .header {
     min-height: 330px;
     background: var(--background-color);
-    background-image: url('../img/app-bg.png');
+    background-image: url('../img/app-bg-w.png');
     background-size: 2%;
 }
 
@@ -245,8 +247,8 @@ body {
     border-radius: 10px;
     padding: 5px 10px;
     background-color: transparent;
-    color: var(--text-color-light);
-    background-image: url('../img/mi.png');
+    color: var(--text-color-dark);
+    background-image: url('../img/mi-w.png');
     background-size: 10%;
     background-repeat: no-repeat;
     background-position: bottom right;
@@ -266,13 +268,18 @@ body {
 /*###########   Textboxes    ###########*/
 
 .textbox-wrapper {
-    padding-top: 25px;
+    padding-top: 22px;
 }
 
+.textbox-wrapper > div > div {
+    border: 2px solid #ccc;
+    margin-top: -4px;
+}
 /* ajustamento de margem para todas as textboxes */
 .header .novoalerta {
     margin-top: 0px;
 }
+
 
 /* serve para dar clip nos tópicos relacionados */
 .header .alerta-relaciona {
@@ -305,7 +312,7 @@ body {
 
 .phcgo-icon {
     font-size: 35px;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     text-align: center;
     padding-bottom: 20px;
     cursor: pointer;
@@ -364,7 +371,7 @@ body {
 
 .selected-color>i {
     opacity: 1;
-    color: var(--primary-title-color);
+    color: var(--secondary-title-color);
     font-size: 18px;
 }
 
@@ -456,7 +463,7 @@ body {
 
 .selected-theme>i {
     opacity: 1;
-    color: var(--primary-title-color);
+    color: var(--secondary-title-color);
     font-size: 18px;
 }
 
@@ -492,7 +499,7 @@ body {
 
 
 #preview-list-row {
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     min-height: 80px;
     padding: 10px 0px;
 }
@@ -504,7 +511,7 @@ body {
 #header-listas,
 #header-tabelas {
     text-align: center;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     padding-bottom: 20px;
     font-size: 20px;
 }
@@ -512,7 +519,7 @@ body {
 #tipo-lista-span {
     display: block;
     text-align: left;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     padding-left: 2px;
     font-size: 14.5px;
 }
@@ -520,7 +527,7 @@ body {
 #num-itens-span {
     display: block;
     text-align: right;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     padding-right: 2px
 }
 
@@ -538,7 +545,7 @@ body {
 #num-colunas-span,
 #cabecalho-span {
     display: block;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
 }
 
 #num-linhas-input {
@@ -550,7 +557,7 @@ body {
 }
 
 #want-links-span {
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     display: inline-block;
     padding: 10px 10px 10px 0px;
 }
@@ -570,14 +577,14 @@ body {
 
 .novo-separador>span {
     font-size: 20px;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     padding: 10px 0px;
     display: block;
 }
 
 #cria-tabela-checkbox-wrapper {
     padding-top: 30px;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
 }
 
 #cria-tabela-checkbox-wrapper span {
@@ -590,13 +597,13 @@ body {
 }
 
 #preview-list-row {
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     text-align: center;
 }
 
 .nova-imagem {
     padding-top: 10px;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
 }
 
 #upload-form {
@@ -623,7 +630,7 @@ body {
 }
 
 #preview-heading-row {
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     padding: 10px 0px;
     min-height: 60px;
 }
@@ -639,7 +646,7 @@ body {
 }
 
 .gerador-links-wrapper {
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
 }
 
 .gerador-links-wrapper>div>input {
@@ -653,7 +660,7 @@ body {
 }
 
 #gerador-titulos {
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     font-size: 20px;
     text-align: center;
 }
@@ -672,7 +679,7 @@ body {
 
 #hilite-subwrapper {
     font-size: 20px;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
     padding-bottom: 20px;
 }
 
@@ -683,5 +690,15 @@ body {
 
 #hilite-checkboxes-row {
     padding: 15px 0px;
-    color: var(--text-color-light);
+    color: var(--text-color-dark);
+}
+
+.btn-light {
+    background-color: #ddd!important;
+    border-color: #ccc!important;
+}
+
+.btn-light:hover {
+    background-color: #bbb!important;
+    border-color: #aaa!important;
 }

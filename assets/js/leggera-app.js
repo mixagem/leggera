@@ -2,7 +2,8 @@
 /* helpcenter+ supperleggera        */
 /* mambosinfinitos, 2022            */
 /* featurelist:
-    - helpcenter "offline" preview
+    - helpcenter preview
+    - helpcenter darkmode (apenas na vista de edição, o código continua 100% compatível com o helpcenter)
     - injetor caixas texto
     - injetor de icons com seletor de cor
     - injetor de buttons com seletor de tema
@@ -12,7 +13,7 @@
     - injetor de imagens
     - injetor de <hr>
     - injetor de títulos
-    - constutor de links, com babyproof para ligações inválidas (# ou http only)
+    - constutor de links
     - editor live na vista principal 
         (atualização ao vivo do preview com a posição do cursor + com o que foi acabado de escrever + introdução de <br> ao carregar Enter)
         (limite de 100.000 caracteres, para evitar a baixa performance em tópicos muito longos)
@@ -27,7 +28,7 @@
         (segundo slot da cache, disponível através das ações respetivas)
     - cleancode™ - formatação de todos os códigos injetados, de modo a adicionar quebras de linha onde justificável, de modo a tornar o código mais legível fora da aplicação 
     - titlescroller - flashback aos tempos do myspace e hi5. groovy af. 
-    - loginscreen com validação de credências c/ BD
+    - gestão de utilizador (signup, resetpassword, login)
     - cookie login 
     - myManuals™ - gestão de manuais c/ acesso a BD (carregar, guardar e apagar) 
 /************************************/
@@ -60,11 +61,64 @@ function mixWrapper() {
         // variável de controlo do autosave (a ser utilizado quando temos um tópico com 100.000+ chars)
         limitExceded: 0,
         // variável com o tema atual para o leggera
-        currentLeggeraTheme: darktheme
+        currentLeggeraTheme: darktheme,
+        // userinfo
+        userInfo: ''
     }
 
     // ################ funções várias da aplicação 
     const leggeraExtraFunctions = {
+
+        getUserInfo: function () {
+
+            $.ajax({    //create an ajax request to display.php
+                type: "POST",
+                url: "assets/php/userinfo.php",
+                dataType: "HTML",
+                data: { username: loggedinUser },
+                success: function (rsp) {
+                    leggeraVariables.hcPreview.innerHTML = rsp;
+                },
+                error: function (rsp) {
+                    leggeraVariables.hcPreview.innerHTML = rsp;
+                }
+            })
+        },
+
+        previewAdjustments: function (code) {
+            let convertedPreview = code;
+
+            // alterar o icon antigo dos topicos relacionados
+            convertedPreview = convertedPreview.replaceAll('<img id="img_conteudo" src="../pimages/go/artigo.svg" alt="PHC GO" class="menu-top-logo-ptxview" style="margin-top:-5px;margin-right:2px;height:20px;width:auto;">', '<i class="fa fa-file-text-o"></i>');
+
+            // conversão para darktheme
+            if (Number(darktheme) === 0) {
+                (function iconsSwitch() {
+                    // black and white switcheroo
+                    convertedPreview = convertedPreview.replaceAll('rgb(0, 0, 0);" class="material-icons">', 'rgb(TEMP, TEMP, TEMP);" class="material-icons">');
+                    convertedPreview = convertedPreview.replaceAll('rgb(224, 224, 224);" class="material-icons">', 'rgb(40, 40, 40);" class="material-icons">');
+                    convertedPreview = convertedPreview.replaceAll('rgb(TEMP, TEMP, TEMP);" class="material-icons">', 'rgb(224, 224, 224);" class="material-icons">');
+
+                    // contraste no azul 
+                    convertedPreview = convertedPreview.replaceAll('rgb(26, 35, 126);" class="material-icons">', 'rgb(62, 112, 230);" class="material-icons">');
+
+                    // contraste no verde
+                    convertedPreview = convertedPreview.replaceAll('rgb(0, 77, 64);" class="material-icons">', 'rgb(0, 125, 104);" class="material-icons">');
+                    // contraste no verde
+                    convertedPreview = convertedPreview.replaceAll('solid rgb(238, 238, 238);', 'solid rgb(50, 50, 50);');
+
+                })();
+
+                (function tableSwitch() {
+                    convertedPreview = convertedPreview.replaceAll(';border:solid 2px #fff;', ';border:solid 2px #111;');
+                })();
+
+                (function hiliteCodebox() {
+                    convertedPreview = convertedPreview.replaceAll(';border:solid #eb8475;', ';border:solid #147b8a;');
+                })();
+            }
+            return convertedPreview;
+        },
 
         // document.createElement, mais turbinada para a escritura de grids
         elementGenerator: function (ele, id = '', classlist = '', inner = '') {
@@ -92,6 +146,7 @@ function mixWrapper() {
                 leggeraVariables.textarea.value = novoSourceCode;
                 // Atualiza o preview
                 leggeraVariables.hcPreview.innerHTML = novoSourceCode;
+                leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(novoSourceCode);
                 // Atualiza a vista de colapsáveis
                 appControlsColap();
                 // Guarda as alterações em cache
@@ -102,6 +157,7 @@ function mixWrapper() {
                 leggeraVariables.activeTextarea.value = novoSourceCode;
                 let inputPreview = leggeraVariables.activeTextarea.parentElement.nextElementSibling.children[1];
                 inputPreview.innerHTML = novoSourceCode;
+                inputPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(novoSourceCode);
             }
         },
 
@@ -189,6 +245,7 @@ function mixWrapper() {
             const getTextareaFromJSON = localStorage.getItem('quickSave');
             leggeraVariables.textarea.value = JSON.parse(getTextareaFromJSON);
             leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+            leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(leggeraVariables.textarea.value);
             appControlsColap();
         },
 
@@ -215,12 +272,17 @@ function mixWrapper() {
         logout: function () {
             localStorage.removeItem('bolachinha');
             location.reload();
+            localStorage.removeItem('darktheme');
         },
 
         changeLeggeraTheme: function () {
-            if (leggeraVariables.currentLeggeraTheme === 0) { leggeraVariables.currentLeggeraTheme = 1; }
-            else { leggeraVariables.currentLeggeraTheme = 0; }
-            console.log(leggeraVariables.currentLeggeraTheme);
+            if (Number(darktheme) === 0) { darktheme = 1; }
+            else { darktheme = 0; }
+            document.querySelector('#theme-css').setAttribute('href', `assets/css/style${darktheme}.css`);
+            document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${darktheme}.css`);
+            document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${darktheme}.css`);
+            leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(leggeraVariables.textarea.value);
+            if (leggeraVariables.hcPreview.innerHTML == '') {leggeraExtraFunctions.getUserInfo()};
         }
     }
 
@@ -279,6 +341,7 @@ function mixWrapper() {
                 leggeraVariables.stringCursor[1] = inputTextString2;
                 // atualiza o preview
                 leggeraVariables.hcPreview.innerHTML = inputTextWithCursor;
+                leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(inputTextWithCursor);
                 appControlsColap();
                 leggeraExtraFunctions.autosave2JSON();
                 //     })();
@@ -301,6 +364,7 @@ function mixWrapper() {
                 leggeraVariables.stringCursor[1] = inputTextString2;
                 // atualiza o preview
                 leggeraVariables.hcPreview.innerHTML = inputTextWithCursor;
+                leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(inputTextWithCursor);
                 appControlsColap();
             }
         },
@@ -333,6 +397,7 @@ function mixWrapper() {
                 leggeraVariables.stringCursor[1] = inputTextString2;
                 // atualiza o preview
                 leggeraVariables.hcPreview.innerHTML = inputTextWithCursor;
+                leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(inputTextWithCursor);
                 appControlsColap();
                 leggeraExtraFunctions.autosave2JSON();
             } else {
@@ -353,6 +418,7 @@ function mixWrapper() {
                 leggeraVariables.stringCursor[1] = inputTextString2;
                 // atualiza o preview
                 leggeraVariables.hcPreview.innerHTML = inputTextWithCursor;
+                leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(inputTextWithCursor);
                 appControlsColap();
                 leggeraExtraFunctions.autosave2JSON();
             }
@@ -361,9 +427,11 @@ function mixWrapper() {
 
     // ################ myManuals
     const leggeraMyManualsDBConnect = {
+
+        manualsContidaIndex: [],
         // Query para buscar os manuais que o utilizador tem guardado
         getManuals: function () {
-            console.log('entrei com: ' + loggedinUser)
+
             $.ajax({    //create an ajax request to display.php
                 type: "POST",
                 url: "assets/php/manualslist.php",
@@ -371,37 +439,63 @@ function mixWrapper() {
                 data: { username: loggedinUser },
                 success: function (rsp) {
                     leggeraMyManualsDBConnect.myManuals(rsp);
+                    leggeraMyManualsDBConnect.manualsContidaIndex = rsp[1];
+                    for (i = 0; i < rsp.length; i++) {
+                        // quando só existia um manual o gajo estava a mandar erro, nao tava a percebizel
+                        try { leggeraMyManualsDBConnect.manualsContidaIndex[i] = (rsp[i].code.toString()); }
+                        catch { }
+                    }
                 },
                 error: function (rsp) {
                     leggeraMyManualsDBConnect.myManuals(rsp);
+                    leggeraMyManualsDBConnect.manualsContidaIndex = rsp[1];
+                    for (i = 0; i < rsp.length; i++) {
+                        // quando só existia um manual o gajo estava a mandar erro, nao tava a percebizel
+                        try { leggeraMyManualsDBConnect.manualsContidaIndex[i] = (rsp[i].code.toString()); }
+                        catch { }
+                    }
                 }
             })
         },
 
         myManualsFilterResults: function () {
+
             const keyword = document.querySelector('#save-manual-input').value.toLowerCase().split(" ");
             const numManuais = document.querySelector('#modal-container tbody').childElementCount;
-            let control = 0;
-            for (i = 1; i <= numManuais; i++) {
-                for (x = 0; x < keyword.length; x++) {
-                    if (document.querySelector('#modal-container tbody').children[i - 1].children[0].innerText.toLowerCase().includes(keyword[x])) {
-                        console.log('found');
-                    } else {
-                        control = 1;
+
+            switch (document.querySelector('#procura-contida').checked) {
+                case true:
+                    for (i = 1; i <= numManuais; i++) {
+
+                        for (x = 0; x < keyword.length; x++) {
+                            if (leggeraMyManualsDBConnect.manualsContidaIndex[i - 1].toLowerCase().includes(keyword[x])) {
+                                document.querySelector('#modal-container tbody').children[i - 1].classList.remove('no-display');
+                            } else {
+                                document.querySelector('#modal-container tbody').children[i - 1].classList.add('no-display');
+                                break
+                            }
+                        }
+
                     }
-                }
-                if (control === 0) {
-                    document.querySelector('#modal-container tbody').children[i - 1].classList.remove('no-display');
-                } else {
-                    document.querySelector('#modal-container tbody').children[i - 1].classList.add('no-display');
-                }
-                control = 0;
+                    break;
+
+                case false:
+                    for (i = 1; i <= numManuais; i++) {
+                        for (x = 0; x < keyword.length; x++) {
+                            if (document.querySelector('#modal-container tbody').children[i - 1].children[0].innerText.toLowerCase().includes(keyword[x])) {
+                                document.querySelector('#modal-container tbody').children[i - 1].classList.remove('no-display');
+                            } else {
+                                document.querySelector('#modal-container tbody').children[i - 1].classList.add('no-display');
+                                break
+                            }
+                        }
+                    };
             }
+
         },
 
         // Constroi a modal com os manuais recebidos da DB
         myManuals: function (rsp) {
-            console.log('here?')
             // oculta a app
             const sectionsArray = document.querySelectorAll('section');
             for (i = 0; i < sectionsArray.length; i++) {
@@ -417,11 +511,17 @@ function mixWrapper() {
             const midWrapper = saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'col-md-2 text-left', ''));
             midWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-success', "<i class='lni lni-save'></i>&nbsp;&nbsp;Guardar Manual"));
             midWrapper.lastChild.addEventListener('click', leggeraMyManualsDBConnect.saveManual)
+
+
+
             const rightWrapper = saveManualModal.appendChild(leggeraExtraFunctions.elementGenerator('div', 'close-myManuals-wrapper', 'col-md-2 text-right', ''));
             rightWrapper.appendChild(leggeraExtraFunctions.elementGenerator('button', 'save-manual-btn', 'btn btn-light', '<i class="lni lni-reply"></i>&nbsp;&nbsp;Voltar ao editor'));
             rightWrapper.lastChild.addEventListener('click', leggeraMyManualsDBConnect.backHome)
 
-
+            leftWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', 'contida-wrapper', '', ''));
+            const procuraContida = leftWrapper.lastChild.appendChild(leggeraExtraFunctions.elementGenerator('input', 'procura-contida', '', ''));
+            procuraContida.setAttribute('type', 'checkbox');
+            leftWrapper.lastChild.innerHTML = leftWrapper.lastChild.innerHTML + '&nbsp;&nbsp;&nbsp;Procura contida?';
             const manualsWrapper = modal.appendChild(leggeraExtraFunctions.elementGenerator('div', 'my-manuals-wrapper', '', ''));
             const modalTable = manualsWrapper.appendChild(leggeraExtraFunctions.elementGenerator('table', 'modal-container', '', ''));
             const modalHeader = modalTable.appendChild(leggeraExtraFunctions.elementGenerator('thead', '', '', ''));
@@ -459,14 +559,13 @@ function mixWrapper() {
             leggeraVariables.textarea.value = rsp[Number(manualID.slice(7, manualID.length)) - 1].code;
             // Atualiza o preview
             leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+            leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(leggeraVariables.textarea.value);
             appControlsColap();
             // Guarda as alterações em cache
             leggeraExtraFunctions.autosave2JSON();
         },
 
         saveManual: function (e) {
-
-            console.log(e.target.parentElement.parentElement.firstChild.innerText);
             let manualName = document.querySelector('#save-manual-input').value;
 
             if (e.target.tagName === "TD") { manualName = e.target.parentElement.firstChild.innerText };
@@ -670,6 +769,8 @@ function mixWrapper() {
     window.onload = (function () {
         // Vai buscar os dados aos JSON
         leggeraJSONGrab.grabThemAll();
+
+        leggeraExtraFunctions.getUserInfo();
         // Vai buscar o último tópico de manual à cache (caso exista)
         try {
             const getTextareaFromJSON = localStorage.getItem('textarea');
@@ -678,11 +779,15 @@ function mixWrapper() {
         catch { }
         // Função que atualiza o hcPreview, conforme tenha encontrado ou não cache 
         if (leggeraVariables.textarea.value === '') {
-            leggeraVariables.hcPreview.appendChild(leggeraExtraFunctions.elementGenerator('span', '', '', 'Não encontrei nenhum tópico em cache. Carrega na caixa de texto para começar!'));
+
+
+
+            leggeraVariables.hcPreview.appendChild(leggeraExtraFunctions.elementGenerator('div', 'container', '', leggeraVariables.userInfo));
         } else {
             leggeraVariables.hcPreview.appendChild(leggeraExtraFunctions.elementGenerator('span', '', '', 'Encontrei um tópico em cache. A carregar...'));
             setTimeout(function () {
                 leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+                leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(leggeraVariables.textarea.value);
             }, 1000);
         }
     })();
@@ -797,7 +902,7 @@ function mixWrapper() {
             leIcon = icon.outerHTML;
             leggeraExtraFunctions.escreveNaTextarea(leIcon);
             // volta a alterar a cor do icon para a côr de origem
-            if (leggeraVariables.currentLeggeraTheme == 1) { icon.style.color = '#fff' }
+            if (darktheme == 1) { icon.style.color = '#fff' }
             else { icon.style.color = '#000' };
         }
     }
@@ -845,21 +950,35 @@ function mixWrapper() {
             for (i = 1; i <= 15; i++) {
                 // A cada 5buttons, cria uma nova linha
                 if (i % 5 === 0) {
-                    // console.log(leggeraJSONGrab.iconsFromJSON);
                     appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[control - 1][i - 1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
+
+
                     //regras de contraste no beat
-                    if (control !== 3 && (i >= 5 && i <= 10)) { appControlsButtonWrapper.lastChild.lastChild.style.borderColor = 'hsla(0,0%,100%,.12)' }
-                    if (control !== 3 && (i === 7 || i === 10)) { appControlsButtonWrapper.lastChild.lastChild.style.color = 'hsla(0,0%,100%,.12)' }
-                    if (i === 9 || i === 10) { appControlsButtonWrapper.lastChild.lastChild.style.background = 'hsla(0,0%,100%,.12)' }
+                    if (Number(darktheme) !== 0) {
+                        if (control !== 3 && (i >= 5 && i <= 10)) { appControlsButtonWrapper.lastChild.lastChild.style.borderColor = 'hsla(0,0%,100%,.12)' }
+                        if (control !== 3 && (i === 7 || i === 10)) { appControlsButtonWrapper.lastChild.lastChild.style.color = 'hsla(0,0%,100%,.12)' }
+                        if (i === 9 || i === 10) { appControlsButtonWrapper.lastChild.lastChild.style.background = 'hsla(0,0%,100%,.12)' }
+                    } else {
+                        if (control == 3 && (i >= 5 && i <= 10)) { appControlsButtonWrapper.lastChild.lastChild.style.borderColor = 'hsla(0,0%,0%,.12)' }
+                        if (control == 3 && (i === 7 || i === 10)) { appControlsButtonWrapper.lastChild.lastChild.style.color = 'hsla(0,0%,0%,.26)' }
+                    }
+
+
                     appControlsButtonWrapper = appControlsButton.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row phc-buttons'));
                 } else {
                     appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[control - 1][i - 1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
-                    //regras de contraste no beat
-                    if (control !== 3 && (i >= 5 && i <= 10)) { appControlsButtonWrapper.lastChild.lastChild.style.borderColor = 'hsla(0,0%,100%,.12)' }
-                    if (control !== 3 && (i === 7 || i === 10)) { appControlsButtonWrapper.lastChild.lastChild.style.color = 'hsla(0,0%,100%,.12)' }
-                    if (i === 9 || i === 10) { appControlsButtonWrapper.lastChild.lastChild.style.background = 'hsla(0,0%,100%,.12)' }
+
+                    if (Number(darktheme) !== 0) {
+                        //regras de contraste no beat
+                        if (control !== 3 && (i >= 5 && i <= 10)) { appControlsButtonWrapper.lastChild.lastChild.style.borderColor = 'hsla(0,0%,100%,.12)' }
+                        if (control !== 3 && (i === 7 || i === 10)) { appControlsButtonWrapper.lastChild.lastChild.style.color = 'hsla(0,0%,100%,.12)' }
+                        if (i === 9 || i === 10) { appControlsButtonWrapper.lastChild.lastChild.style.background = 'hsla(0,0%,100%,.12)' }
+                    } else {
+                        if (control == 3 && (i >= 5 && i <= 10)) { appControlsButtonWrapper.lastChild.lastChild.style.borderColor = 'hsla(0,0%,0%,.12)' }
+                        if (control == 3 && (i === 7 || i === 10)) { appControlsButtonWrapper.lastChild.lastChild.style.color = 'hsla(0,0%,0%,.26)' }
+                    }
                 }
 
             }
@@ -1229,7 +1348,6 @@ function mixWrapper() {
                     contentType: false,
                     processData: false,
                     success: function (response) {
-                        console.log(response)
                         if (response != 0) {
                             let uploadedImagem = `<span style="display:flex;justify-content:center;align-self:center;"><img style="max-width:100%;height:auto;"\nsrc="${response}"></span>`
                             if (document.querySelector('#imagem-centrada').checked === false) {
@@ -1626,6 +1744,8 @@ function mixWrapper() {
         // Mostra o save button
         const saveButton = e.target.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling
         saveButton.classList.remove('no-display');
+        const cancelButton = saveButton.nextElementSibling
+        cancelButton.classList.remove('no-display');
     }
 
     // Função para atualizar o prewview dos colapsáveis (H2)
@@ -1797,6 +1917,8 @@ function mixWrapper() {
         newCollapFinal = topicoAntesColapsaveis() + newCollapFinal;
         leggeraVariables.textarea.value = newCollapFinal;
         leggeraVariables.hcPreview.innerHTML = newCollapFinal;
+        leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(newCollapFinal);
+
 
         //obtem a nossa localização vertical ao gravar
         const whereWasI = document.querySelector('#' + e.target.parentElement.id).parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getBoundingClientRect().bottom
@@ -1854,6 +1976,7 @@ function mixWrapper() {
             leggeraVariables.textarea.value = leggeraVariables.textarea.value + "\n" + abrirTodosDiv + "\n" + '<!-- Início do Colapsável #1 -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #1 -->');
             leggeraVariables.textarea.value = leggeraVariables.textarea.value.replaceAll('<div class="collapse', "\n" + "\n" + '<div class="collapse')
             leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+            leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(leggeraVariables.textarea.value);
             appControlsColap();
         } else {
 
@@ -1867,6 +1990,7 @@ function mixWrapper() {
             leggeraVariables.textarea.value = leggeraVariables.textarea.value + "\n" + '<!-- Início do Colapsável #' + (leggeraVariables.colapList.length + 1) + ' -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #' + (leggeraVariables.colapList.length + 1) + ' -->');
             leggeraVariables.textarea.value = leggeraVariables.textarea.value.replaceAll('><div class="collapse', '>' + "\n" + "\n" + '<div class="collapse ')
             leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+            leggeraVariables.hcPreview.innerHTML = leggeraExtraFunctions.previewAdjustments(leggeraVariables.textarea.value);
             appControlsColap();
             window.scrollTo(0, document.body.scrollHeight);
         }

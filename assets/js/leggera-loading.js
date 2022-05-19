@@ -74,7 +74,7 @@ function cookieLogin() {
             dataType: "JSON",
             data: { cookie: bolachinha },
             success: function (response) {
-                if (response.includes('Erro')) {
+                if (response.includes('Erro: Cookie inválida')) {
                     localStorage.removeItem('bolachinha');
                 } else {
                     lightTheme = response[1];
@@ -115,10 +115,18 @@ function leggeraLogin() {
         },
         success: function (response) {
             if (response.includes('Conta inativa')) {
-                leggeraLoginFail('Conta inativa');
-            } else if (response.includes('Erro')) {
-                leggeraLoginFail('Credenciais inválidas');
-            } else {
+                leggeraLoginFail('Erro: Conta inativa');
+            } else if (response.includes('Credenciais')) {
+                leggeraLoginFail('Erro: Credenciais inválidas');
+            } else if (response.length > 3) {
+                loggedinUser = currentUsername.value;
+                lightTheme = response[1];
+                let saveTheme2Cache = JSON.stringify(lightTheme);
+                localStorage.setItem('lightTheme', saveTheme2Cache);
+                localStorage.setItem('session', response[2]);
+                leggeraLoginSucess(response);
+            }
+            else {
                 loggedinUser = currentUsername.value;
                 lightTheme = response[1];
                 let saveTheme2Cache = JSON.stringify(lightTheme);
@@ -159,16 +167,17 @@ function leggeraLoginFail(status) {
     }, 4000);
 }
 function leggeraLoginSucess(rsp) {
+    console.log(rsp)
     lightTheme = rsp[1];
     document.querySelector('#theme-css').setAttribute('href', `assets/css/style${lightTheme}.css`);
     document.querySelector('#my-manuals-css').setAttribute('href', `assets/css/mymanuals${lightTheme}.css`);
     document.querySelector('#hc-preview-css').setAttribute('href', `assets/css/helpcenter-preview${lightTheme}.css`);
-    if (Number(lightTheme)===0 && Number(wantCookie)===1) {wantCookieCheckbox.style.color = 'rgb(81, 63, 255)'}
+    if (Number(lightTheme) === 0 && Number(wantCookie) === 1) { wantCookieCheckbox.style.color = 'rgb(81, 63, 255)' }
     const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);
     const novaBolachinha = JSON.stringify(fornoBolachinha);
 
     if (wantCookie === 1) {
-        $.ajax({    
+        $.ajax({
             type: "POST",
             url: "assets/php/savecookie.php",
             dataType: "text",
@@ -183,52 +192,73 @@ function leggeraLoginSucess(rsp) {
         }
         );
     }
+
     const landingLogos = document.querySelectorAll('#loading-wrapper .animate__animated')
     const landingLogosArray = Array.from(landingLogos);
     // remover o log-in wrapper da secelção
     landingLogosArray.pop();
     // animação fadeOut para o wrapper de login
     document.querySelector('#login-wrapper').classList = ('animate__fadeOutDown animate__animated');
-    // voltar a colocar o gif/título no centro da página, com delay
-    setTimeout(function () {
-        let marginSize;
-        let newMarginSize;
-        const animationToTheRight = setInterval(function () {
-            for (i = 0; i < landingLogosArray.length; i++) {
-                let tempPos = landingLogosArray[i].style.marginLeft.search('%');
-                marginSize = landingLogosArray[i].style.marginLeft.slice(0, tempPos)
-                newMarginSize = Number(marginSize) + 3;
-                landingLogosArray[i].style.marginLeft = `${newMarginSize}%`;
-            }
-            if (Number(newMarginSize) >= '0') {
-                clearInterval(animationToTheRight);
-            }
-        }, 5)
-    }, 800)
-    setTimeout(function () {
-        // const rng = Math.random() * (max - min) + min+1;
-        const welcomeArray = ['Mekieeee', 'Ora Boas', 'Como é que estamos', 'Vai trabalhar', 'Bora bora', 'Manuais? Aguenta', 'Grandes vidas']
-        const rng = Number(Math.floor(Math.random() * 7));
-        const userFullName = rsp[0].split(' ');
-        const welcomeTitle = document.createElement('div');
-        welcomeTitle.innerText = `${welcomeArray[rng]} ${userFullName[0]}`;
-        welcomeTitle.id = 'loading-title';
-        welcomeTitle.classList = 'animate__animated animate__fadeIn animate__delay';
-        welcomeTitle.innerText = String(welcomeTitle.innerText).toLocaleUpperCase();
-        document.querySelector('#loading-title').replaceWith(welcomeTitle);
-    }, 1200)
-    setTimeout(function () {
-        $.ajax({    //create an ajax request to display.php
-            type: "GET",
-            url: "assets/php/app.php",
-            dataType: "text",
-            success: function (rsp) {
-                document.querySelector('body').innerHTML = rsp;
-            }
-        })
-    }, 3200)
-    setTimeout(function () {
-        // leggera-app.js
-        mixWrapper();
-    }, 3500)
+
+    if (rsp.length <= 4) {
+        const landingLogos = document.querySelectorAll('#loading-wrapper .animate__animated')
+        const landingLogosArray = Array.from(landingLogos);
+        // remover o log-in wrapper da secelção
+        landingLogosArray.pop();
+        // animação fadeOut para o wrapper de login
+        document.querySelector('#login-wrapper').classList = ('animate__fadeOutDown animate__animated');
+        // voltar a colocar o gif/título no centro da página, com delay
+        setTimeout(function () {
+            let marginSize;
+            let newMarginSize;
+            const animationToTheRight = setInterval(function () {
+                for (i = 0; i < landingLogosArray.length; i++) {
+                    let tempPos = landingLogosArray[i].style.marginLeft.search('%');
+                    marginSize = landingLogosArray[i].style.marginLeft.slice(0, tempPos)
+                    newMarginSize = Number(marginSize) + 3;
+                    landingLogosArray[i].style.marginLeft = `${newMarginSize}%`;
+                }
+                if (Number(newMarginSize) >= '0') {
+                    clearInterval(animationToTheRight);
+                }
+            }, 5)
+        }, 800)
+
+        setTimeout(function () {
+            // const rng = Math.random() * (max - min) + min+1;
+            const welcomeArray = ['Mekieeee', 'Ora Boas', 'Como é que estamos', 'Vai trabalhar', 'Bora bora', 'Manuais? Aguenta', 'Grandes vidas']
+            const rng = Number(Math.floor(Math.random() * 7));
+            const userFullName = rsp[0].split(' ');
+            const welcomeTitle = document.createElement('div');
+            welcomeTitle.innerText = `${welcomeArray[rng]} ${userFullName[0]}`;
+            welcomeTitle.id = 'loading-title';
+            welcomeTitle.classList = 'animate__animated animate__fadeIn animate__delay';
+            welcomeTitle.innerText = String(welcomeTitle.innerText).toLocaleUpperCase();
+            document.querySelector('#loading-title').replaceWith(welcomeTitle);
+        }, 1200)
+        // a serem chamados depois 
+        setTimeout(function () {
+            $.ajax({    //create an ajax request to display.php
+                type: "GET",
+                url: "assets/php/app.php",
+                dataType: "text",
+                success: function (rsp) {
+                    document.querySelector('body').innerHTML = rsp;
+                }
+            })
+        }, 3200)
+        setTimeout(function () {
+            // leggera-app.js
+            mixWrapper();
+        }, 3500)
+    } else {
+        for (i = 0; i < landingLogosArray.length; i++) {
+            landingLogosArray[i].classList = 'animate__fadeOutDown animate__animated';
+        }
+        setTimeout(function () {
+            document.querySelector('#loading-wrapper').id = 'update-wrapper';
+            document.querySelector('#update-wrapper').style.overflow = 'clip';
+            document.querySelector('#update-wrapper').innerHTML = rsp[4]
+        }, 1200)
+    }
 }

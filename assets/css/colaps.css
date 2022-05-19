@@ -1,7 +1,7 @@
 
 #colapsables-wrapper {
     background-color: #fff;
-    min-height: calc(100vh - 330px);
+    min-height: 100vh;
     background-image: url('../img/colaps-bg.png');
     width: 100%;
 }
@@ -66,12 +66,14 @@
     background: rgb(218, 227, 251);
     background: linear-gradient(180deg, rgba(218, 227, 251, 1) 0%, rgba(176, 184, 209, 1) 100%);
     border-top: 2px solid #333;
+    border-left: 2px solid #333;
 }
 
 .row.par {
     background: rgb(251, 228, 218);
     background: linear-gradient(180deg, rgba(251, 228, 218, 1) 0%, rgba(209, 188, 176, 1) 100%);
     border-top: 2px solid #333;
+    border-left: 2px solid #333;
 }
 
 /* todos os body preview  */
@@ -79,7 +81,7 @@
     background-color: #fff;
     padding: 20px 20px;
     border-left: 2px solid #333;
-    min-height: 420px;
+    min-height: 45vh;
 }
 
 /**** Notepad
@@ -102,7 +104,7 @@
 }
 
 #gerador-colaps-wrapper {
-    min-height: calc(100vh - 330px);
+    min-height: 100vh;
     display: grid;
     justify-content: center;
     align-items: center;

@@ -94,6 +94,18 @@
     justify-content: right;
 }
 
+/*########## Grid 2.0 */
+
+.app-grid {
+    background-image: url(../img/app-bg.png);
+    background-size: 2%;
+    min-height: 100vh;
+}
+
+.app-grid > div {
+    padding:0px;
+}
+
 /*########### Live preview         */
 #helpcenter-preview {
     padding-top: 40px;
@@ -138,7 +150,7 @@
 
 /* Body HelpCenter */
 .text-body-hc {
-    min-height: 80vh;
+    min-height: 81vh;
 }
 
 #main-div {
@@ -161,6 +173,7 @@
     background-color: #fff;
     padding: 0 !important;
     color: #000 !important;
+    min-height: 100vh;
 }
 
 /** Estilos utilizados em tópicos de manual HelpCenter  **/

@@ -94,6 +94,22 @@
     justify-content: right;
 }
 
+/*########## Grid 2.0 */
+
+.app-grid {
+    background-image: url(../img/app-bg-w.png);
+    background-size: 2%;
+    min-height: 100vh;
+}
+
+.app-grid > div {
+    padding:0px;
+}
+
+.menu-nav-top-left {
+    text-align: left;
+    padding-left:20px;
+}
 
 /*########### Live preview         */
 #helpcenter-preview {
@@ -139,7 +155,7 @@
 
 /* Body HelpCenter */
 .text-body-hc {
-    min-height: 80vh;
+    min-height: 81vh;
 }
 
 #main-div {
@@ -162,6 +178,7 @@
     background-color: #111;
     padding: 0 !important;
     color: #fff !important;
+    min-height: 100vh;
 }
 
 /** Estilos utilizados em tópicos de manual HelpCenter  **/

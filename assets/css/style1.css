@@ -4,6 +4,7 @@
     --primary-title-color: gold;
     --secondary-title-color: rgb(81, 63, 255);
     --background-color: #000;
+    --inverted-background-color: #fff;
     --text-color-dark: #000;
     --text-color-light: #fff;
     --alert-color: red;
@@ -206,9 +207,6 @@ body {
 /* Cabeçalho */
 .header {
     min-height: 330px;
-    background: var(--background-color);
-    background-image: url('../img/app-bg.png');
-    background-size: 2%;
 }
 
 /* primeiro div, para dar espaçamento do topo */
@@ -219,7 +217,7 @@ body {
 /* estilo das textareas do cabeçalho do editor (principal + hilite.me)*/
 .header textarea {
     width: 100%;
-    min-height: 200px;
+    min-height: 450px;
     border-radius: 10px;
     padding: 5px 10px;
     background-color: transparent;
@@ -286,7 +284,7 @@ body {
     font-size: 35px;
     color: var(--text-color-light);
     text-align: center;
-    padding-bottom: 20px;
+    padding: 0px 0px 20px 0px !important;
     cursor: pointer;
     text-shadow: 1px 1px var(--background-color);
 }
@@ -442,6 +440,11 @@ body {
 /*########### Listas & Tabelas ###########*/
 
 
+.lists-tables-wrapper{
+    padding-top:15px;
+}
+
+
 #preview-list-row {
     color: var(--text-color-light);
     min-height: 80px;
@@ -462,7 +465,7 @@ body {
 
 #tipo-lista-span {
     display: block;
-    text-align: left;
+    text-align: center;
     color: var(--text-color-light);
     padding-left: 2px;
     font-size: 14.5px;
@@ -517,11 +520,15 @@ body {
 }
 
 #listas-wrapper>div:nth-child(4)>div:nth-child(2) {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
 }
 
 .novo-separador {
     text-align: center;
+    padding-top:25px;
 }
 
 .novo-separador>span {
@@ -551,7 +558,7 @@ body {
 }
 
 .nova-imagem {
-    padding-top: 10px;
+    padding-top: 30px;
     color: var(--text-color-light);
 }
 
@@ -574,9 +581,10 @@ body {
 
 /*########## Títulos & Ligações ##########*/
 
-.nova-ligacao-btn-col {
-    padding-top: 20px;
+.titles-links-wrapper{
+    padding-top:15px;
 }
+
 
 #preview-heading-row {
     color: var(--text-color-light);
@@ -638,8 +646,12 @@ body {
 }
 
 #hilite-radio-row {
-    padding: 10px 0px;
+    padding-top: 10px;
     color: var(--text-color-light);
+}
+
+.line-numbers {
+    padding: 10px;
 }
 
 /* .btn-light {

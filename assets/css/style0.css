@@ -4,6 +4,7 @@
     --primary-title-color: rgb(81, 63, 255);
     --secondary-title-color: gold;
     --background-color: #fff;
+    --inverted-background-color: #000;
     --text-color-light: #fff;
     --text-color-dark: #000;
     --alert-color: red;
@@ -195,6 +196,11 @@ body {
     cursor: pointer;
 }
 
+
+#update-wrapper {
+    height: 100vh;
+    background-color: var(--background-color);
+}
 /*###########     Editor     ###########*/
 
 .sticky-top {
@@ -207,9 +213,6 @@ body {
 /* Cabeçalho */
 .header {
     min-height: 330px;
-    background: var(--background-color);
-    background-image: url('../img/app-bg-w.png');
-    background-size: 2%;
 }
 
 /* primeiro div, para dar espaçamento do topo */
@@ -220,7 +223,7 @@ body {
 /* estilo das textareas do cabeçalho do editor (principal + hilite.me)*/
 .header textarea {
     width: 100%;
-    min-height: 200px;
+    min-height: 450px;
     border-radius: 10px;
     padding: 5px 10px;
     background-color: transparent;
@@ -283,7 +286,7 @@ body {
     font-size: 35px;
     color: var(--text-color-dark);
     text-align: center;
-    padding-bottom: 20px;
+    padding: 0px 0px 20px 0px !important;
     cursor: pointer;
     text-shadow: 1px 1px var(--background-color);
 }
@@ -437,7 +440,9 @@ body {
 
 
 /*########### Listas & Tabelas ###########*/
-
+.lists-tables-wrapper{
+    padding-top:15px;
+}
 
 #preview-list-row {
     color: var(--text-color-dark);
@@ -467,7 +472,7 @@ body {
 
 #num-itens-span {
     display: block;
-    text-align: right;
+    text-align: center;
     color: var(--text-color-dark);
     padding-right: 2px
 }
@@ -514,11 +519,15 @@ body {
 }
 
 #listas-wrapper>div:nth-child(4)>div:nth-child(2) {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
 }
 
 .novo-separador {
     text-align: center;
+    padding-top:25px;
 }
 
 .novo-separador>span {
@@ -548,7 +557,7 @@ body {
 }
 
 .nova-imagem {
-    padding-top: 10px;
+    padding-top: 30px;
     color: var(--text-color-dark);
 }
 
@@ -571,8 +580,8 @@ body {
 
 /*########## Títulos & Ligações ##########*/
 
-.nova-ligacao-btn-col {
-    padding-top: 20px;
+.titles-links-wrapper{
+    padding-top:15px;
 }
 
 #preview-heading-row {
@@ -635,8 +644,12 @@ body {
 }
 
 #hilite-radio-row {
-    padding: 10px 0px;
+    padding-top: 10px;
     color: var(--text-color-dark);
+}
+
+.line-numbers {
+    padding: 10px;
 }
 
 .btn-light {

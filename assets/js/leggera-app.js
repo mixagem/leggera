@@ -243,8 +243,8 @@ function mixWrapper() {
                 novoCursorPos = cursorPos;
 
                 // if (inputText[cursorPos] === '>') {
-                inputTextString1 = inputText.slice(0, cursorPos + 2)
-                inputTextString2 = inputText.slice(cursorPos + 2, inputText.length)
+                inputTextString1 = inputText.slice(0, cursorPos)
+                inputTextString2 = inputText.slice(cursorPos, inputText.length)
                 // old rotina de cursor, causava muito lag
                 // } else {
                 //     (function rotinaCursor() {
@@ -516,31 +516,70 @@ function mixWrapper() {
         buttonsFromJSON: [],
         numeroTextboxes: '',
         numeroIcons: '',
+        numeroButtons: '',
 
-        // Syntax para obter os dados JSON
-        grabJSONData: function (url, array) {
-            fetch(url)
-                .then(function (response) { return response.json() })
-                .then(function (data) { appendData(data) })
-                .catch(function (err) { console.log('Rebentou. É lidar compadre.') })
-            function appendData(data) {
-                for (let i = 0; i < data.length; i++) {
-                    array[i] = data[i].code;
-                }
-                // serve para atualizar a datalength de acordo com a função que chamou este metodo
-                if (array === leggeraJSONGrab.textboxesFromJSON) { leggeraJSONGrab.numeroTextboxes = data.length }
-                if (array === leggeraJSONGrab.iconsFromJSON) { leggeraJSONGrab.numeroIcons = data.length }
-            }
-        },
+        
 
         // Executa todas
         grabThemAll: function () {
-            (this).grabJSONData('assets/js/buttons-horizon.json', (this).horizonButtonsFromJSON);
-            (this).grabJSONData('assets/js/buttons-forest.json', (this).forestButtonsFromJSON);
-            (this).grabJSONData('assets/js/buttons-dark.json', (this).darkButtonsFromJSON);
-            (this).grabJSONData('assets/js/buttons-light.json', (this).lightButtonsFromJSON);
-            (this).grabJSONData('assets/js/textboxes.json', (this).textboxesFromJSON);
-            (this).grabJSONData('assets/js/icons.json', (this).iconsFromJSON);
+           
+
+            $.ajax({    //create an ajax request to display.php
+                type: "POST",
+                url: "assets/php/assetsgo.php",
+                dataType: "JSON",
+                data: {
+                    action: 'icons' 
+                },
+                success: function (rsp) {
+                    leggeraJSONGrab.numeroIcons = rsp.length
+                    for (i = 0; i < rsp.length; i++) {
+                        leggeraJSONGrab.iconsFromJSON[i] = rsp[i];
+                    }
+                }
+            })
+
+            $.ajax({    //create an ajax request to display.php
+                type: "POST",
+                url: "assets/php/assetsgo.php",
+                dataType: "JSON",
+                data: {
+                    action: 'textboxes' 
+                },
+                success: function (rsp) {
+                    leggeraJSONGrab.numeroTextboxes = rsp.length
+                    for (i = 0; i < rsp.length; i++) {
+                        leggeraJSONGrab.textboxesFromJSON[i] = rsp[i];
+                    }
+                }
+            })
+
+
+            $.ajax({    //create an ajax request to display.php
+                type: "POST",
+                url: "assets/php/assetsgo.php",
+                dataType: "JSON",
+                data: {
+                    action: 'buttons' 
+                },
+                success: function (rsp) {
+                    // leggeraJSONGrab.numeroButtons = rsp[0].length;
+                    // for (i = 0; i < rsp.length; i++) {
+                    //     leggeraJSONGrab.iconsFromJSON[i] = rsp[0];
+                    //     leggeraJSONGrab.iconsFromJSON[i] = rsp[1];
+                    //     leggeraJSONGrab.iconsFromJSON[i] = rsp[2];
+                    //     leggeraJSONGrab.iconsFromJSON[i] = rsp[3];
+                    // }
+                    leggeraJSONGrab.numeroButtons = rsp[0].length;
+                    leggeraJSONGrab.buttonsFromJSON = rsp;
+
+                }
+            })
+
+           
+
+
+
         }
     }
 
@@ -739,37 +778,34 @@ function mixWrapper() {
 
         // Função para mostrar o appControls de botoes e etiquetas
         displayControls: function (e, control = 1) {
-            switch (control) {
-                case 1: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.horizonButtonsFromJSON;
-                    leggeraVariables.currentTheme = 'horizon' //default quando acessamos ao menu 
-                    break
-                case 2: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.forestButtonsFromJSON;
-                    break
-                case 3: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.darkButtonsFromJSON;
-                    break
-                case 4: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.lightButtonsFromJSON;
-            }
+            if (control === 1) {leggeraVariables.currentTheme = 'horizon' } // hotfix para quando escolhemos um outro tema, e voltamos a aceder ao menu (é precisao alterar para o tema principal)
+            // switch (control) {
+            //     case 1: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.horizonButtonsFromJSON;
+            //         
+            //         break
+            //     case 2: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.forestButtonsFromJSON;
+            //         break
+            //     case 3: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.darkButtonsFromJSON;
+            //         break
+            //     case 4: leggeraJSONGrab.buttonsFromJSON = leggeraJSONGrab.lightButtonsFromJSON;
+            // }
             // Limpa o appControls + inicia paginador
             let pag = leggeraExtraFunctions.appControlsChange();
             // Anexar ao appControls o wrapper principal
             let appControlsButton = leggeraVariables.appControls.appendChild(leggeraExtraFunctions.elementGenerator('div', '', `row page-${pag}`));
             // Anexar ao wrapper principal uma linha de 4 buttons
             let appControlsButtonWrapper = appControlsButton.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row phc-buttons'));
-            // Tive de  maertelar o número de ciclos para a row das chips ter colunas mais curtas que o resto dos botões XD
-            for (i = 1; i <= 10; i++) {
+            for (i = 1; i <= 15; i++) {
                 // A cada 5buttons, cria uma nova linha
                 if (i % 5 === 0) {
-                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[i - 1]));
+                    // console.log(leggeraJSONGrab.iconsFromJSON);
+                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[control-1][i-1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
                     appControlsButtonWrapper = appControlsButton.appendChild(leggeraExtraFunctions.elementGenerator('div', '', 'row phc-buttons'));
                 } else {
-                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[i - 1]));
+                    appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[control-1][i-1]));
                     appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton)
                 }
-            }
-            for (i = 11; i <= 15; i++) {
-                appControlsButtonWrapper.appendChild(leggeraExtraFunctions.elementGenerator('div', `botao-${leggeraVariables.currentTheme}-${i}`, 'botao col-md-2', leggeraJSONGrab.buttonsFromJSON[i - 1]));
-                appControlsButtonWrapper.lastChild.addEventListener('click', leggeraButtons.writeButton);
             }
             const themePickerRow = leggeraVariables.appControls.firstChild.appendChild(leggeraExtraFunctions.elementGenerator('div', 'theme-picker', 'row'));
             const themeTable = ['horizon', 'forest', 'dark', 'light']
@@ -791,8 +827,10 @@ function mixWrapper() {
             // Corrige o etarget quando carregamos ao lado do botão/etiqueta
             if (button.classList.length > 0) { button = button.firstChild };
 
+            const themeID = ['horizon','forest','dark','light'];
+            const currentThemeID = themeID.indexOf(leggeraVariables.currentTheme);
             // Vai buscar o número do botão e vai buscar ao array dos botões o código original 
-            button = leggeraJSONGrab.buttonsFromJSON[String(button.parentElement.id).replace(`botao-${leggeraVariables.currentTheme}-`, '') - 1];
+            button = leggeraJSONGrab.buttonsFromJSON[currentThemeID][String(button.parentElement.id).replace(`botao-${leggeraVariables.currentTheme}-`, '') - 1];
             leggeraExtraFunctions.escreveNaTextarea(button);
         }
     }
@@ -1592,8 +1630,8 @@ function mixWrapper() {
         // babyproof para quando colocamos o cursor numa tag, ele se mostrado for da tag (para não partir o prewview)
         novoColapsCursorPos = cursorappControlsPos;
         if (inputText[cursorappControlsPos] === '>') {
-            inputColapTextStrings = inputText.slice(0, cursorappControlsPos + 2)
-            inputColapTextStrings = inputText.slice(cursorappControlsPos + 2, inputText.length)
+            inputColapTextStrings = inputText.slice(0, cursorappControlsPos)
+            inputColapTextStrings = inputText.slice(cursorappControlsPos, inputText.length)
         } else {
             (function rotinaCursor() {
                 switch (inputText[novoColapsCursorPos]) {

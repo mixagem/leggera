@@ -3,7 +3,7 @@
 /* mambosinfinitos, 2022            */
 /************************************/
 window.onload = setTimeout(leggeraLoading);
-document.querySelector('#login-btn').addEventListener('click', leggeraToken);
+document.querySelector('#login-btn').addEventListener('click', leggeraReset);
 document.querySelector('#loading-wrapper').style.backgroundImage = `url(assets/img/loading-bg-1.png)`;
 function leggeraLoading() {
     const loginWrapperFade = setTimeout(function () {
@@ -26,17 +26,17 @@ function leggeraLoading() {
         }, 5)
     }, 1400)
 }
-function leggeraToken() {
+function leggeraReset() {
     $.ajax({    //create an ajax request to display.php
         type: "POST",
-        url: "assets/php/token.php",
+        url: "assets/php/unlock.php",
         dataType: "text",
         data: {
-            username: document.querySelector('#username').value,
-            usermail: document.querySelector('#usermail').value,
+            token: document.querySelector('#token').value,
+            password: document.querySelector('#password').value,
         },
         success: function (response) {
-            if (!response.startsWith('T')) {
+            if (response.startsWith('Err')) {
                 leggeraLoginFail(response);
             } else {
                 leggeraLoginSucess(response);
@@ -90,10 +90,17 @@ function leggeraLoginSucess(rsp) {
     }, 800)
     setTimeout(function () {
         const welcomeTitle = document.createElement('div');
-        welcomeTitle.innerText = `${rsp}`;
+        welcomeTitle.innerText = `Utilizador recuperado`;
         welcomeTitle.id = 'loading-title';
         welcomeTitle.classList = 'animate__animated animate__fadeIn animate__delay';
         welcomeTitle.innerText = String(welcomeTitle.innerText).toLocaleUpperCase();
         document.querySelector('#loading-title').replaceWith(welcomeTitle);
+        sendback2homepage();
     }, 1200)
+}
+
+function sendback2homepage() {
+    const redirectTimer = setTimeout(function () {
+        window.location.replace('/leggera/index.html');
+    }, 3500);
 }

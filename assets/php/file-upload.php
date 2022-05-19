@@ -15,9 +15,9 @@ if (isset($_FILES['file']['name'])) {
         echo "Desculpa, já existe um ficheiro com esse nome.";
         $uploadOk = 0;
     }
-    // verifica o tamanho do ficheiro (5MB max)
-    if ($_FILES["file"]["size"] > 5242880) {
-        echo "Desculpa, o tamanho máximo suportado para imagens é 5MB.";
+    // verifica o tamanho do ficheiro (2MB max)
+    if ($_FILES["file"]["size"] > 2097152) {
+        echo "Desculpa, o tamanho máximo suportado para imagens é 2MB.";
         $uploadOk = 0;
     }
     if ($uploadOk != 0) {

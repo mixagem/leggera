@@ -4,7 +4,6 @@
 /************************************/
 window.onload = setTimeout(leggeraLoading);
 document.querySelector('#login-btn').addEventListener('click', leggeraSignup);
-document.querySelector('#loading-wrapper').style.backgroundImage = `url(assets/img/loading-bg-1.png)`;
 function leggeraLoading() {
     const loginWrapperFade = setTimeout(function () {
 
@@ -45,23 +44,23 @@ function leggeraSignup() {
             },
             success: function (response) {
                 if (response.includes('reservado')) {
-                    leggeraLoginFail('Nome de utilizador reservado');
+                    leggeraLoginFail('Utilizador reservado');
                 } else if (response.toString().includes('Mailer')) {
-                    leggeraLoginFail('Erro ao enviar email para o endereço submetido');
+                    leggeraLoginFail('Erro ao enviar email');
                 } else if (response.toString().includes('Erro')) {
-                    leggeraLoginFail('Erro ao registar utilizador');
+                    leggeraLoginFail('Erro de comunicação');
                 } else {
-                    leggeraLoginSucess('Utilizador registado com sucesso, verifica a tua caixa de correio.');
+                    leggeraLoginSucess('Utilizador registado');
                 }
             },
 
             error: function (response) {
                 if (response.toString().includes('reservado')) {
-                    leggeraLoginFail('Nome de utilizador reservado');
+                    leggeraLoginFail('Utilizador reservado');
                 } else if (response.toString().includes('Mailer')) {
-                    leggeraLoginFail('Erro ao enviar email para o endereço submetido');
+                    leggeraLoginFail('Erro ao enviar email');
                 } else {
-                    leggeraLoginFail('Erro ao registar utilizador');
+                    leggeraLoginFail('Erro de comunicação');
                 }
             }
         });

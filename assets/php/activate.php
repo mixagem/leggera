@@ -19,21 +19,21 @@ if (mysqli_num_rows($result) == 1) {
         <meta http-equiv='X-UA-Compatible' content='IE=edge'>
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <title>.:&nbsp;HelpCenter+&nbsp;Superleggera&nbsp;edition&nbsp;:.&nbsp;</title>
-        <link id='theme-css' rel='stylesheet' type='text/css' href='/v17/assets/css/style1.css'>
-        <link rel='stylesheet' type='text/css' href='/v17/assets/css/bootstrap.min.css'>
-        <link rel='stylesheet' type='text/css' href='/v17/assets/css/font-awesome.min.css'>
+        <link id='theme-css' rel='stylesheet' type='text/css' href='/leggera/assets/css/style1.css'>
+        <link rel='stylesheet' type='text/css' href='/leggera/assets/css/bootstrap.min.css'>
+        <link rel='stylesheet' type='text/css' href='/leggera/assets/css/font-awesome.min.css'>
         <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
         <link rel='stylesheet' type='text/css'
             href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css' />
         <link rel='stylesheet' type='text/css' href='https://cdn.lineicons.com/3.0/lineicons.css'>
     
-        <link rel='shortcut icon' href='/v17/favicon.ico' type='image/x-icon'>
-        <link rel='icon' href='/v17/favicon.ico' type='image/x-icon'>
+        <link rel='shortcut icon' href='/leggera/favicon.ico' type='image/x-icon'>
+        <link rel='icon' href='/leggera/favicon.ico' type='image/x-icon'>
     
     </head>
     
     <body>
-        <div id='loading-wrapper' style='margin-top:-50px;background-image: url(/v17/assets/img/loading-bg-1.png);'>
+        <div id='loading-wrapper' style='margin-top:-5vh;height:105vh;background-image: url(/leggera/assets/img/loading-bg-1.png);'>
             <span id='loading-gif' class='animate__animated animate__fadeIn'></span>
             <span id='loading-gif-red' class='animate__animated animate__fadeIn'></span>
             <div style='text-transform: uppercase;' id='loading-title' class='animate__animated animate__fadeIn animate__delay-1s'>REGISTO CONCLUÍDO COM
@@ -41,11 +41,11 @@ if (mysqli_num_rows($result) == 1) {
         </div>
     </body>
     
-    <script src='/v17/assets/js/jquery.min.js' type='text/javascript'></script>
-    <script src='/v17/assets/js/bootstrap.min.js' type='text/javascript'></script>
+    <script src='/leggera/assets/js/jquery.min.js' type='text/javascript'></script>
+    <script src='/leggera/assets/js/bootstrap.min.js' type='text/javascript'></script>
     <script>(function redirect() {
             const redirectTimer = setTimeout(function () {
-                window.location.replace('/v17/index.html');
+                window.location.replace('/leggera/index.html');
             }, 5000);
         })();</script>";
     } else {

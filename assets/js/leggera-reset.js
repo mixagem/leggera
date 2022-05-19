@@ -3,7 +3,7 @@
 /* mambosinfinitos, 2022            */
 /************************************/
 window.onload = setTimeout(leggeraLoading);
-document.querySelector('#login-btn').addEventListener('click', leggeraReset);
+document.querySelector('#login-btn').addEventListener('click', leggeraToken);
 document.querySelector('#loading-wrapper').style.backgroundImage = `url(assets/img/loading-bg-1.png)`;
 function leggeraLoading() {
     const loginWrapperFade = setTimeout(function () {
@@ -26,17 +26,17 @@ function leggeraLoading() {
         }, 5)
     }, 1400)
 }
-function leggeraReset() {
+function leggeraToken() {
     $.ajax({    //create an ajax request to display.php
         type: "POST",
         url: "assets/php/reset.php",
         dataType: "text",
         data: {
-            token: document.querySelector('#token').value,
-            password: document.querySelector('#password').value,
+            username: document.querySelector('#username').value,
+            usermail: document.querySelector('#usermail').value,
         },
         success: function (response) {
-            if (response.startsWith('Err')) {
+            if (!response.startsWith('T')) {
                 leggeraLoginFail(response);
             } else {
                 leggeraLoginSucess(response);

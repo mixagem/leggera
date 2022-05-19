@@ -35,7 +35,7 @@ switch ($action) {
             $query = "UPDATE manuals SET code ='$code', timestamp='$timestamp' WHERE (author = '$un' AND title = '$manual')";
             $result = mysqli_query($con, $query);
             $apagueimanual = mysqli_affected_rows($con);
-            if ($apagueimanual = 1) {
+            if ($apagueimanual == 1) {
                 echo "Manual atualizado com sucesso.";
             } else {
                 echo "Erro: O manual não foi atualizado.";
@@ -46,7 +46,7 @@ switch ($action) {
         VALUES ('$un', '$manual', '$code', '$timestamp')";
             $result = mysqli_query($con, $query);
             $crieimanual = mysqli_affected_rows($con);
-            if ($crieimanual = 1) {
+            if ($crieimanual == 1) {
                 echo "Manual introduzido com sucesso";
             } else {
                 echo "Erro: O manual não foi introduzido.";

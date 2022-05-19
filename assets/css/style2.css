@@ -39,7 +39,7 @@ body {
     padding: 0;
     font-size: 14px !important;
     font-family: 'Neutrif Pro' !important;
-    background: var(--background-color) !important;
+    background-color: var(--background-color) !important;
     color: var(--text-color-dark) !important;
     overflow-x: clip;
 }
@@ -68,7 +68,6 @@ body {
     display: grid;
     justify-content: center;
     align-content: center;
-    background-color: var(--background-color);
     overflow-y: clip;
 }
 
@@ -128,7 +127,7 @@ body {
 /* labels */
 #login-wrapper span {
     color: var(--text-color-light);
-    font-size: 40px;
+    font-size: 20px;
     padding-top: 5px;
     padding-bottom: 5px;
 }
@@ -196,12 +195,6 @@ body {
 
 /*###########     Editor     ###########*/
 
-.sticky-top {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
 
 /* Cabeçalho */
 .header {

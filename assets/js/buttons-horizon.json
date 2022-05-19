@@ -43,5 +43,8 @@
     },{
         "desc" : "PHC GO Chip Cinza",
         "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#707070;'>Rascunho</div>"
+    },{
+        "desc" : "PHC GO Chip Comentário",
+        "code" : "<div style='display:inline-flex;padding:7px 12px;border-radius:16px;align-items:center;min-height:32px;height:1px;border:none;-webkit-appearance:none;-moz-appearance:none;position:relative;box-sizing:border-box;font-size:14px;font-weight:500;white-space:nowrap;letter-spacing:normal;color:#fff;background-color:#1a237e;'>@FTeixeira</div>"
     }
 ]

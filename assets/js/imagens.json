@@ -1,11 +1,52 @@
 [
     {
-        "desc": "Resumo da imagem 1",
-        "code": "<img src='/assets/img/1.png'>"
+        "desc": "Menu",
+        "code": " <i class='fa fa-bars' aria-hidden='true'></i> "
     },
     {
-        "desc": "Resumo da imagem 2",
-        "code": "<img src='/assets/img/2.png'>"
+        "desc": "Utilizador",
+        "code": " <i class='fa fa-user' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "X",
+        "code": " <i class='fa fa-times' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "Checkbox false",
+        "code": " <i class='fa fa-square-o' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "Checkbox true",
+        "code": " <i class='fa fa-check-square' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "Lupa procura",
+        "code": " <i class='fa fa-search' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "+",
+        "code": " <i class='fa fa-plus' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "Ações de registo",
+        "code": " <i class='fa fa-ellipsis-v' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "Ajuda personalizada",
+        "code": " <i class='fa fa-support' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "Edição",
+        "code": " <i class='fa fa-pencil' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "Favoritos false",
+        "code": " <i class='fa fa-star-o' aria-hidden='true'></i> "
+    },
+    {
+        "desc": "Favoritos true",
+        "code": " <i class='fa fa-star' aria-hidden='true'></i> "
     }
+
 
 ]

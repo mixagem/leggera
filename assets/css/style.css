@@ -24,11 +24,12 @@ body {
     background:#111;
     color: #000;
     line-height:1.42857143;
+    overflow:auto;
 }
 
 .header {
     padding-top:30px;
-    min-height:200px;
+    height: 20vh;
     background:#111;
     position: -webkit-sticky;
     position: sticky;
@@ -41,8 +42,8 @@ textarea {
     height:100px;
 }
 
-.header > .container-fluid > .row > div:first-child {
-    padding-left:30px;
+.display-preview {
+    height:80vh;
 }
 
 
@@ -227,10 +228,32 @@ textarea {
 
 #modal {
     background-color:rgba(0, 0, 0, 0.685);
-    height:calc(100vh - 200px);
+    height:80vh;
     width:100vw;
 }
 
 .no-display {
     display:none!important;
+}
+
+.mini-item {
+    font-size:40px;
+    color:#fff;
+    text-align: center;
+    padding: 20px 5px;
+}
+
+.go-themes {
+    padding-top:20px;
+}
+
+.go-themes div {
+    color:blue!important;
+}
+
+.color-pick,
+.color-pick div:last-child {
+    display: flex;
+    align-items: center;
+    color:#fff;
 }

@@ -1,6 +1,5 @@
 function mixWrapper() {
 
-
     let cursorPosInfo = [];
     const addTextBoxBtn = document.querySelector('#textbox-btn');
     const addIconBtn = document.querySelector('#logos-btn');
@@ -8,35 +7,59 @@ function mixWrapper() {
     const hcPreview = document.querySelector('.hc-preview');
     const modaldiv = document.querySelector('#modal');
     const maindiv = document.querySelector('#main-div');
-    const previewBtn = document.querySelector('#preview-btn');
-    const numeroImagens = 16; // trocar pelo numero de objetos no json no futuro.
+
+    const numeroImagens = 16;
     const numeroTextBoxes = 4;
-    const iconsArray = [
-        '<img src="/assets/img/icons/1.png">',
-        '<img src="/assets/img/icons/2.png">',
-        '<img src="/assets/img/icons/3.png">',
-        '<img src="/assets/img/icons/4.png">',
-        '<img src="/assets/img/icons/5.png">',
-        '<img src="/assets/img/icons/6.png">',
-        '<img src="/assets/img/icons/7.png">',
-        '<img src="/assets/img/icons/8.png">',
-        '<img src="/assets/img/icons/9.png">',
-        '<img src="/assets/img/icons/10.png">',
-        '<img src="/assets/img/icons/11.png">',
-        '<img src="/assets/img/icons/12.png">',
-        '<img src="/assets/img/icons/13.png">',
-        '<img src="/assets/img/icons/14.png">',
-        '<img src="/assets/img/icons/15.png">',
-        '<img src="/assets/img/icons/16.png">'
-    ]
+    const iconsFromJSON = [];
+    const textBoxesFromJSON = [];
 
+    function grabJSONIcons() {
 
+        fetch('assets/js/imagens.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                appendData(data);
+            })
+            .catch(function (err) {
+                // console.log('error: ' + err);
+            });
 
+        function appendData(data) {
+            for (let i = 0; i < data.length; i++) {
+                iconsFromJSON[i] = document.querySelector(`.col-md-1` + `.mini-item-${i + 1}`);
+                iconsFromJSON[i].innerHTML = data[i].code;
+            }
+        }
 
-    function text() {
-        let inputText = textarea.value;  // obter o texto
-        let fixedText = inputText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"'); // o texto corrigido
-        maindiv.innerHTML = fixedText; // publicar o texto
+    }
+
+    function grabJSONTextBoxes() {
+
+        fetch('assets/js/textbox.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                appendData(data);
+            })
+            .catch(function (err) {
+                // console.log('error: ' + err);
+            });
+
+        function appendData(data) {
+            for (let i = 0; i < data.length; i++) {
+                textBoxesFromJSON[i] = document.querySelector(`.col-md-3` + `.item-${i + 1}`);
+                textBoxesFromJSON[i].innerHTML = data[i].code;
+            }
+        }
+
+    }
+
+    function iconTopicRelacionado(fixedText) {
+        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"'); // o texto corrigido
+        maindiv.innerHTML = fixedText2; // publicar o texto
     }
 
     function getCursorPos(e) {
@@ -51,9 +74,9 @@ function mixWrapper() {
         let inputTextString1 = inputText.slice(0, cursorPos);
         let inputTextString2 = inputText.slice(cursorPos);
         let fixedText = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
-        maindiv.innerHTML = fixedText;
         cursorPosInfo[1] = inputTextString1;
         cursorPosInfo[2] = inputTextString2;
+        iconTopicRelacionado(fixedText);
     }
 
     function selectIcon(eTarget) {
@@ -62,9 +85,7 @@ function mixWrapper() {
         textarea.value = fixedText;
     }
 
-    previewBtn.addEventListener('click', text);
     textarea.addEventListener('click', updateCursorPos);
-
 
     function newRow(pag) {
         const newRow = document.createElement('div');
@@ -72,7 +93,6 @@ function mixWrapper() {
         newRow.classList.add(`page-${pag}`);
         return newRow
     }
-
 
     function newHiddenRow(pag) {
         const newHiddenRow = document.createElement('div');
@@ -86,7 +106,16 @@ function mixWrapper() {
         const newItem = document.createElement('div');
         newItem.classList.add('col-md-3');
         newItem.classList.add(`item-${i}`);
-        newItem.innerHTML = iconsArray[(i - 1)];
+        newItem.innerHTML = `${i}`;
+        return newItem
+    }
+
+    function newMiniItem(i) {
+        const newItem = document.createElement('div');
+        newItem.classList.add('col-md-1');
+        newItem.classList.add(`mini-item-${i}`);
+        newItem.classList.add(`mini-item`);
+        newItem.innerHTML = `${i}`;
         return newItem
     }
 
@@ -110,22 +139,22 @@ function mixWrapper() {
         let pag = 1;
         modaldiv.appendChild(newRow(pag));
         for (i = 1; i <= numeroImagens; i++) {
-            if ((i % 16) === 0) {
+            if ((i % 36) === 0) {
                 let modaldivLastrow = modaldiv.lastChild;
-                modaldivLastrow.appendChild(newItem(i));
+                modaldivLastrow.appendChild(newMiniItem(i));
                 pag++;
                 modaldiv.appendChild(newHiddenRow(pag));
             } else {
                 let modaldivLastrow = modaldiv.lastChild;
-                modaldivLastrow.appendChild(newItem(i));
+                modaldivLastrow.appendChild(newMiniItem(i));
             }
-
         }
         modaldiv.appendChild(newPagiRow());
         let pagiRow = document.querySelector('.pagi');
         for (let pagi = 1; pagi <= pag; pagi++) {
             pagiRow.appendChild(newPagiItem(pagi));
         }
+        grabJSONIcons();
     }
 
     function getTextBoxes() {
@@ -133,7 +162,6 @@ function mixWrapper() {
         let pag = 1;
         modaldiv.appendChild(newRow(pag));
         for (i = 1; i <= numeroTextBoxes; i++) {
-
             let modaldivLastrow = modaldiv.lastChild;
             modaldivLastrow.appendChild(newItem(i));
         }
@@ -142,38 +170,62 @@ function mixWrapper() {
         for (let pagi = 1; pagi <= pag; pagi++) {
             pagiRow.appendChild(newPagiItem(pagi));
         }
+        grabJSONTextBoxes();
     }
 
     addIconBtn.addEventListener('click', () => {
         hcPreview.classList.add('no-display');
         modaldiv.classList.remove('no-display');
         getIcons();
-        // Gerador de eventlistener para cada icon
+
         (function () {
             let eventArray = [];
             for (i = 1; i <= numeroImagens; i++) {
-                eventArray[i] = document.querySelector('.col-md-3' + `.item-${i}`);
+                eventArray[i] = document.querySelector('.col-md-1' + `.mini-item-${i}` + '.mini-item');
                 eventArray[i].addEventListener('click', (e) => {
                     hcPreview.classList.remove('no-display');
                     modaldiv.classList.add('no-display');
                     eTarget = e.target;
-                    selectIcon(eTarget);
+                    eTargetLenght = eTarget.classList.length;
+                    eTargetChild = eTarget.children[0];
+                    if (eTargetLenght !== 2) {
+                        selectIcon(eTargetChild);
+                    } else {
+                        selectIcon(eTarget);
+                    }
                 });
             }
         })();
     });
-
 
     addTextBoxBtn.addEventListener('click', () => {
         hcPreview.classList.add('no-display');
         modaldiv.classList.remove('no-display');
         getTextBoxes();
 
+        (function () {
+            let eventArray = [];
+            for (i = 1; i <= numeroTextBoxes; i++) {
+                eventArray[i] = document.querySelector('.col-md-3' + `.item-${i}`);
+                eventArray[i].addEventListener('click', (e) => {
+                    hcPreview.classList.remove('no-display');
+                    modaldiv.classList.add('no-display');
+                    eTarget = e.target;
+                    eTargetLenght = eTarget.classList.length;
+                    eTargetParent = eTarget.parentElement;
+                    eTargetParentLenght = eTargetParent.classList.length;
+                    if (eTargetLenght !== 2) {
+                        selectIcon(eTargetParent);
+                    } else if (eTargetParentLenght !== 2) {
+                        selectIcon(eTargetParent.parentElement);
+                    } else {
+                        selectIcon(eTarget);
+                    }
+
+                });
+            }
+        })();
     });
-
-
-
-
 
 }
 

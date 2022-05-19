@@ -2,6 +2,28 @@
 /*###########    Globais     ###########*/
 /*######################################*/
 
+:root {
+    --primary-title-color: gold;
+    --secondary-title-color: violet;
+    --background-color: #000;
+    --text-color-dark: #000;
+    --text-color-clear: #fff;
+    --alert-color: red;
+    --success-color: rgb(0, 189, 0);
+}
+
+html {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+}
+
 @font-face {
     font-family: 'Neutrif Pro';
     src: local('Neutrif Pro Regular'), local('Neutrif-Pro-Regular'),
@@ -13,11 +35,13 @@
 }
 
 body {
-    font-size: 14.5px !important;
+    margin: 0;
+    padding: 0;
+    /*!important for bootstrap overide*/
+    font-size: 14px !important;
     font-family: 'Neutrif Pro' !important;
-    background: #111;
-    color: #000;
-    line-height: 1.42857143;
+    background: var(--background-color) !important;
+    color: var(--text-color-dark) !important;
     overflow-x: clip;
 }
 
@@ -26,8 +50,7 @@ pre {
 }
 
 a {
-    color: #000000 !important;
-    font-family: 'Neutrif Pro' !important;
+    color: var(--secondary-title-color);
     font-weight: bold;
 }
 
@@ -39,11 +62,12 @@ a:hover {
     display: none !important;
 }
 
-.sticky-top {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    z-index: 1;
+.no-opacity {
+    opacity: 0;
+}
+
+.alert-label {
+    color: var(--alert-color) !important;
 }
 
 /*######################################*/
@@ -52,30 +76,84 @@ a:hover {
 
 #loading-wrapper {
     height: 100vh;
-    background-color: #000;
+    margin-top:-20px;
     display: grid;
     justify-content: center;
     align-content: center;
 }
 
-#loading-title {
+#loading-title,
+#welcome-text {
     padding-top: 10px;
     justify-self: center;
-    color: gold;
     letter-spacing: 5px;
 }
 
-#loading-gif {
+#loading-title {
+    color: var(--primary-title-color);
+}
+
+#welcome-text {
+    color: var(--success-title-color);
+}
+
+.margin-animation-complete{
+  margin-left:-160%;
+}
+
+#loading-gif,
+#loading-gif-red {
     justify-self: center;
-    background-image: url('../img/mi.gif');
     width: 278px;
     height: 142px;
     background-attachment: local;
 }
 
+#loading-gif {
+    background-image: url('../img/mi.gif');
+    position: relative;
+    bottom: -100%;
+    z-index: 2;
+}
+
+#loading-gif-red {
+    background-image: url('../img/mi-red.gif');
+    z-index: 1;
+}
+
 /* velocidade fadein gif + titulo */
 .animate__animated.animate__fadeIn {
+    /*bootstrap overide*/
     --animate-duration: 1.5s !important;
+}
+
+#login-wrapper {
+    margin-top: -68.5%;
+    width: 350px;
+    margin-left: 60%;
+}
+
+#login-wrapper>input,
+#login-wrapper>span,
+#login-wrapper>button {
+    width: 100%;
+}
+
+#login-wrapper>span {
+    color: var(--text-color-clear);
+    font-size: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#login-wrapper>input {
+    margin-bottom: 20px;
+}
+
+#login-btn {
+    /* bootstrap overide */
+    background-color: var(--primary-title-color) !important;
+    margin-top:10px;
 }
 
 /*######################################*/
@@ -83,9 +161,16 @@ a:hover {
 /*######################################*/
 
 
+.sticky-top {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
 /* Cabeçalho */
 .header {
-        min-height: 330px;
+    min-height: 330px;
     background: #1D1D1D;
     background-image: url('../img/header-bg.png');
     background-size: 2%;
@@ -855,5 +940,5 @@ a.manuais:hover {
 }
 
 #novo-hilitecode-btn {
-    color: #000;
+    color: rgb(0, 255, 13);
 }

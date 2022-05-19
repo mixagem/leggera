@@ -28,25 +28,44 @@ function leggeraLoading() {
         }, 5)
     }, 1400)
 }
+let userImage;
 function leggeraSignup() {
-    $.ajax({    //create an ajax request to display.php
-        type: "POST",
-        url: "assets/php/signup.php",
-        dataType: "text",
-        data: {
-            username: document.querySelector('#username').value,
-            password: document.querySelector('#password').value,
-            nome: document.querySelector('#nome').value,
-            email: document.querySelector('#email').value
-        },
-        success: function (response) {
-            if (response.startsWith('Erro')) {
-                leggeraLoginFail(response);
-            } else {
-                leggeraLoginSucess(response);
+    imgUpload();
+    const delayForImage = setTimeout(function () {
+        $.ajax({    //create an ajax request to display.php
+            type: "POST",
+            url: "assets/php/signup.php",
+            dataType: "text",
+            data: {
+                username: document.querySelector('#username').value,
+                password: document.querySelector('#password').value,
+                nome: document.querySelector('#nome').value,
+                email: document.querySelector('#email').value,
+                image: userImage
+            },
+            success: function (response) {
+                if (response.includes('reservado')) {
+                    leggeraLoginFail('Nome de utilizador reservado');
+                } else if (response.toString().includes('Mailer')) {
+                    leggeraLoginFail('Erro ao enviar email para o endereço submetido');
+                } else if (response.toString().includes('Erro')) {
+                    leggeraLoginFail('Erro ao registar utilizador');
+                } else {
+                    leggeraLoginSucess('Utilizador registado com sucesso, verifica a tua caixa de correio.');
+                }
+            },
+
+            error: function (response) {
+                if (response.toString().includes('reservado')) {
+                    leggeraLoginFail('Nome de utilizador reservado');
+                } else if (response.toString().includes('Mailer')) {
+                    leggeraLoginFail('Erro ao enviar email para o endereço submetido');
+                } else {
+                    leggeraLoginFail('Erro ao registar utilizador');
+                }
             }
-        }
-    });
+        });
+    }, 1000);
 }
 function leggeraLoginFail(rsp) {
     document.querySelector('#loading-gif').classList = 'animate__animated animate__fadeOut margin-animation-complete';
@@ -63,8 +82,9 @@ function leggeraLoginFail(rsp) {
         revertedTitle.id = 'loading-title';
         revertedTitle.innerText = String('Superleggera').toLocaleUpperCase();
         revertedTitle.style.marginLeft = '-150%'
+        document.querySelector('#loading-title').replaceWith(revertedTitle);
         // serve para dar fix no desync entre uma tentativa errada e certa
-        if (document.querySelector('#loading-title').innerText.startsWith('CREDENCIAIS INVÁLIDAS')) {
+        if (document.querySelector('#loading-title').innerText.startsWith(rsp)) {
             document.querySelector('#loading-title').replaceWith(revertedTitle);
         }
     }, 4000);
@@ -100,4 +120,24 @@ function leggeraLoginSucess(rsp) {
         welcomeTitle.innerText = String(welcomeTitle.innerText).toLocaleUpperCase();
         document.querySelector('#loading-title').replaceWith(welcomeTitle);
     }, 1200)
+
+
+}
+
+function imgUpload() {
+    const formData = new FormData();
+    const files = $('#file-upload-input')[0].files;
+    formData.append('file', files[0]);
+    $.ajax({
+        url: 'assets/php/file-upload.php',
+        type: 'post',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response != 0) {
+                return userImage=response;
+            } else { return '' }
+        }
+    });
 }

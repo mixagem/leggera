@@ -284,11 +284,13 @@ function mixWrapper() {
             // Atualiza a textarea
             leggeraVariables.textarea.value = JSON.parse(getTextareaFromJSON);
             // Atualiza o preview
-            leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
+            leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(JSON.parse(getTextareaFromJSON));
             // Atualiza a vista de colapsáveis
             leggeraCollapsables.appControlsColap();
             // Guarda as alterações em cache
             leggeraMethods.autosave2JSON();
+             // Atualiza o preview outra vez (backup para quando o JSON não vem a tempo da primeira passagem)
+             leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
         },
         // método para limpar a área de controlos, e iniciar o contador de páginas da área selecionada
         appControlsChange: function () {

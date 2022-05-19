@@ -113,8 +113,10 @@ function leggeraLogin() {
             password: document.querySelector('#password').value
         },
         success: function (response) {
-            if (response.includes('Erro')) {
-                leggeraLoginFail();
+            if (response.includes('Conta inativa')) {
+                leggeraLoginFail('Conta inativa');
+            } else if (response.includes('Erro')) {
+                leggeraLoginFail('Credenciais inválidas');
             } else {
                 loggedinUser = currentUsername.value;
                 lightTheme = response[1];
@@ -124,16 +126,20 @@ function leggeraLogin() {
             }
         },
         error: function (response) {
-            leggeraLoginFail();
+            if (response.responseText.includes('Conta inativa')) {
+                leggeraLoginFail('Conta inativa');
+            } else {
+                leggeraLoginFail('Credenciais inválidas');
+            }
         }
     });
 }
-function leggeraLoginFail() {
+function leggeraLoginFail(status) {
     document.querySelector('#loading-gif').classList = 'animate__animated animate__fadeOut margin-animation-complete';
     const newTitle = document.createElement('div');
     newTitle.classList = 'animate__animated animate__fadeIn animate__delay-1s alert-label';
     newTitle.id = 'loading-title';
-    newTitle.innerText = String('Credenciais inválidas').toLocaleUpperCase();
+    newTitle.innerText = String(status).toLocaleUpperCase();
     newTitle.style.marginLeft = '-150%'
     document.querySelector('#loading-title').replaceWith(newTitle);
     const revertGifTimer = setTimeout(function () {
@@ -143,8 +149,9 @@ function leggeraLoginFail() {
         revertedTitle.id = 'loading-title';
         revertedTitle.innerText = String('Superleggera').toLocaleUpperCase();
         revertedTitle.style.marginLeft = '-150%'
+        document.querySelector('#loading-title').replaceWith(revertedTitle);
         // serve para dar fix no desync entre uma tentativa errada e certa
-        if (document.querySelector('#loading-title').innerText.startsWith('CREDENCIAIS INVÁLIDAS')) {
+        if (document.querySelector('#loading-title').innerText.startsWith(status)) {
             document.querySelector('#loading-title').replaceWith(revertedTitle);
         }
     }, 4000);
@@ -195,8 +202,15 @@ function leggeraLoginSucess(rsp) {
         }, 5)
     }, 800)
     setTimeout(function () {
+
+
+        // const rng = Math.random() * (max - min) + min+1;
+        const welcomeArray = ['Mekieeee', 'Ora Boas', 'Como é que estamos', 'Vai trabalhar', 'Bora bora', 'Manuais? Aguenta', 'Grandes vidas']
+        const rng = Number(Math.floor(Math.random() * 8));
+        console.log(rng)
+        const userFullName = rsp[0].split(' ');
         const welcomeTitle = document.createElement('div');
-        welcomeTitle.innerText = `Mekiee ${rsp[0]}`;
+        welcomeTitle.innerText = `${welcomeArray[rng]} ${userFullName[0]}`;
         welcomeTitle.id = 'loading-title';
         welcomeTitle.classList = 'animate__animated animate__fadeIn animate__delay';
         welcomeTitle.innerText = String(welcomeTitle.innerText).toLocaleUpperCase();

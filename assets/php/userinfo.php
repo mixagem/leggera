@@ -19,6 +19,7 @@ switch ($action) {
                 $totallogins = $row['totallogins'];
                 $img = $row['image'];
                 $alertas = $row['wantalerts'];
+                $alias = $row['alias'];
             }
         }
 
@@ -39,6 +40,7 @@ switch ($action) {
             <div id='user-info-wrapper' class='col-md-8'>
                 <div id='user-info'>
                     <div style='width:100%;font-size:35px;font-weight: bold;'>" . $nome . "</div>
+                    <div style='width:100%;font-size:15px;font-weight: bold;'>" . $alias . "</div>
                     <div style='width:100%;font-size:20px'><span class='material-icons' style='vertical-align:sub;font-size:22px'>contact_mail</span>&nbsp;&nbsp;&nbsp;" . $email . "</div>
                     <div style='width:100%;padding-top:5px;'><span class='material-icons' style='vertical-align:top;font-size:22px'>cookie</span>&nbsp;&nbsp;&nbsp;&nbsp;" . $cookie . "</div>
                 </div>

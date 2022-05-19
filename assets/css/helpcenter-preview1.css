@@ -302,11 +302,15 @@ a.manuais:hover {
 
 #user-info>div:first-child,
 #user-info>div>span {
-    color: rgb(0, 40, 255);
+    color: var(--secondary-title-color);
+}
+
+#user-info>div:nth-child(2){
+    color: #EB8475;
 }
 
 #user-stats>div>div {
-    color: rgb(0, 40, 255);
+    color: var(--secondary-title-color);
 }
 
 #user-pic {

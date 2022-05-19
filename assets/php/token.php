@@ -3,7 +3,7 @@
 $usermail = trim($_POST['usermail']);
 $un = trim($_POST['username']);
 $con = mysqli_connect('localhost', 'root', '', 'superleggera');
-$svurl = 'http://localhost/leggera';
+$svurl = 'http://phc202107001.phc.local:8080/leggera';
 
 // Import PHPMailer classes into the global namespace 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -21,13 +21,13 @@ $mail->Password = ')QjMf^wH2bqI';   // SMTP password
 $mail->SMTPSecure = 'ssl';            // Enable TLS encryption, `ssl` also accepted 
 $mail->Port = 465;                    // TCP port to connect to 
 // Sender info 
-$mail->setFrom('geral@mambosinfinitos.pt', 'Mixagem');
+$mail->setFrom('geral@mambosinfinitos.pt', 'SUPERLEGGERA Admin');
 // Add a recipient 
 $mail->addAddress($usermail);
 // Set email format to HTML 
 $mail->isHTML(true);
 // Mail subject 
-$mail->Subject = 'SUPPERLEGGERA - Recuperação da conta "' . $un . '"';
+$mail->Subject = 'SUPERLEGGERA - Recuperação da conta "' . $un . '"';
 
 // token generator
 function generateRandomString($length = 10)
@@ -54,13 +54,16 @@ if (mysqli_num_rows($result) == 1) {
             " . $nome . ",</h1>
         <p style='font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;padding-left:20px'>Foi introduzido um
             pedido de recuperação de password para a conta <span style='font-weight: bold;color:rgb(56,92,255)'>" . $un . "</span>.<br>
-            Para alterar a tua password, visita a <a href='" . $svurl . "' style='font-weight: bold;color:rgb(56,92,255)'>página de recuperação</a>, e
+            Para alterar a tua password, visita a <a href='" . $svurl . "/unlock.html' style='font-weight: bold;color:rgb(56,92,255)'>página de recuperação</a>, e
             apresenta o seguinte token:</p>
-        <div style='display:flex;justify-content:center;align-self:center;padding:20px 0px;'>
-            <span style='border:1px solid black;padding:5px 20px;font-size:20px;color:rgb(56,92,255);font-weight:bold;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;border-radius: 5px;'>" . $token . "</span>
+
+
+            <div style='display:flex;justify-content:center;align-self:center;padding:20px 0px;'>
+            <a style='border:1px solid black;padding:5px 20px;font-size:20px;color:rgb(56,92,255);font-weight:bold;font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;border-radius: 5px;'>" . $token . "</a>
         </div>
-        <span style='font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;display:flex;justify-content:center;align-self:center;font-size:10px;'>Caso o pedido não tenha sido introduzido por ti, ignora este e-mail.</span>
+        <span style='font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;display:flex;justify-content:center;align-self:center;text-align:center;font-size:10px;'>Caso o pedido não tenha sido introduzido por ti, ignora este e-mail.<br>&copy;&nbsp;&nbsp;Mambos Infinitos 2022</span>
     </div>";
+
 
         // Envia o email alternativo, sem HTML 
         $mail->AltBody = "Olá " . $nome . "\nFoi introduzido um pedido de recuperação de password para a conta" . $un . ".\nPara alterar a tua password, visita a página de recuperação (" . $svurl . "), e apresenta o seguinte token:\n\n" . $token . "\n\nCaso o pedido não tenha sido introduzido por ti, ignora este e-mail.";
@@ -75,4 +78,4 @@ if (mysqli_num_rows($result) == 1) {
 } else {
     echo 'Erro: Credenciais inválidas.';
 }
-mysqli_close($con2);
+mysqli_close($con);

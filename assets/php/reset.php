@@ -14,7 +14,7 @@ $options = 0;
 $newpw = openssl_encrypt($data, $method, $key, $options, $iv);
 
 // vai buscar as informações do utilizador com este token
-$query = "SELECT * users WHERE unlocktoken='$token'";
+$query = "SELECT * from users WHERE unlocktoken='$token'";
 $result = mysqli_query($con, $query);
 if (mysqli_num_rows($result) == 1) {
     // as informações do utilizador necessárias

@@ -1,3 +1,7 @@
+/*######################################*/
+/*###########    Globais     ###########*/
+/*######################################*/
+
 @font-face {
     font-family: 'Neutrif Pro';
     src: local('Neutrif Pro Regular'), local('Neutrif-Pro-Regular'),
@@ -35,59 +39,6 @@ a:hover {
     display: none !important;
 }
 
-
-/*########### Landing        */
-
-#loading {
-    padding-top: 10px;
-    justify-self: center;
-    color: gold;
-    letter-spacing: 5px;
-}
-
-#loading-span {
-    justify-self: center;
-    background-image: url('../img/mi.gif');
-    width: 278px;
-    height: 142px;
-    background-attachment: local;
-}
-
-.animate__animated.animate__fadeIn {
-    --animate-duration: 1.5s !important;
-}
-
-#landing {
-    height: 100vh;
-    background-color: #000;
-    display: grid;
-    justify-content: center;
-    align-content: center;
-}
-
-
-
-
-
-
-
-/*########### Cabeçalho Editor        */
-
-.header {
-    min-height: 25vh;
-    background: #1D1D1D;
-    background-image: url('../img/header-bg.png');
-    background-size: 2%;
-}
-
-.header>div {
-    padding-top: 10px;
-}
-
-.header .novoalerta {
-    margin-top: 0px;
-}
-
 .sticky-top {
     position: -webkit-sticky;
     position: sticky;
@@ -95,10 +46,60 @@ a:hover {
     z-index: 1;
 }
 
+/*######################################*/
+/*###########    Landing     ###########*/
+/*######################################*/
+
+#loading-wrapper {
+    height: 100vh;
+    background-color: #000;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+#loading-title {
+    padding-top: 10px;
+    justify-self: center;
+    color: gold;
+    letter-spacing: 5px;
+}
+
+#loading-gif {
+    justify-self: center;
+    background-image: url('../img/mi.gif');
+    width: 278px;
+    height: 142px;
+    background-attachment: local;
+}
+
+/* velocidade fadein gif + titulo */
+.animate__animated.animate__fadeIn {
+    --animate-duration: 1.5s !important;
+}
+
+/*######################################*/
+/*###########     Editor     ###########*/
+/*######################################*/
+
+
+/* Cabeçalho */
+.header {
+    min-height: 34vh;
+    background: #1D1D1D;
+    background-image: url('../img/header-bg.png');
+    background-size: 2%;
+}
+
+/* primeiro div, para dar espaçamento do topo */
+.header>div {
+    padding-top: 10px;
+}
+
+/* estilo das textareas do cabeçalho do editor (principal + hilite.me)*/
 .header textarea {
     width: 100%;
     min-height: 175px;
-    /* overflow: auto; */
     background-color: transparent;
     color: #fff;
     border-radius: 10px;
@@ -113,30 +114,34 @@ a:hover {
     background-position: bottom right;
 }
 
-#modal {
+#app-controls-wrapper {
     text-align: center;
+    padding-top:10px;
 }
 
-/*paddings da text area */
+/*paddings para a textarea principal */
 .headControls {
     padding-bottom: 15px;
 }
 
 .headControls2 {
-    padding-top: 15px;
+    padding-top: 20px;
 }
 
 
-/*########### Textboxes        */
+/*######################################*/
+/*###########   Textboxes    ###########*/
+/*######################################*/
 
+/* ajustamento de margem para todas as textboxes */
+.header .novoalerta {
+    margin-top: 0px;
+}
+
+/* serve para dar clip nos tópicos relacionados */
 .header .alerta-relaciona {
     max-height: 114.5px;
     overflow: clip;
-}
-
-/*  Alinhamento Texboxes */
-.helpcenter-textbox {
-    cursor: pointer;
 }
 
 .helpcenter-textbox {
@@ -155,7 +160,9 @@ a:hover {
 }
 
 
-/*########### Icons         */
+/*######################################*/
+/*###########     Icons      ###########*/
+/*######################################*/
 
 .phcgo-icon {
     font-size: 35px;
@@ -173,35 +180,51 @@ a:hover {
     transition-duration: 150ms;
 }
 
+/* sub-wrappers icons do lado esquerdo */
 .icon-sub-row-1 {
     padding-right: 0 !important;
     padding-left: 30px !important;
     padding-bottom: 0px !important;
 }
-
+/* sub-wrappers icons do lado direito*/
 .icon-sub-row-2 {
     padding-left: 0 !important;
     padding-right: 30px !important;
 }
 
 
-/*########### Botões         */
+/*######################################*/
+/*###########    Buttons     ###########*/
+/*######################################*/
 
 
-.botao-label {
+.botao {
     text-align: center;
     padding-top: 25px;
     cursor: pointer !important;
 }
 
-
-.botao-label:hover button,
-.botao-label:hover div {
+.botao:hover button,
+.botao:hover div {
     transition-duration: 250ms;
     box-shadow: 1px 1px #000, 2px 3px rgb(0, 195, 255) !important;
 }
 
-/*########### Listas e Tabelas         */
+#botao5,
+#botao6,
+#botao7,
+#botao8 {
+    border-color: #fff!important;
+}
+
+#botao7 {
+    color: #fff!important;
+}
+
+
+/*########################################*/
+/*########### Listas & Tabelas ###########*/
+/*########################################*/
 
 #preview-list-row {
     color: #fff;
@@ -262,9 +285,10 @@ a:hover {
     width: 30%
 }
 
-
 /*########### Live preview         */
-
+#helpcenter-preview {
+padding-top: 40px;
+}
 .display-preview {
     min-height: 80vh;
 }
@@ -472,13 +496,6 @@ h3.manuais {
     padding: 5px 15px;
 }
 
-.td-cabecalho {
-    background-color: rgb(255, 225, 189) !important;
-    border: solid 1px #000 !important;
-    font-size: 16px !important;
-    font-weight: bold;
-}
-
 a.manuais {
     color: #3934BE !important;
     font-size: 15px !important;
@@ -489,23 +506,16 @@ a.manuais:hover {
     text-decoration: none;
 }
 
-/* default helpcenter, eu acho. tenho de validar */
-/* .phcgo-table>tbody>tr>td {
-    text-align: left;
-    background-color: #fff;
-    padding: 20px 10px;
-    border: solid 1px #000;
-}  */
 
 
 /*########### Colapsáveis         */
 
-#colapsables-modal {
+#colapsables-wrapper {
     background-color: #fff;
 }
 
 /* todos os inputs */
-#colapsables-modal>div>div>div>input {
+#colapsables-wrapper>div>div>div>input {
     width: 100%;
     padding: 5px 10px;
     margin: 5px;
@@ -514,7 +524,7 @@ a.manuais:hover {
 }
 
 /* todas as textareas */
-#colapsables-modal>div>div>div>textarea {
+#colapsables-wrapper>div>div>div>textarea {
     min-height: 200px;
     width: 100%;
     padding: 5px 10px;
@@ -525,7 +535,7 @@ a.manuais:hover {
 }
 
 /* tod os spans*/
-#colapsables-modal>div>div>div>span {
+#colapsables-wrapper>div>div>div>span {
     display: block;
     width: 100%;
     padding: 20px 50px 5px 30px;
@@ -538,12 +548,12 @@ a.manuais:hover {
 }
 
 /* todos os  save buttosn  */
-#colapsables-modal>div>div>div>button {
+#colapsables-wrapper>div>div>div>button {
     margin-left: 2%;
 }
 
 /* todos os h2 preview */
-#colapsables-modal>div>div>.col-md-7>div:first-child {
+#colapsables-wrapper>div>div>.col-md-7>div:first-child {
     background-color: #333;
     margin-bottom: 10px;
     font-size: 20px;
@@ -565,7 +575,7 @@ a.manuais:hover {
 }
 
 /* todos os body preview  */
-#colapsables-modal>div>div>.col-md-7>div:last-child {
+#colapsables-wrapper>div>div>.col-md-7>div:last-child {
     background-color: #fff;
     padding: 20px 20px;
     border-left: 1px solid #333;
@@ -577,7 +587,6 @@ a.manuais:hover {
 #preview-list-row {
     color: #fff;
 }
-
 
 .nova-ligacao-btn-col {
     padding-top: 20px;
@@ -659,6 +668,17 @@ a.manuais:hover {
     padding: 10px 0px;
 }
 
+#cria-tabela-checkbox-wrapper {
+    padding-top:30px;
+    color:#fff;
+}
+
+#cria-tabela-checkbox-wrapper span {
+    padding-left: 5px;
+    padding-right: 20px;
+}
+
+
 #hilite-textarea {
     min-height: 100px !important;
     font-size: 12px;
@@ -672,23 +692,3 @@ a.manuais:hover {
 #novo-hilitecode-btn {
     color: #000;
 }
-/* 
-.cabecalho-table-modern {
-    border-radius: 20px;
-    border: solid 2px #fff;
-    background-color: rgb(63, 168, 246);
-    color: #fff;
-    padding: 4px 20px;
-    font-size: 20px;
-}
-
-.td-table-modern {
-    border-radius: 20px;
-    border: solid 2px #fff;
-    background-color: rgba(242, 242, 242, 1);
-    color: #000;
-    padding: 5px 20px;
-} */
-
-
-

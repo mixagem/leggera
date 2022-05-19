@@ -1,94 +1,743 @@
 /************************************/
-/* helpcenterplus                   */
+/* helpcenter+ supperliggera        */
 /* mambosinfinitos, 2022            */
 /************************************/
 
 
 function mixWrapper() {
 
-    // Variáveis globais
-    const modernTableStyle = '<style>.cabecalho-table-modern{border-radius:20px;border:solid 2px #fff;background-color:#3fa8f6;color:#fff;padding:4px 20px;font-size:20px}.td-table-modern{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}</style>'
+    // ############ APP START ############
 
-    // textarea cabeçalho
+    window.onload = superliggeraStart();
+    function superliggeraStart() {
+
+        // Vai buscar os dados aos JSON
+        grabThemAll();
+
+        // RNG entre 2500 e 3000
+        const rng = Math.floor(Math.random() * (3000 - 2500)) + 2500;
+
+        // Função a ser executada RNG milisegundos depois de ter sido carregada a página
+        const landingTimer = setTimeout(function () {
+
+            // Esconde a loading page
+            document.querySelector('#loading-wrapper').classList.add('no-display')
+
+            // Mostra a aplicação
+            const allSections = [];
+            allSections.push(document.querySelector('.sticky-top'))
+            allSections.push(document.querySelector('.display-preview'))
+            for (i = 0; i < allSections.length; i++) {
+                allSections[i].classList.remove('no-display')
+            }
+        }, rng)
+
+        return landingTimer
+    }
+
+
+    // ############ JSON FETCH ############
+
+    /**
+    * Delaração de arrays para guardar os dados vindos do fetch JSON
+    * Utilizados na construção dos menus
+    */
+    const iconsFromJSON = [];
+    const textboxesFromJSON = [];
+    const buttonsFromJSON = [];
+
+    /**
+     * Declaração variáveis utilizadas para guardar o número de itens em cada JSON
+     * Utilizados na construção dos menus
+     */
+    // a construção dos menus
+    let numeroTextboxes;
+    let numeroIcons;
+    let numeroButtons;
+
+    // Executa todas as funções que vão buscar dados JSON
+    function grabThemAll() {
+        grabJSONButtons();
+        grabJSONTextBoxes();
+        grabJSONIcons();
+    }
+
+    function grabJSONButtons() {
+        fetch('assets/js/buttons.json')
+            .then(function (response) { return response.json() })
+            .then(function (data) { appendData(data) })
+            .catch(function (err) { console.log('Rebentou. É lidar compadre.') })
+
+        function appendData(data) {
+            for (let i = 0; i < data.length; i++) {
+                buttonsFromJSON[i] = data[i].code;
+            }
+            numeroButtons = data.length;
+        }
+    }
+
+    function grabJSONTextBoxes() {
+        fetch('assets/js/textbox.json')
+            .then(function (response) { return response.json() })
+            .then(function (data) { appendData(data) })
+            .catch(function (err) { console.log('Rebentou. É lidar compadre.') })
+
+        function appendData(data) {
+            for (let i = 0; i < data.length; i++) {
+                textboxesFromJSON[i] = data[i].code;
+            }
+            numeroTextboxes = data.length;
+        }
+    }
+
+    function grabJSONIcons() {
+        fetch('assets/js/imagens.json')
+            .then(function (response) { return response.json() })
+            .then(function (data) { appendData(data) })
+            .catch(function (err) { console.log('Rebentou. É lidar compadre.') })
+
+        function appendData(data) {
+            for (let i = 0; i < data.length; i++) {
+                iconsFromJSON[i] = data[i].code;
+            }
+            numeroIcons = data.length;
+        }
+    }
+
+
+    // ############ SELETORES  ############
+
     const textarea = document.querySelector('textarea');
+    const appControls = document.querySelector('#app-controls-wrapper');
+    const hcPreview = document.querySelector('#helpcenter-preview');
 
-    // div modal cabeçalho
-    const modaldiv = document.querySelector('#modal');
 
-    // div principal do helpcenter preview 
-    const maindiv = document.querySelector('#main-div');
-
+    // ############ VARIÁVEIS ############
+    const normalTableStyle = '<style>.phcgo-old-table>tbody>tr>td{text-align:left;background-color:#fff;padding:20px 10px;border:solid 1px #000}.phcgo-old-table>tbody>tr:nth-child(1)>td{background-color:rgb(255, 225, 189)!important;border:solid 1px #000!important;font-size:16px!important;font-weight:700}</style>'
+    const modernTableStyle = '<style>.phcgo-new-table>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:rgb(255, 225, 189);color:#000;padding:4px 20px;font-size:20px}</style>'
+    const modernTableStyleBlue = '<style>.phcgo-new-table-blue>tbody>tr>td{border-radius:20px;border:solid 2px #fff;background-color:#f2f2f2;color:#000;padding:5px 20px}.phcgo-new-table-blue>tbody>tr:nth-child(1)>td{border-radius:20px;border:solid 2px #fff;background-color:#3fa8f6;color:#fff;padding:4px 20px;font-size:20px}</style>'
     /** 
      * arrays a ser utilizados para guardar os slices
      * das textareas, aquando da introdução de elementos
      * ([0] = texto até ao cursor | [1] = texto a partir do cursos)
     */
-    let cursorPosInfo = ['', ''];
-    let modalTextareaPos = ['', ''];
-    let collapsablesArray = [];
+    let stringCursor = [];
+    let stringCursorColap = [];
+
+    /**
+     * Array onde vão ser guardados os colapsáveis existentes (.row .seccao-phcgo)
+     * A ser utilizado para a construção da vista de colapsáveis
+     */
+    let colapList = [];
 
     // variável com o valor da última textarea selecionada
     let activeTextarea = '';
 
-    // variável com o valor da última checkbox (hilite.me) selecionada
-    let codetype = 'vbnet'
-    let tipoTabela = 'normal-table'
+    // variável com o valor da última checkbox (tipo de tabela) selecionada
+    let codeType = 'vbnet'
+    let tableType = 'normal-table'
 
-    // Variáveis globais [preciso de aprender async(?) para guardar nas globais o valor dos length dos json]   
-    const numeroImagens = 70;
-    const numeroTextBoxes = 5;
-    const numeroButoes = 12;
 
-    // Declaração das variáveis a ser utilizadas aquando da leitura dos JSON
-    const iconsFromJSON = [];
-    const textBoxesFromJSON = [];
-    const buttonsFromJSON = [];
+    // ############ FUNÇÕES CONSTRUTORAS ############
+
+    function elementGenerator(ele, id = '', classlist = '', inner = '') {
+        const elementGenerated = document.createElement(`${ele}`);
+        if (id !== '') { elementGenerated.id = `${id}` }
+        if (classlist !== '') { elementGenerated.classList = `${classlist}` }
+        if (inner !== '') { elementGenerated.innerHTML = `${inner}` }
+        return elementGenerated
+    }
+
+
+    // ############ APPCONTROLS TEXTBOXES ############
+
+    // Função para mostar as textboxes no appControls
+    function appControlsTextbox() {
+
+        // Limpa o appControls + inicia paginador
+        let pag = appControlsChange();
+
+        // Anexar ao appControls a primeira página
+        let textboxControls = appControls.appendChild(elementGenerator('div', '', `row page-${pag}`));
+
+        // Anexa as Textboxes à primeira página
+        for (i = 1; i <= numeroTextboxes; i++) {
+            textboxControls.appendChild(elementGenerator('div', `textbox-${i}`, 'col-md-4 helpcenter-textbox', textboxesFromJSON[i - 1]));
+            textboxControls.lastChild.addEventListener('click', writeTextbox)
+        }
+    }
+
+    // Função para escrever as textboxes na textarea
+    function writeTextbox(e) {
+        let textbox = e.target;
+
+        // Corrige a textbox quando se carrega na <img> ou <i>
+        if (textbox.tagName === "IMG"
+            || textbox.tagName === "I") { textbox = textbox.parentElement.parentElement };
+
+        // Corrige a textbox quando se carrega no título da textbox
+        if (textbox.classList.contains('novoalerta-titulo')
+            || textbox.classList.contains('novoalerta-contido')) { textbox = textbox.parentElement };
+
+        // Corrige a textbox quando se carrega fora das textboxes
+        if (textbox.classList.contains('helpcenter-textbox')) { textbox = textbox.firstChild };
+
+        // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
+        textbox = textbox.outerHTML.toString().replace('<div class="novoalerta-titulo">', '<div class="novoalerta-titulo">' + "\n")
+        textbox = textbox.toString().replace('<br>', '<br>' + "\n")
+        textbox = textbox.toString().replace('<ul>', '<ul>' + "\n")
+        textbox = textbox.toString().replace('</li>', '</li>' + "\n")
+
+        escreveNaTextareaGeradores(textbox);
+        // Hotfix para corrigir a text-box dos tópicos relacionados
+
+    }
+
+
+    // ############ APPCONTROLS ICONS ############
+
+    // Função para mostrar os icons no appControls 
+    function appControlsIcons() {
+
+        // Limpa o appControls + inicia paginador
+        let pag = appControlsChange();
+
+        // Declaração de variáveis necessárias para efetuar o loop      
+        let nWrapper = 1;
+        let nSubWrapper = 1;
+
+        // Anexar ao appControls o wrapper de icons principal
+        let appControlsIcons = appControls.appendChild(elementGenerator('div', '', `row page-${pag}`));
+
+        // Anexar o wrapper de icons (row 24 icons) ao wrapper principal
+        let appControlsIconsMainWrapper = appControlsIcons.appendChild(elementGenerator('div', '', `row icon-row-${nWrapper}`));
+
+        // Anexar um sub-wrapper de icons (col 12 icons)
+        let appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(elementGenerator('div', '', `col-md-6 icon-sub-row-${nSubWrapper}`));
+
+        for (i = 1; i <= numeroIcons; i++) {
+
+            // A cada 24 interações, cria um novo row de 24 icons
+            if ((i % 24) === 0) {
+                appControlsIconsSubWrapper.appendChild(elementGenerator('div', `icon-${i}`, 'col-md-1 phcgo-icon', iconsFromJSON[i - 1]));
+                appControlsIconsSubWrapper.lastChild.addEventListener('click', writeIcon);
+                nSubWrapper = 1;
+                nWrapper++;
+                appControlsIconsMainWrapper = appControlsIcons.appendChild(elementGenerator('div', '', `row icon-row-${nWrapper}`));
+                appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(elementGenerator('div', '', `col-md-6 icon-sub-row-${nSubWrapper}`));
+            }
+
+            // A cada 12 interações, cria um novo row de 12 icons
+            else if ((i % 12) === 0) {
+                appControlsIconsSubWrapper.appendChild(elementGenerator('div', `icon-${i}`, 'col-md-1 phcgo-icon', iconsFromJSON[i - 1]));
+                appControlsIconsSubWrapper.lastChild.addEventListener('click', writeIcon);
+                nSubWrapper++;
+                appControlsIconsSubWrapper = appControlsIconsMainWrapper.appendChild(elementGenerator('div', '', `col-md-6 icon-sub-row-${nSubWrapper}`));
+            }
+
+            else {
+                appControlsIconsSubWrapper.appendChild(elementGenerator('div', `icon-${i}`, 'col-md-1 phcgo-icon', iconsFromJSON[i - 1]));
+                appControlsIconsSubWrapper.lastChild.addEventListener('click', writeIcon);
+            }
+        }
+    }
+
+    function writeIcon(e) {
+        let icon = e.target;
+
+        // Corrige o etarget quando não carregamos direitinho no icon
+        if (icon.classList.contains('phcgo-icon')) { icon = icon.firstChild };
+
+        escreveNaTextarea(icon);
+    }
+
+
+    // ############ APPCONTROLS BUTTONS ############
+
+    // Função para mostrar o appControls de botoes e etiquetas
+    function appControlsButtons() {
+
+        // Limpa o appControls + inicia paginador
+        let pag = appControlsChange();
+
+        // Anexar ao appControls o wrapper principal
+        let appControlsButton = appControls.appendChild(elementGenerator('div', '', `row page-${pag}`));
+
+        // Anexar ao wrapper principal uma linha de 4 buttons
+        let appControlsButtonWrapper = appControlsButton.appendChild(elementGenerator('div', '', 'row phc-buttons'));
+
+        for (i = 1; i <= numeroButtons; i++) {
+
+            // A cada 4 buttons, cria uma nova linha
+            if (i % 4 === 0) {
+                appControlsButtonWrapper.appendChild(elementGenerator('div', `botao-${i}`, 'botao col-md-3', buttonsFromJSON[i - 1]));
+                appControlsButtonWrapper.lastChild.addEventListener('click', writeButton)
+                appControlsButtonWrapper = appControlsButton.appendChild(elementGenerator('div', '', 'row phc-buttons'));
+            } else {
+                appControlsButtonWrapper.appendChild(elementGenerator('div', `botao-${i}`, 'botao col-md-3', buttonsFromJSON[i - 1]));
+                appControlsButtonWrapper.lastChild.addEventListener('click', writeButton)
+            }
+        }
+
+        //hot fix para ajustar o contraste, sem mexer no codigo original do botão 
+        for (i = 5; i <= 8; i++) {
+            document.querySelector(`#botao-${i}`).lastChild.style.backgroundColor = 'rgba(255,255,255,0.08)'
+            if (i === 7) {
+                document.querySelector(`#botao-${i}`).lastChild.style.color = '#888'
+            }
+            else {
+                document.querySelector(`#botao-${i}`).lastChild.style.border = '1px solid #bbb'
+            }
+        }
+    }
+
+    // Função para adicionar um botão ao código do tópico
+    function writeButton(e) {
+        let button = e.target;
+        // Corrige o etarget quando carregamos ao lado do botão/etiqueta
+        if (button.classList.length > 0) { button = button.firstChild };
+
+        // Vai buscar o número do botão e vai buscar ao array dos botões o código original 
+        button = buttonsFromJSON[String(button.parentElement.id).replace('botao-', '') - 1];
+        escreveNaTextareaGeradores(button);
+    }
+
+
+    // ############ APPCONTROLS LISTS & TABLES ############
+
+    // Função para mostrar o appControls de Listas e Tabelas
+    function appControlsListsAndTables() {
+
+        // ########## LISTAS ##########
+
+        // Limpa o appControls + inicia paginador
+        let pag = appControlsChange();
+
+        // Anexar ao appControls a primeira página (atualmente não existe segunda página)
+        let appControlsListsAndTables = appControls.appendChild(elementGenerator('div', '', `row page-${pag}`));
+
+        // Anexar o wrapper da secção listas ao wrapper principal
+        const appControlsLists = appControlsListsAndTables.appendChild(elementGenerator('div', 'listas-wrapper', 'col-md-5'));
+
+        let row = appControlsLists.appendChild(elementGenerator('div', 'header-listas', 'row', '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de listas'));
+        row = appControlsLists.appendChild(elementGenerator('div', '', 'row'));
+        let col = row.appendChild(elementGenerator('div', '', 'col-md-8'));
+
+        // Span Tipo Lista
+        const tipoListaSpan = col.appendChild(elementGenerator('span', 'tipo-lista-span', '', 'Tipo de lista'));
+
+        col = row.appendChild(elementGenerator('div', '', 'col-md-4'));
+
+        // Span "Número de Itens"
+        const numItensSpan = col.appendChild(elementGenerator('span', 'num-itens-span', '', '# Itens'));
+
+        row = appControlsLists.appendChild(elementGenerator('div', '', 'row'));
+        col = row.appendChild(elementGenerator('div', '', 'col-md-8'));
+
+        // Dropdown para "Tipo de lista"
+        let tipoListaDropdown = col.appendChild(elementGenerator('select', 'tipo-lista-dropdown'));
+
+        tipoListaDropdown.addEventListener('change', previewLista)
+
+        // Anexar opções á dropdown
+        // Opção 1    
+        tipoListaDropdown.appendChild(elementGenerator('option', '', '', '&nbsp;Não ordenada &nbsp;&nbsp;&nbsp;( • Item )'));
+        tipoListaDropdown.lastChild.value = 'ul'; // Valor a se passado para a função construtora de lista
+        // Opção 2
+        tipoListaDropdown.appendChild(elementGenerator('option', '', '', '&nbsp;Ordenada &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( 1. Item )'));
+        tipoListaDropdown.lastChild.value = 'ol-1';
+        // Opção 3
+        tipoListaDropdown.appendChild(elementGenerator('option', '', '', '&nbsp;Ordenada &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a. Item )'));
+        tipoListaDropdown.lastChild.value = 'ol-a';
+
+        col = row.appendChild(elementGenerator('div', '', 'col-md-2'));// Filler row
+        col = row.appendChild(elementGenerator('div', '', 'col-md-2'));
+
+        // Input "Número de Itens"
+        let numItensInput = col.appendChild(elementGenerator('input', 'num-itens-input'));
+        numItensInput.setAttribute('type', 'number')
+
+        row = appControlsLists.appendChild(elementGenerator('div', '', 'row'));
+
+        // Pre-view da lista
+        col = row.appendChild(elementGenerator('div', 'preview-list-row', 'col-md-12'));
+
+        // Lista default
+        let previewList = col.appendChild(document.createElement('ul'));
+        previewList.style.listStylePosition = 'inside';
+        for (i = 1; i <= 3; i++) {
+            previewList.appendChild(elementGenerator('li', '', '', `<b>Item ${i}:</b> Lorem Ipsum`));
+        }
+
+        // Row 4
+        row = appControlsLists.appendChild(elementGenerator('div', '', 'row'));
+        col = row.appendChild(elementGenerator('div', 'cria-lista-btn-div', 'col-md-12'));
+
+        // Button "Criar lista"
+        let criarListaButton = col.appendChild(elementGenerator('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar lista'));
+        criarListaButton.addEventListener('click', writeList)
+
+        // ########## TABELAS ##########
+
+        // Anexar o wrapper da secção das tabelas ao wrapper principal 
+        const novaTabelaWrapper = appControlsListsAndTables.appendChild(elementGenerator('div', 'tabelas-wrapper', 'col-md-7'));
+
+        row = novaTabelaWrapper.appendChild(elementGenerator('div', 'header-tabelas', 'row', '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de tabelas'));
+        row = novaTabelaWrapper.appendChild(elementGenerator('div', '', 'row'));
+        col = row.appendChild(elementGenerator('div', '', 'col-md-1')); // Filler col
+        col = row.appendChild(elementGenerator('div', '', 'col-md-3'));
+
+        // Span 'Número de Linhas'
+        const numLinhasSpan = col.appendChild(elementGenerator('span', 'num-linhas-span', '', '# de linhas'));
+        // Input 'Número de Linhas'
+        const numLinhasInput = col.appendChild(elementGenerator('input', 'num-linhas-input'));
+        numLinhasInput.setAttribute('type', 'number')
+
+        // Col 3
+        col = row.appendChild(elementGenerator('div', '', 'col-md-3'));
+
+        // Span 'Número de Colunas'
+        let numColunasSpan = col.appendChild(elementGenerator('span', 'num-colunas-span', '', '# de colunas'));
+
+        // Input 'Número de Colunas'
+        const numColunasInput = col.appendChild(elementGenerator('input', 'num-colunas-input'));
+        numColunasInput.setAttribute('type', 'number')
+
+
+
+        col = row.appendChild(elementGenerator('div', '', 'col-md-1'));   // Filler col
+        col = row.appendChild(elementGenerator('div', '', 'col-md-3'));
+
+        // Button 'Converter tabela'
+        let converterTabela = col.appendChild(elementGenerator('button', '', 'btn btn-warning', '<i class="lni lni-code"></i>&nbsp;&nbsp;Converter tabela'));
+        converterTabela.addEventListener('click', convertTable);
+
+
+        col = row.appendChild(elementGenerator('div', '', 'col-md-1')); //  Filler Col
+        row = novaTabelaWrapper.appendChild(elementGenerator('div', '', 'row'));
+        col = row.appendChild(elementGenerator('div', '', 'col-md-1')); //  Filler Col
+        col = row.appendChild(elementGenerator('div', 'cria-tabela-checkbox-wrapper', 'col-md-7'));
+
+        // Checkbox 'Normal'
+        const checkbox1 = col.appendChild(elementGenerator('input', 'normal-table'));
+        checkbox1.setAttribute('type', 'checkbox');
+        checkbox1.setAttribute('checked', 'true'); // Ativa a checkbox por omissão
+        checkbox1.addEventListener('click', updateTableType)
+
+        // Span 'Normal'
+        const checkboxLabel1 = col.appendChild(elementGenerator('span', '', '', 'Normal'));
+
+
+        // Input 'Moderna'
+        const checkbox2 = col.appendChild(elementGenerator('input', 'modern-table'));
+        checkbox2.setAttribute('type', 'checkbox');
+        checkbox2.addEventListener('click', updateTableType)
+
+        // Span 'Moderna'
+        const checkboxLabel2 = col.appendChild(elementGenerator('span', '', '', 'Moderna'));
+
+        // Input 'Moderna Azul'
+        const checkbox3 = col.appendChild(elementGenerator('input', 'modern-table-blue'));
+        checkbox3.setAttribute('type', 'checkbox');
+        checkbox3.addEventListener('click', updateTableType)
+
+        // Span 'Moderna Azul'
+        const checkboxLabel3 = col.appendChild(elementGenerator('span', '', '', 'Moderna Azul'));
+
+
+        col = row.appendChild(elementGenerator('div', 'cria-tabela-btn-div', 'col-md-3'));
+
+        // Button 'Criar tabela'
+        let criarTabela = col.appendChild(elementGenerator('button', '', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar tabela'));
+        criarTabela.addEventListener('click', writeTable);
+
+        col = row.appendChild(elementGenerator('div', '', 'col-md-1')); //  Filler Col
+
+        // ########## SEPARADOR HORIZONTAL ##########
+
+        //wrapper novo separador
+        const novoSeparadorWrapper = row.appendChild(elementGenerator('div', '', 'col-md-12 novo-separador'));
+        novoSeparadorWrapper.appendChild(elementGenerator('span', '', '', '<i class="lni lni-hammer"></i> Separador horizontal<br>'));
+
+        // Button para adicionar separador horizontal (hr)
+        const novaQuebraBtn = novoSeparadorWrapper.appendChild(elementGenerator('button', 'nova-quebra-btn', 'btn btn-success', '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir separador horizontal'));
+        novaQuebraBtn.addEventListener('click', writeHR);
+    }
+
+    // Função para adicionar uma lista ao código do tópico
+    function writeList() {
+
+        // Obter os parâmetros para a lista
+        const tipo = document.querySelector('#tipo-lista-dropdown').value;
+        const n = document.querySelector('#num-itens-input').value;
+
+        // Babyproof
+        if ((isNaN(n)) === true
+            || n <= 0) { alert('O valor para o número de itens não é válido (só aceito números positivos, acima de zero).'); return }
+
+        // Declarar variávis para o Switch
+        let novaLista = '';
+
+        switch (tipo) {
+
+            // Opção 1
+            case 'ul':
+                novaLista = document.createElement('ul');
+                novaLista.style.listStylePosition = 'inside';
+                for (i = 1; i <= n; i++) {
+                    novaLista.appendChild(elementGenerator('li', '', '', `<b>Item ${i}:</b> Lorem ipsum`));
+                }
+                // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
+                novaLista = (novaLista.outerHTML.toString().replaceAll('<li><b>', "\n" + '<li><b>'));
+                escreveNaTextareaGeradores(novaLista);
+                break;
+
+            // Opção 2
+            case 'ol-1':
+                novaLista = document.createElement('ol');
+                novaLista.setAttribute('type', '1');
+                novaLista.style.listStylePosition = "inside";
+                for (i = 1; i <= n; i++) {
+                    novaLista.appendChild(elementGenerator('li', '', '', `<b>Item ${i}:</b> Lorem ipsum`));
+                }
+                // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
+                novaLista = (novaLista.outerHTML.toString().replaceAll('<li><b>', "\n" + '<li><b>'));
+                escreveNaTextareaGeradores(novaLista);
+                break;
+
+            // Opção 3
+            case 'ol-a':
+                novaLista = document.createElement('ol');
+                novaLista.setAttribute('type', 'a');
+                novaLista.style.listStylePosition = 'inside';
+                for (i = 1; i <= n; i++) {
+                    novaLista.appendChild(elementGenerator('li', '', '', `<b>Item ${i}:</b> Lorem ipsum`));
+                }
+                // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
+                novaLista = (novaLista.outerHTML.toString().replaceAll('<li><b>', "\n" + '<li><b>'));
+                escreveNaTextareaGeradores(novaLista);
+                break;
+        }
+
+    }
+
+    // Função para adicionar uma tabela ao tópico de manual
+    function writeTable() {
+
+        // Obter os parâmetros para a ligação
+        const numLinhas = document.querySelector('#num-linhas-input').value;
+        const numColunas = document.querySelector('#num-colunas-input').value;
+        // const cabecalho = document.querySelector('#cabecalho-checkbox').checked;
+
+        // Babyproof
+        if ((isNaN(numLinhas)) === true
+            || numLinhas <= 0) { alert('O valor para o número de linhas não é válido (só aceito números positivos, acima de zero).'); return }
+        if ((isNaN(numColunas)) === true
+            || numColunas <= 0) { alert('O valor para o número de colunas não é válido (só aceito números positivos, acima de zero).'); return }
+
+        let novaTabela;
+
+        // <table>
+        switch (tableType) {
+            case 'normal-table': novaTabela = elementGenerator('table', '', 'phcgo-old-table'); break
+            case 'modern-table': novaTabela = elementGenerator('table', '', 'phcgo-new-table'); break
+            case 'modern-table-blue': novaTabela = elementGenerator('table', '', 'phcgo-new-table-blue'); break
+        }
+
+        novaTabela.style.display = 'flex';
+        novaTabela.style.justifyContent = 'center';
+
+        // <tbody>
+        const tBody = novaTabela.appendChild(document.createElement('tbody'));
+
+        // adiciona o cabeçalho à tabela
+        // if (cabecalho === true) {
+
+        const novoCabecalho = document.createElement('tr');
+        for (i = 1; i <= numColunas; i++) {
+            let novaColuna = novoCabecalho.appendChild(elementGenerator('td', '', '', `Cabeçalho ${i}`));
+        }
+        tBody.appendChild(novoCabecalho);
+        // }
+
+        // adiciona as restantes linhas á tabela
+        for (iLinhas = 1; iLinhas <= numLinhas; iLinhas++) {
+            const novaLinha = document.createElement('tr');
+            for (iColunas = 1; iColunas <= numColunas; iColunas++) {
+                let novaColuna = novaLinha.appendChild(elementGenerator('td', '', '', `Linha ${iLinhas} Coluna ${iColunas}`));
+            }
+            tBody.appendChild(novaLinha);
+        }
+
+        // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
+        novaTabela = (novaTabela.outerHTML.toString().replaceAll('<tr>', "\n" + '<tr>'));
+        novaTabela = (novaTabela.toString().replaceAll('</td><td>', '</td>' + "\n" + '<td>'));
+        novaTabela.replaceAll('</tbody>', "\n" + '</tbody>');
+
+        // Anexar o <style> necessário, de acordo com a tabela selecionada
+        switch (tableType) {
+            case 'normal-table':
+                novaTabela.classList = 'phcgo-old-table';
+                novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + normalTableStyle + "\n" + novaTabela); break
+            case 'modern-table':
+                novaTabela.classList = 'phcgo-new-table';
+                novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + modernTableStyle + "\n" + novaTabela); break
+            case 'modern-table-blue':
+                novaTabela.classList = 'phcgo-new-table-blue';
+                novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + modernTableStyleBlue + "\n" + novaTabela); break
+        }
+        escreveNaTextareaGeradores(novaTabela);
+    }
+
+    function convertTable() {
+
+        let nome;
+        switch (tableType) {
+            case 'normal-table': nome = 'Normal'; break
+            case 'modern-table': nome = 'Moderna'; break
+            case 'modern-table-blue': nome = 'Moderna Azul'; break
+        }
+
+        const tablecode = prompt(`Introduz o código da tua tabela.\n\nEsta será convertida no estilo atualmente selecionado ( ${nome} )`);
+
+
+        const tablecodeSlices = [];
+
+        if (tablecode.toString().includes('<tbody>') && tablecode.toString().includes('</tbody>')) {
+
+            tablecodeSlices.push(tablecode.toString().indexOf('<tbody>'))
+            tablecodeSlices.push(tablecode.toString().indexOf('</tbody>'))
+            tablecodeSlices.push(tablecode.toString().slice(tablecodeSlices[0] + 7, tablecodeSlices[1]))
+
+        } else if (tablecode.toString().includes('<table>') && tablecode.toString().includes('</table>')) {
+
+            tablecodeSlices.push(tablecode.toString().indexOf('<table>'))
+            tablecodeSlices.push(tablecode.toString().indexOf('</table>'))
+            tablecodeSlices.push(tablecode.toString().slice(tablecodeSlices[0] + 7, tablecodeSlices[1]))
+            console.log(tablecodeSlices)
+
+        } else { alert('A tabela fornecida não está corretamente formatada.'); return }
+
+        // <table>
+        switch (tableType) {
+            case 'normal-table': novaTabela = elementGenerator('table', '', 'phcgo-old-table'); break
+            case 'modern-table': novaTabela = elementGenerator('table', '', 'phcgo-new-table'); break
+            case 'modern-table-blue': novaTabela = elementGenerator('table', '', 'phcgo-new-table-blue'); break
+        }
+
+        novaTabela.style.display = 'flex';
+        novaTabela.style.justifyContent = 'center';
+
+        // <tbody>
+        const tBody = novaTabela.appendChild(document.createElement('tbody'));
+        tBody.innerHTML = tablecodeSlices[2]
+
+        // Introdução de quebras de linha, de modo a tornar o código da textbox mais legível fora do leitor
+        novaTabela = (novaTabela.outerHTML.toString().replaceAll('<tr>', "\n" + '<tr>'));
+        novaTabela = (novaTabela.toString().replaceAll('</td><td>', '</td>' + "\n" + '<td>'));
+        novaTabela.replaceAll('</tbody>', "\n" + '</tbody>');
+
+        // Anexar o <style> necessário, de acordo com a tabela selecionada
+        switch (tableType) {
+            case 'normal-table':
+                novaTabela.classList = 'phcgo-old-table';
+                novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + normalTableStyle + "\n" + novaTabela); break
+            case 'modern-table':
+                novaTabela.classList = 'phcgo-new-table';
+                novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + modernTableStyle + "\n" + novaTabela); break
+            case 'modern-table-blue':
+                novaTabela.classList = 'phcgo-new-table-blue';
+                novaTabela = ('<!-- Estilos necessários para a tabela -->' + "\n" + modernTableStyleBlue + "\n" + novaTabela); break
+        }
+        escreveNaTextareaGeradores(novaTabela);
+
+    }
+
+    // Função para adicionar um seprador horizontal <hr> código do tópico
+    function writeHR() {
+        const novoSeparador = document.createElement('hr');
+        novoSeparador.style.borderTop = '3px solid #eee';
+        escreveNaTextarea(novoSeparador);
+    }
+
+
+    // ############ APPCONTROLS TITLES & LINKS ############
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function appControlsChange() {
+        // Limpar o div dos appControls
+        appControls.innerHTML = '';
+
+        // Iniciar contador paginador (a ser utilizado no futuro, caso os elementos não caibam todos numa só página de appControls)
+        return pag = 1;
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Collapsables
 
     // Variáveis globais
-    const colapMainDiv = document.querySelector('#colapsables-modal');
+    const colaphcPreview = document.querySelector('#colapsables-wrapper');
     const botaoVistaColap = document.querySelector('#colap-btn');
-    botaoVistaColap.addEventListener('click', toogleColapsablesModal);
+    botaoVistaColap.addEventListener('click', toogleColapsablesappControls);
 
     // Função ao carregar no botão Vista Colapsavel    
-    function toogleColapsablesModal() {
+    function toogleColapsablesappControls() {
         const helpcenterPreviewWrapper = document.querySelector('.hc-preview');
 
         //babyproof - reset à activetextarea
         activeTextarea = '';
 
-        if (colapMainDiv.classList.contains('no-display') === true) {
+        if (colaphcPreview.classList.contains('no-display') === true) {
             botaoVistaColap.classList.replace('btn-light', 'btn-info');
-            colapMainDiv.classList.remove('no-display');
+            colaphcPreview.classList.remove('no-display');
             helpcenterPreviewWrapper.classList.add('no-display');
-            modalColap();
+            appControlsColap();
         } else {
             botaoVistaColap.classList.replace('btn-info', 'btn-light');        // a ordem invertida do getcollaps é importante, não sei porque nao me lembra
-            modalColap();
-            colapMainDiv.classList.add('no-display');
+            appControlsColap();
+            colaphcPreview.classList.add('no-display');
             helpcenterPreviewWrapper.classList.remove('no-display');
         }
 
     }
 
-    // Função para mostrar a modal dos colapsáveis
-    function modalColap() {
+    // Função para mostrar a appControls dos colapsáveis
+    function appControlsColap() {
 
         // Array com todos os colapsáveis do tópico
-        collapsablesArray = document.querySelectorAll('.row .seccao-phcgo');
+        colapList = document.querySelectorAll('.row .seccao-phcgo');
 
-        // Limpa a modal
-        colapMainDiv.innerHTML = '';
+        // Limpa a appControls
+        colaphcPreview.innerHTML = '';
 
         // Wrapper (row)
-        let colapWrapper = colapMainDiv.appendChild(newRow(1));
+        let colapWrapper = colaphcPreview.appendChild(elementGenerator('div', '', `row page-1`));
 
-        if (collapsablesArray.length !== 0) {
+        if (colapList.length !== 0) {
             // Loop para cada item do Array
-            for (i = 1; i <= collapsablesArray.length; i++) {
+            for (i = 1; i <= colapList.length; i++) {
 
                 // Row 1
                 let row = colapWrapper.appendChild(newColapRow());
@@ -101,13 +750,13 @@ function mixWrapper() {
                 // Input 1
                 wrapperLeft.appendChild(newSpan('colap-id', 'ID do colapsável (minúsculas, sem acentuação, sem espaçamento)'));
                 let idInput = wrapperLeft.appendChild(newColapIDInput(i));
-                idInput.value = collapsablesArray[i - 1].nextElementSibling.id;
+                idInput.value = colapList[i - 1].nextElementSibling.id;
                 idInput.addEventListener('keyup', updateColapPreviewByID)
 
                 // Input 2
                 wrapperLeft.appendChild(newSpan('colap-h2', 'Título do colapsável'));
                 let h2Input = wrapperLeft.appendChild(newColapH2Input(i));
-                let h2Trim = collapsablesArray[i - 1].innerText.trim().split('	');     // trim para ficar direitinho
+                let h2Trim = colapList[i - 1].innerText.trim().split('	');     // trim para ficar direitinho
                 h2Input.value = h2Trim[0];
                 h2Input.addEventListener('keyup', updateColapHeading)
 
@@ -122,7 +771,7 @@ function mixWrapper() {
                 bodyInput.addEventListener('click', colapTextAreaEvents)
 
 
-                let bodyTempInput = collapsablesArray[i - 1].nextElementSibling.innerHTML;
+                let bodyTempInput = colapList[i - 1].nextElementSibling.innerHTML;
                 // Remove o cursor laranja ao passar para os collaps
                 bodyInput.value = String(bodyTempInput).replace('<span id="pulse">|</span>', '');
 
@@ -147,7 +796,7 @@ function mixWrapper() {
                 }
 
                 wrapperRight.appendChild(newColapBodyDisplay(i));
-                wrapperRight.lastChild.innerHTML = collapsablesArray[i - 1].nextElementSibling.innerHTML;
+                wrapperRight.lastChild.innerHTML = colapList[i - 1].nextElementSibling.innerHTML;
             }
 
             // adicionar novo collap
@@ -165,7 +814,7 @@ function mixWrapper() {
             scrollToTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); })
 
         } else {
-            let geradorColapWrapper = colapMainDiv.appendChild(document.createElement('div'));
+            let geradorColapWrapper = colaphcPreview.appendChild(document.createElement('div'));
             geradorColapWrapper.id = 'gerador-colaps-wrapper';
             geradorColapWrapper.classList = 'row'
 
@@ -197,18 +846,18 @@ function mixWrapper() {
         activeTextarea = e.target;
 
         let inputText = activeTextarea.value;
-        let cursorModalPos = getColapCursorPos(e);
+        let cursorappControlsPos = getColapCursorPos(e);
 
         // divide o input em duas partes (até ao cursor, e após o curos)
         let inputColapTextStrings = [];
-        inputColapTextStrings.push([inputText.slice(0, cursorModalPos)]);
-        inputColapTextStrings.push([inputText.slice(cursorModalPos)]);
+        inputColapTextStrings.push([inputText.slice(0, cursorappControlsPos)]);
+        inputColapTextStrings.push([inputText.slice(cursorappControlsPos)]);
 
         // introduz o cursor laranja
         let inputColapTextWithCursor = `${inputColapTextStrings[0]}<span id="pulse">|</span>${inputColapTextStrings[1]}`;
 
-        modalTextareaPos[0] = inputColapTextStrings[0];
-        modalTextareaPos[1] = inputColapTextStrings[1];
+        stringCursorColap[0] = inputColapTextStrings[0];
+        stringCursorColap[1] = inputColapTextStrings[1];
 
         // Preview do input
         let inputPreview = e.target.parentElement.nextElementSibling.children[0];
@@ -224,18 +873,18 @@ function mixWrapper() {
         activeTextarea = e.target;
 
         let inputText = activeTextarea.value;
-        let cursorModalPos = getColapCursorPos(e);
+        let cursorappControlsPos = getColapCursorPos(e);
 
         // divide o input em duas partes (até ao cursor, e após o curos)
         let inputColapTextStrings = [];
-        inputColapTextStrings.push([inputText.slice(0, cursorModalPos)]);
-        inputColapTextStrings.push([inputText.slice(cursorModalPos)]);
+        inputColapTextStrings.push([inputText.slice(0, cursorappControlsPos)]);
+        inputColapTextStrings.push([inputText.slice(cursorappControlsPos)]);
 
         // introduz o cursor laranja
         let inputColapTextWithCursor = `${inputColapTextStrings[0]}<span id="pulse">|</span>${inputColapTextStrings[1]}`;
 
-        modalTextareaPos[0] = inputColapTextStrings[0];
-        modalTextareaPos[1] = inputColapTextStrings[1];
+        stringCursorColap[0] = inputColapTextStrings[0];
+        stringCursorColap[1] = inputColapTextStrings[1];
 
         // Preview do input
         let inputPreview = e.target.parentElement.nextElementSibling.children[1];
@@ -248,12 +897,12 @@ function mixWrapper() {
 
     function gerarColapsaveis() {
 
-        const collapsablesArray = document.querySelectorAll('.row .seccao-phcgo');
+        const colapList = document.querySelectorAll('.row .seccao-phcgo');
 
         let newCollapFinal = '';
         let newCollapseArray = [[], [], []];
 
-        for (i = 1; i <= collapsablesArray.length; i++) {
+        for (i = 1; i <= colapList.length; i++) {
 
             newCollapseArray[0][i - 1] = document.querySelector(`.colap-input-id-${i}`).value;
             newCollapseArray[1][i - 1] = document.querySelector(`.colap-input-h2-${i}`).value;
@@ -305,9 +954,9 @@ function mixWrapper() {
 
         newCollapFinal = topicoAntesColapsaveis() + newCollapFinal;
         textarea.value = newCollapFinal;
-        maindiv.innerHTML = fixArtigosRelacionadosLogo(newCollapFinal);
-        modalColap();
-        saveIntoJSON();
+        hcPreview.innerHTML = fixArtigosRelacionadosLogo(newCollapFinal);
+        appControlsColap();
+        autosave2JSON();
 
     }
 
@@ -369,401 +1018,19 @@ function mixWrapper() {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Função para mostrar a modal de Listas e Tabelas
-    function modalListasETabelas() {
 
-        // Limpar a modal
-        modaldiv.innerHTML = '';
+
+    // // Função para mostrar a modal de Títulos e Ligações
+    function appControlsTitulosELigacoes() {
+
+        // Limpar a appControls
+        appControls.innerHTML = '';
 
         // Iniciar contador paginador
         let pag = 1;
 
-        // Anexar à modal a primeira página (atualmente não existe segunda página)
-        let primeiraPagina = modaldiv.appendChild(newRow(pag));
-
-        // Wrapper da secção das listas
-        const novaListaWrapper = document.createElement('div');
-        novaListaWrapper.classList.add('col-md-5');
-        novaListaWrapper.id = 'listas-wrapper';
-
-        // Row 0
-        let row = novaListaWrapper.appendChild(document.createElement('div'));
-        row.classList.add('row')
-        row.id = 'header-listas'
-        row.innerHTML = '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de listas'
-
-        // Row 1
-        row = novaListaWrapper.appendChild(document.createElement('div'));
-        row.classList.add('row')
-
-        // Col 1
-        let col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-8')
-
-        // Span Tipo Lista
-        let tipoListaSpan = col.appendChild(document.createElement('span'));
-        tipoListaSpan.innerText = 'Tipo de lista';
-        tipoListaSpan.id = 'tipo-lista-span';
-
-        // Col 2
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-4')
-
-        // Span "Número de Itens"
-        let numItensSpan = col.appendChild(document.createElement('span'));
-        numItensSpan.innerText = '# Itens';
-        numItensSpan.id = 'num-itens-span';
-
-        // Row 2
-        row = novaListaWrapper.appendChild(document.createElement('div'));
-        row.classList.add('row')
-
-        // Col 1
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-8')
-
-        // Dropdown para "Tipo de lista"
-        let tipoListaDropdown = col.appendChild(document.createElement('select'));
-        tipoListaDropdown.id = 'tipo-lista-dropdown'
-        tipoListaDropdown.addEventListener('change', previewLista)
-
-        // Anexar opções á dropdown
-        // Opção 1    
-        tipoListaDropdown.appendChild(document.createElement('option'));
-        tipoListaDropdown.lastChild.value = 'ul' // Valor a se passado para a função construtora de lista
-        tipoListaDropdown.lastChild.innerHTML = '&nbsp;Não ordenada &nbsp;&nbsp;&nbsp;( • Item )';
-        // Opção 2
-        tipoListaDropdown.appendChild(document.createElement('option'));
-        tipoListaDropdown.lastChild.value = 'ol-1'
-        tipoListaDropdown.lastChild.innerHTML = '&nbsp;Ordenada &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( 1. Item )'
-        // Opção 3
-        tipoListaDropdown.appendChild(document.createElement('option'));
-        tipoListaDropdown.lastChild.value = 'ol-a'
-        tipoListaDropdown.lastChild.innerHTML = '&nbsp;Ordenada &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a. Item )';
-
-        // Col 2 (Filler)
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-2')
-
-        // Col 3
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-2')
-
-        // Input "Número de Itens"
-        let numItensInput = col.appendChild(document.createElement('input'));
-        numItensInput.id = 'num-itens-input'
-        numItensInput.setAttribute('type', 'number')
-
-        // Row 3 
-        row = novaListaWrapper.appendChild(document.createElement('div'));
-        row.classList.add('row')
-
-        // Col 1 (pre-view da lista)
-        col = row.appendChild(document.createElement('div'));
-        col.classList = 'col-md-12'
-        col.id = 'preview-list-row'
-
-        // Preview-default li
-        let previewList = col.appendChild(document.createElement('ul'));
-        previewList.style.listStylePosition = 'inside';
-        for (i = 1; i <= 3; i++) {
-            previewList.appendChild(document.createElement('li'));
-            previewList.lastChild.innerHTML = `<b>Item ${i}:</b> Lorem Ipsum`;
-        }
-
-        // Row 4
-        row = novaListaWrapper.appendChild(document.createElement('div'));
-        row.classList.add('row')
-
-        // Col Button criar lista
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-12')
-        col.id = 'cria-lista-btn-div'
-
-        // Button "Criar lista"
-        let criarListaButton = col.appendChild(document.createElement('button'));
-        criarListaButton.classList = 'btn btn-success';
-        criarListaButton.innerHTML = '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar lista'
-        criarListaButton.addEventListener('click', escreveLista)
-
-        // Anexar o wrapper da secção de listas à primeiraRow
-        primeiraPagina.appendChild(novaListaWrapper);
-
-        // Wrapper da secção das tabelas
-        const novaTabelaWrapper = document.createElement('div');
-        novaTabelaWrapper.classList.add('col-md-7');
-        novaTabelaWrapper.id = 'tabelas-wrapper';
-
-        // Row 0
-        row = novaTabelaWrapper.appendChild(document.createElement('div'));
-        row.classList.add('row')
-        row.id = 'header-tabelas'
-        row.innerHTML = '<i class="lni lni-hammer"></i>&nbsp;&nbsp;Gerador de tabelas'
-
-        // Row 1
-        row = novaTabelaWrapper.appendChild(document.createElement('div'));
-        row.classList.add('row')
-
-        // Col 1 (Filler)
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-1')
-
-        // Col 2
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-3')
-
-        // Span 'Número de Linhas'
-        let numLinhasSpan = col.appendChild(document.createElement('span'));
-        numLinhasSpan.id = 'num-linhas-span'
-        numLinhasSpan.innerText = '# de linhas';
-
-        // Input 'Número de Linhas'
-        let numLinhasInput = col.appendChild(document.createElement('input'));
-        numLinhasInput.id = 'num-linhas-input'
-        numLinhasInput.setAttribute('type', 'number')
-
-        // Col 3
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-3')
-
-        // Span 'Número de Colunas'
-        let numColunasSpan = col.appendChild(document.createElement('span'));
-        numColunasSpan.id = 'num-colunas-span'
-        numColunasSpan.innerText = '# de colunas';
-
-        // Input 'Número de Colunas'
-        let numColunasInput = col.appendChild(document.createElement('input'));
-        numColunasInput.id = 'num-colunas-input';
-        numColunasInput.setAttribute('type', 'number')
-
-        // Col 4 (Filler)
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-1')
-
-        // Col 5
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-3')
-
-        // Span 'Cabeçalho?'
-        let cabecalhoSpan = col.appendChild(document.createElement('span'));
-        cabecalhoSpan.innerText = 'Cabeçalho?';
-        cabecalhoSpan.id = 'cabecalho-span'
-
-        // Checkbox 'Cabeçalho?'
-        let cabecalhoCheckbox = col.appendChild(document.createElement('input'));
-        cabecalhoCheckbox.setAttribute('type', 'checkbox');
-        cabecalhoCheckbox.setAttribute('checked', 'true'); // Ativa a checkbox por omissão
-        cabecalhoCheckbox.id = 'cabecalho-checkbox';
-
-        // Col 6 (Filler)
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-1')
-
-        // Row 2
-        row = novaTabelaWrapper.appendChild(document.createElement('div'));
-        row.classList.add('row')
-
-        // Col 2
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-6')
-        col.id = 'cria-tabela-checkbox-wrapper'
-
-        // Span 'Cabeçalho?'
-        let checkboxLabel1 = col.appendChild(document.createElement('span'));
-        checkboxLabel1.innerText = 'Normal';
-
-        const checkbox1 = col.appendChild(document.createElement('input'));
-        checkbox1.setAttribute('type', 'checkbox');
-        checkbox1.setAttribute('checked', 'true'); // Ativa a checkbox por omissão
-        checkbox1.id = 'normal-table'
-        checkbox1.addEventListener('click',updateTableType)
-
-        let checkboxLabel2 = col.appendChild(document.createElement('span'));
-        checkboxLabel2.innerText = 'Morderna';
-
-        const checkbox2 = col.appendChild(document.createElement('input'));
-        checkbox2.setAttribute('type', 'checkbox');
-        checkbox2.id = 'modern-table'
-        checkbox2.addEventListener('click',updateTableType)
-
-        // Col 2
-        col = row.appendChild(document.createElement('div'));
-        col.classList.add('col-md-6')
-        col.id = 'cria-tabela-btn-div'
-
-        // Button 'Criar tabela'
-        let criarCabecalho = col.appendChild(document.createElement('button'));
-        criarCabecalho.classList.add('btn');
-        criarCabecalho.classList.add('btn-success');
-        criarCabecalho.innerHTML = '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Criar tabela';
-        criarCabecalho.addEventListener('click', escreverTabela);
-
-        //wrapper novo separador
-        const novoSeparadorWrapper = row.appendChild(document.createElement('div'));
-        novoSeparadorWrapper.classList = 'col-md-12 novo-separador'
-        novoSeparadorWrapper.appendChild(document.createElement('span'));
-        novoSeparadorWrapper.lastChild.innerHTML = '<i class="lni lni-code"></i> Separador horizontal<br>'
-
-        // Button para adicionar separador horizontal (hr)
-        const novaQuebraBtn = novoSeparadorWrapper.appendChild(document.createElement('button'));
-        novaQuebraBtn.innerHTML = '<i class="lni lni-construction-hammer"></i>&nbsp;&nbsp;Introduzir separador horizontal';
-        novaQuebraBtn.classList = 'btn btn-success';
-        novaQuebraBtn.id = 'nova-quebra-btn';
-        novaQuebraBtn.addEventListener('click', escreverQuebra);
-
-        // Anexar o wrapper da secção de ligações à primeira row 
-        primeiraPagina.appendChild(novaTabelaWrapper);
-    }
-
-    // Função para adicionar uma lista ao código do tópico
-    function escreveLista() {
-
-        // Obter os parâmetros para a lista
-        const tipo = document.querySelector('#tipo-lista-dropdown').value;
-        const n = document.querySelector('#num-itens-input').value;
-
-        // Babyproof
-        if ((isNaN(n)) === true
-            || n <= 0) { alert('O valor para o número de itens não é válido (só aceito números positivos, acima de zero).'); return }
-
-        // Declarar variávis para o Switch
-        let novaLista = '';
-
-        switch (tipo) {
-
-            // Opção 1
-            case 'ul':
-                novaLista = document.createElement('ul');
-                novaLista.style.listStylePosition = 'inside';
-                for (i = 1; i <= n; i++) {
-                    let novoItem = novaLista.appendChild(document.createElement('li'));
-                    novoItem.innerHTML = `<b>Item ${i}:</b> Lorem ipsum`;
-                }
-                novaLista = (novaLista.outerHTML.toString().replaceAll('<li><b>', "\n" + '<li><b>'));
-                escreveNaTextareaGeradores(novaLista);
-                break;
-
-            // Opção 2
-            case 'ol-1':
-                novaLista = document.createElement('ol');
-                novaLista.setAttribute('type', '1');
-                novaLista.style.listStylePosition = "inside";
-                for (i = 1; i <= n; i++) {
-                    novaLista.appendChild(document.createElement('li'));
-                    novaLista.lastChild.innerHTML = `<b>Item ${i}:</b> Lorem ipsum`;
-                }
-                novaLista = (novaLista.outerHTML.toString().replaceAll('<li><b>', "\n" + '<li><b>'));
-                escreveNaTextareaGeradores(novaLista);
-                break;
-
-            // Opção 3
-            case 'ol-a':
-                novaLista = document.createElement('ol');
-                novaLista.setAttribute('type', 'a');
-                novaLista.style.listStylePosition = 'inside';
-                for (i = 1; i <= n; i++) {
-                    novaLista.appendChild(document.createElement('li'));
-                    novaLista.lastChild.innerHTML = `<b>Item ${i}:</b> Lorem ipsum`;
-                }
-                novaLista = (novaLista.outerHTML.toString().replaceAll('<li><b>', "\n" + '<li><b>'));
-                escreveNaTextareaGeradores(novaLista);
-                break;
-        }
-
-    }
-
-    // Função para adicionar uma tabela ao tópico de manual
-    function escreverTabela() {
-
-        // Obter os parâmetros para a ligação
-        const numLinhas = document.querySelector('#num-linhas-input').value;
-        const numColunas = document.querySelector('#num-colunas-input').value;
-        const cabecalho = document.querySelector('#cabecalho-checkbox').checked;
-
-        // Babyproof
-        if ((isNaN(numLinhas)) === true
-            || numLinhas <= 0) { alert('O valor para o número de linhas não é válido (só aceito números positivos, acima de zero).'); return }
-        if ((isNaN(numColunas)) === true
-            || numColunas <= 0) { alert('O valor para o número de colunas não é válido (só aceito números positivos, acima de zero).'); return }
-
-        // <table>
-        let novaTabela = document.createElement('table');
-        novaTabela.classList.add('phcgo-table');
-        novaTabela.style.display = 'flex';
-        novaTabela.style.justifyContent = 'center';
-
-        // <tbody>
-        const tBody = novaTabela.appendChild(document.createElement('tbody'));
-
-        switch (tipoTabela) {
-            case 'normal-table':
-
-                // Se a checkbox estiver a true, é também adicionado um cabeçalho à tabela
-                if (cabecalho === true) {
-                    const novoCabecalho = document.createElement('tr');
-                    for (i = 1; i <= numColunas; i++) {
-                        let novaColuna = novoCabecalho.appendChild(document.createElement('td'));
-                        novaColuna.classList.add('td-cabecalho');
-                        novaColuna.innerText = `Cabeçalho ${i}`;
-                    }
-                    tBody.appendChild(novoCabecalho);
-                }
-
-                // adiciona as restantes linhas á tabela
-                for (iLinhas = 1; iLinhas <= numLinhas; iLinhas++) {
-                    const novaLinha = document.createElement('tr');
-                    for (iColunas = 1; iColunas <= numColunas; iColunas++) {
-                        let novaColuna = novaLinha.appendChild(document.createElement('td'));
-                        novaColuna.innerText = `Linha ${iLinhas} Coluna ${iColunas}`;
-                    }
-                    tBody.appendChild(novaLinha);
-                }
-            break
-            case 'modern-table':
-
-                // Se a checkbox estiver a true, é também adicionado um cabeçalho à tabela
-                if (cabecalho === true) {
-                    const novoCabecalho = document.createElement('tr');
-                    for (i = 1; i <= numColunas; i++) {
-                        let novaColuna = novoCabecalho.appendChild(document.createElement('td'));
-                        novaColuna.classList.add('cabecalho-table-modern')
-                        novaColuna.innerText = `Cabeçalho ${i}`;
-                    }
-                    tBody.appendChild(novoCabecalho);
-                }
-
-                // adiciona as restantes linhas á tabela
-                for (iLinhas = 1; iLinhas <= numLinhas; iLinhas++) {
-                    const novaLinha = document.createElement('tr');
-                    for (iColunas = 1; iColunas <= numColunas; iColunas++) {
-                        let novaColuna = novaLinha.appendChild(document.createElement('td'));
-                        novaColuna.classList.add('td-table-modern')
-                        novaColuna.innerText = `Linha ${iLinhas} Coluna ${iColunas}`;
-                    }
-                    tBody.appendChild(novaLinha);
-                }
-                break
-        }
-
-        // para tornar o código gerado mais clean
-        novaTabela = (novaTabela.outerHTML.toString().replaceAll('<tr>', "\n" + '<tr>'));
-        novaTabela = (novaTabela.toString().replaceAll('</td><td>', '</td>' + "\n" + '<td>'));
-        novaTabela.replaceAll('</tbody>', "\n" + '</tbody>');
-        novaTabela = ('<!-- Estilos necessários para a tabela moderna -->'+"\n"+modernTableStyle+"\n"+novaTabela)
-        escreveNaTextareaGeradores(novaTabela);
-    }
-
-    // // Função para mostrar a moda de Títulos e Ligações
-    function modalTitulosELigacoes() {
-
-        // Limpar a modal
-        modaldiv.innerHTML = '';
-
-        // Iniciar contador paginador
-        let pag = 1;
-
-        // Anexar à modal a primeira página (atualmente não existe segunda página)
-        let primeiraPagina = modaldiv.appendChild(newRow(pag));
+        // Anexar à appControls a primeira página (atualmente não existe segunda página)
+        let primeiraPagina = appControls.appendChild(elementGenerator('div', '', `row page-${pag}`));
 
         // Wrapper da secção da esquerda
         const novoVariosWrapperLeft = primeiraPagina.appendChild(document.createElement('div'));
@@ -948,25 +1215,33 @@ function mixWrapper() {
         novaHiliteCheckboxesRow.id = 'hilite-checkboxes-row'
 
         let miniWrapper1 = novaHiliteCheckboxesRow.appendChild(document.createElement('div'))
-        miniWrapper1.classList = 'col-md-6'
-        miniWrapper1.appendChild(document.createElement('span'));
-        miniWrapper1.lastChild.innerHTML = 'VB.NET&nbsp;&nbsp;'
-
+        miniWrapper1.classList = 'col-md-4'
         miniWrapper1.appendChild(document.createElement('input'));
         miniWrapper1.lastChild.type = 'checkbox'
         miniWrapper1.lastChild.setAttribute('checked', 'true');
         miniWrapper1.lastChild.id = 'vbnet'
         miniWrapper1.checked = true;
-        miniWrapper1.addEventListener('change', updateCodeType)
+        miniWrapper1.addEventListener('change', updatecodeType)
+        miniWrapper1.appendChild(document.createElement('span'));
+        miniWrapper1.lastChild.innerHTML = '&nbsp;&nbsp;VB.NET'
 
         let miniWrapper2 = novaHiliteCheckboxesRow.appendChild(document.createElement('div'))
-        miniWrapper2.classList = 'col-md-6'
-        miniWrapper2.appendChild(document.createElement('span'));
-        miniWrapper2.lastChild.innerHTML = 'TypeScript&nbsp;&nbsp;'
+        miniWrapper2.classList = 'col-md-4'
         miniWrapper2.appendChild(document.createElement('input'));
         miniWrapper2.lastChild.type = 'checkbox'
         miniWrapper2.lastChild.id = 'ts'
-        miniWrapper2.addEventListener('change', updateCodeType)
+        miniWrapper2.addEventListener('change', updatecodeType)
+        miniWrapper2.appendChild(document.createElement('span'));
+        miniWrapper2.lastChild.innerHTML = '&nbsp;&nbsp;TypeScript'
+
+        let miniWrapper3 = novaHiliteCheckboxesRow.appendChild(document.createElement('div'))
+        miniWrapper3.classList = 'col-md-4'
+        miniWrapper3.appendChild(document.createElement('input'));
+        miniWrapper3.lastChild.type = 'checkbox'
+        miniWrapper3.lastChild.id = 'json'
+        miniWrapper3.addEventListener('change', updatecodeType)
+        miniWrapper3.appendChild(document.createElement('span'));
+        miniWrapper3.lastChild.innerHTML = '&nbsp;&nbsp;JSON'
 
         const novaHiliteBtn = hiliteWrapper.appendChild(document.createElement('button'));
         novaHiliteBtn.innerHTML = '<i class="lni lni-code"></i>&nbsp;&nbsp;Gerar código hilite.me';
@@ -996,256 +1271,25 @@ function mixWrapper() {
         escreveNaTextarea(novaLigacao);
     }
 
-    // Função para adicionar um seprador horizontal <hr> código do tópico
-    function escreverQuebra() {
-        const novoSeparador = document.createElement('hr');
-        novoSeparador.style.borderTop = '3px solid #eee';
-        escreveNaTextarea(novoSeparador);
-    }
 
-    // Função para mostrar a modal de botoes
-    function modalBotoes() {
 
-        // Limpar a modal
-        modaldiv.innerHTML = '';
 
-        // Iniciar contador paginador
-        let pag = 1;
 
-        // Anexar à modal a primeira página (atualmente não existe segunda página)
-        let primeiraPagina = modaldiv.appendChild(newRow(pag));
 
-        // Anexar à primeira página os wrappers (funcionam como rows)
-        let novoBotoesWrapper = primeiraPagina.appendChild(document.createElement('div'));
-        novoBotoesWrapper.classList = 'row phc-buttons';
 
-        for (i = 1; i <= numeroButoes; i++) {
-            // A cada 4 interações, cria uma nova linha
-            if (i % 4 === 0) {
-                novoBotoesWrapper.appendChild(botaoDiv(i));
-                novoBotoesWrapper = primeiraPagina.appendChild(document.createElement('div'));
-                novoBotoesWrapper.classList = 'row phc-buttons';
-            } else {
-                novoBotoesWrapper.appendChild(botaoDiv(i));
-            }
-        }
 
-        // Substitui os valores dos botoes, pelos valores do JSON
-        grabJSONButtons();
-    }
 
-    // Função para anexar botões à modal de botões
-    function botaoDiv(i) {
-        const newMediumItem = document.createElement('div');
-        newMediumItem.classList = `botao-${i} botao-label col-md-3`;
-        newMediumItem.innerHTML = `${i}`;
-        newMediumItem.addEventListener('click', escreverBotao)
-        return newMediumItem
-    }
 
-    // Função para adicionar um botão ao código do tópico
-    function escreverBotao(e) {
-        let eTarget = e.target;
-
-        // HotFix para quando o target não é igual ao botão
-        if (eTarget.classList.length > 0) { eTarget = eTarget.firstChild };
-
-        escreveNaTextarea(eTarget);
-    }
-
-    // Função para substituir os valores dos botoes, de acordo com o JSON
-    function grabJSONButtons() {
-
-        fetch('assets/js/buttons.json')
-            .then(function (response) { return response.json(); })
-            .then(function (data) { appendData(data); })
-            .catch(function (err) { })
-
-        function appendData(data) {
-            for (let i = 0; i < data.length; i++) {
-                buttonsFromJSON[i] = document.querySelector(`.botao-${i + 1}`); //+.col-md-3` 
-                buttonsFromJSON[i].innerHTML = data[i].code;
-            }
-        }
-    }
-
-    // Função para mostrar a modal de icons
-    function modalIcons() {
-
-        // Limpar a modal
-        modaldiv.innerHTML = '';
-
-        // Iniciar contador paginador
-        let pag = 1;
-
-        // Declaração de variáveis necessárias para efetuar o loop      
-        let row = 1;
-        let preRow = 1;
-
-        // Anexar à modal a primeira página (atualmente não existe segunda página)
-        let primeiraPagina = modaldiv.appendChild(newRow(pag));
-
-        let divPrimeiraRow = primeiraPagina.appendChild(document.createElement('div'));
-        divPrimeiraRow.classList = `row icon-row-${preRow}`;
-
-        let divSegundaRow = divPrimeiraRow.appendChild(document.createElement('div'));
-        divSegundaRow.classList = `col-md-6 icon-sub-row-${row}`;
-
-        for (i = 1; i <= numeroImagens; i++) {
-
-            // A cada 24 interações, cria um novo row (100%)
-            if ((i % 24) === 0) {
-                divSegundaRow.appendChild(divIcon(i));
-                row = 1;
-                preRow++;
-                primeiraPagina.appendChild(document.createElement('div'));
-                primeiraPagina.lastChild.classList = `row icon-row-${preRow}`;
-                primeiraPagina.lastChild.appendChild(document.createElement('div'));
-                primeiraPagina.lastChild.lastChild.classList = `col-md-6 icon-sub-row-${row}`;
-                divPrimeiraRow = primeiraPagina.lastChild;
-                divSegundaRow = primeiraPagina.lastChild.lastChild;
-            }
-
-            // A cada 12 interações, cria um novo row (50%)
-            else if ((i % 12) === 0) {
-                divSegundaRow.appendChild(divIcon(i));
-                row++;
-                divPrimeiraRow.appendChild(document.createElement('div'));
-                divPrimeiraRow.lastChild.classList = `col-md-6 icon-sub-row-${row}`;
-                divSegundaRow = divPrimeiraRow.lastChild;
-            }
-
-            else { divSegundaRow.appendChild(divIcon(i)); }
-
-        }
-        grabJSONIcons();
-    }
-
-    function divIcon(i) {
-        const divIcon = document.createElement('div');
-        divIcon.classList = `icon-${i} col-md-1 phcgo-icon`;
-        divIcon.innerHTML = `${i}`;
-        divIcon.addEventListener('click', escreverIcon);
-        return divIcon
-    }
-
-    function escreverIcon(e) {
-        let eTarget = e.target;
-
-        // HotFix para quando o target não é igual ao icons
-        if (eTarget.classList.contains('phcgo-icon')) { eTarget = eTarget.firstChild };
-
-        escreveNaTextarea(eTarget);
-    }
-
-    function grabJSONIcons() {
-
-        fetch('assets/js/imagens.json')
-            .then(function (response) { return response.json(); })
-            .then(function (data) { appendData(data); })
-            .catch(function (err) { })
-
-        function appendData(data) {
-            for (let i = 0; i < data.length; i++) {
-                iconsFromJSON[i] = document.querySelector(`.icon-${i + 1}`);
-                iconsFromJSON[i].innerHTML = data[i].code;
-            }
-        }
-
-    }
-
-    // Função para mostar a modal de Textboxes
-    function modalTextbox() {
-
-        // Limpar a modal
-        modaldiv.innerHTML = '';
-
-        // Iniciar contador paginador
-        let pag = 1;
-
-        // Anexar à modal a primeira página (atualmente não existe segunda página)
-        let primeiraPagina = modaldiv.appendChild(newRow(pag));
-
-        for (i = 1; i <= numeroTextBoxes; i++) {
-            primeiraPagina.appendChild(divTextbox(i));
-        }
-        grabJSONTextBoxes();
-    }
-
-    function grabJSONTextBoxes() {
-
-        fetch('assets/js/textbox.json')
-            .then(function (response) { return response.json(); })
-            .then(function (data) { appendData(data); })
-            .catch(function (err) { });
-
-        function appendData(data) {
-            for (let i = 0; i < data.length; i++) {
-                textBoxesFromJSON[i] = document.querySelector(`.textbox-${i + 1}`);
-                textBoxesFromJSON[i].innerHTML = data[i].code;
-            }
-        }
-    }
-
-    function divTextbox(i) {
-        const divTextbox = document.createElement('div');          // Função geradora <div col> para Caixas de texto
-        divTextbox.classList = `textbox-${i} helpcenter-textbox col-md-4`;
-        divTextbox.innerHTML = `${i}`;
-        divTextbox.addEventListener('click', escreverTextbox);
-        return divTextbox
-    }
-
-    function escreverTextbox(e) {
-        let eTarget = e.target;
-
-        // Hotfix para quando o target devolve a <img> ou <i> (quando carregamos nos icons da textboxes)
-        if (eTarget.tagName === "IMG"
-            || eTarget.tagName === "I") { eTarget = eTarget.parentElement.parentElement };
-
-        // Hotfix para quando o target devolve o título do div (quando carregamos no título da textboxes)
-        if (eTarget.classList.contains('novoalerta-titulo')
-            || eTarget.classList.contains('novoalerta-contido')) { eTarget = eTarget.parentElement };
-
-        // Hotfix para quando o target devolve o wrapper (quando carregamos fora das textboxes)
-        if (eTarget.classList.contains('helpcenter-textbox')) { eTarget = eTarget.firstChild };
-
-        eTarget = eTarget.outerHTML.toString().replace('<div class="novoalerta-titulo">', '<div class="novoalerta-titulo">' + "\n")
-        eTarget = eTarget.toString().replace('<br>', '<br>' + "\n")
-        eTarget = eTarget.toString().replace('<ul>', '<ul>' + "\n")
-        eTarget = eTarget.toString().replace('</li>', '</li>' + "\n")
-
-        escreveNaTextareaGeradores(eTarget);
-        // Hotfix para corrigir a text-box dos tópicos relacionados
-
-    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Extras 
 
     // Landing page
-    window.onload = function () {
-        const rng = Math.floor(Math.random() * (3000 - 2500)) + 2500;
 
-        const landingTimer = setTimeout(function () {
-
-            // esconde o loading
-            document.querySelector('#landing').classList.add('no-display');
-
-            // mostras as sections
-            const allSections = [];
-            allSections.push(document.querySelector('.sticky-top'));
-            allSections.push(document.querySelector('.display-preview'));
-            for (i = 0; i < allSections.length; i++) {
-                allSections[i].classList.remove('no-display');
-            }
-        }, rng);
-
-        return landingTimer;
-    }
 
     // Função para guardar na cache do browser o Source Code do tópico (e respetivas alterações)
-    function saveIntoJSON() {
+    function autosave2JSON() {
         let textarea2JSON = JSON.stringify(textarea.value);
         localStorage.setItem('textarea', textarea2JSON);
     }
@@ -1308,26 +1352,28 @@ function mixWrapper() {
         let inputTextWithCursor = `${inputTextString1}<span id="pulse">|</span>${inputTextString2}`;
 
         // guarda a posição do cursor 
-        cursorPosInfo[0] = inputTextString1;
-        cursorPosInfo[1] = inputTextString2;
+        stringCursor[0] = inputTextString1;
+        stringCursor[1] = inputTextString2;
 
         // atualiza o preview
-        maindiv.innerHTML = inputTextWithCursor;
-        maindiv.innerHTML = fixArtigosRelacionadosLogo(maindiv.innerHTML);
+        hcPreview.innerHTML = inputTextWithCursor;
+        hcPreview.innerHTML = fixArtigosRelacionadosLogo(hcPreview.innerHTML);
 
-        modalColap();
-        saveIntoJSON();
+        appControlsColap();
+        autosave2JSON();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Event listeners
-    document.querySelector('#listas-tabelas-btn').addEventListener('click', modalListasETabelas);
+    document.querySelector('#listas-tabelas-btn').addEventListener('click', appControlsListsAndTables);
     document.querySelector('#ancora-btn').addEventListener('click', stickyTop);
-    document.querySelector('#titulos-ligacoes-btn').addEventListener('click', modalTitulosELigacoes);
-    document.querySelector('#botoes-btn').addEventListener('click', modalBotoes);
-    document.querySelector('#logos-btn').addEventListener('click', modalIcons);
-    document.querySelector('#textbox-btn').addEventListener('click', modalTextbox);
+    document.querySelector('#titulos-ligacoes-btn').addEventListener('click', appControlsTitulosELigacoes);
+    document.querySelector('#botoes-btn').addEventListener('click', appControlsButtons);
+    document.querySelector('#logos-btn').addEventListener('click', appControlsIcons);
+    document.querySelector('#textbox-btn').addEventListener('click', appControlsTextbox);
+    document.querySelector('#quicksave-btn').addEventListener('click', quickSave);
+    document.querySelector('#quickload-btn').addEventListener('click', quickLoad);
 
     // Função que atualiza à medida que vamos escrevendo, ou quando clicamos na text-area
     textarea.addEventListener('keyup', updatePreviews);
@@ -1337,22 +1383,16 @@ function mixWrapper() {
 
     // Debug Tools
 
-    // // Mostra target na consola
-    // document.addEventListener("click", function (e) {
-    //     console.log(e.target);
-    //     console.log('cursorpos: '+e.target.selectionStart)
-    // });
+    // Mostra target na consola
+    document.addEventListener("click", function (e) {
+        console.log(e.target);
+        // console.log('cursorpos: '+e.target.selectionStart)
+    });
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Paginador (futureproof caso seja necessário adicionar páginas adicionais às diferentes categorias)
-    function newRow(pag) {
-        const newRow = document.createElement('div');
-        newRow.classList.add('row');
-        newRow.classList.add(`page-${pag}`);
-        return newRow
-    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1409,7 +1449,7 @@ function mixWrapper() {
         }
     }
     // Função que vai buscar o tópico à cache do browser (Caso exista)
-    function JSON2Input() {
+    function fromJSON2Textarea() {
         try {
             const getTextareaFromJSON = localStorage.getItem('textarea');
             textarea.value = JSON.parse(getTextareaFromJSON);
@@ -1417,24 +1457,24 @@ function mixWrapper() {
         catch { }
     }
 
-    // Função que atualiza o maindiv, conforme tenha encontrado ou não cache 
+    // Função que atualiza o hcPreview, conforme tenha encontrado ou não cache 
     function haveCache() {
         if (textarea.value === '') {
-            let haveCache = maindiv.appendChild(document.createElement('span'));
+            let haveCache = hcPreview.appendChild(document.createElement('span'));
             haveCache.innerText = 'Não encontrei nenhum tópico em cache. Carrega na caixa de texto para começar!'
         } else {
-            let haveCache = maindiv.appendChild(document.createElement('span'));
+            let haveCache = hcPreview.appendChild(document.createElement('span'));
             haveCache.innerText = 'Encontrei um tópico em cache. A carregar...'
-            let timer = setTimeout(refreshMainDiv, 3600);
-            function refreshMainDiv() {
-                maindiv.innerHTML = textarea.value;
+            let timer = setTimeout(refreshhcPreview, 3600);
+            function refreshhcPreview() {
+                hcPreview.innerHTML = textarea.value;
             }
         }
     }
 
     // Inicializa as funções relacionadas com cache
     (function () {
-        JSON2Input();
+        fromJSON2Textarea();
         haveCache();
     }());
 
@@ -1446,24 +1486,24 @@ function mixWrapper() {
 
         // caso seja a textarea principal
         if (activeTextarea.id === 'textarea') {
-            // O array cursorPosInfo é composto por duas string, antes e depois do cursor
+            // O array stringCursor é composto por duas string, antes e depois do cursor
             // O novoSourceCode faz o concat das string, com o elemento a ser escrito na posição do cursor.
-            novoSourceCode = `${cursorPosInfo[0]}` + "\n" + `${etarget.outerHTML}` + `${cursorPosInfo[1]}`;
+            novoSourceCode = `${stringCursor[0]}` + "\n" + `${etarget.outerHTML}` + `${stringCursor[1]}`;
 
             // Atualiza a textarea
             textarea.value = novoSourceCode;
 
             // Atualiza o preview
-            maindiv.innerHTML = fixArtigosRelacionadosLogo(novoSourceCode);
+            hcPreview.innerHTML = fixArtigosRelacionadosLogo(novoSourceCode);
 
-            modalColap();
+            appControlsColap();
 
             // Guarda as alterações em cache
-            saveIntoJSON();
+            autosave2JSON();
 
             // caso seja as textareas da vista de collaps
         } else {
-            novoSourceCode = `${modalTextareaPos[0]}` + "\n" + `${(etarget.outerHTML).toString()}` + `${modalTextareaPos[1]}`;
+            novoSourceCode = `${stringCursorColap[0]}` + "\n" + `${(etarget.outerHTML).toString()}` + `${stringCursorColap[1]}`;
             activeTextarea.value = novoSourceCode;
             let inputPreview = activeTextarea.parentElement.nextElementSibling.children[1];
             inputPreview.innerHTML = novoSourceCode;
@@ -1479,24 +1519,24 @@ function mixWrapper() {
 
         // caso seja a textarea principal
         if (activeTextarea.id === 'textarea') {
-            // O array cursorPosInfo é composto por duas string, antes e depois do cursor
+            // O array stringCursor é composto por duas string, antes e depois do cursor
             // O novoSourceCode faz o concat das string, com o elemento a ser escrito na posição do cursor.
-            novoSourceCode = `${cursorPosInfo[0]}` + "\n" + `${etarget}` + `${cursorPosInfo[1]}`;
+            novoSourceCode = `${stringCursor[0]}` + "\n" + `${etarget}` + `${stringCursor[1]}`;
 
             // Atualiza a textarea
             textarea.value = novoSourceCode;
 
             // Atualiza o preview
-            maindiv.innerHTML = fixArtigosRelacionadosLogo(novoSourceCode);
+            hcPreview.innerHTML = fixArtigosRelacionadosLogo(novoSourceCode);
 
-            modalColap();
+            appControlsColap();
 
             // Guarda as alterações em cache
-            saveIntoJSON();
+            autosave2JSON();
 
             // caso seja as textareas da vista de collaps
         } else {
-            novoSourceCode = `${modalTextareaPos[0]}` + "\n" + `${(etarget).toString()}` + `${modalTextareaPos[1]}`;
+            novoSourceCode = `${stringCursorColap[0]}` + "\n" + `${(etarget).toString()}` + `${stringCursorColap[1]}`;
             activeTextarea.value = novoSourceCode;
             let inputPreview = activeTextarea.parentElement.nextElementSibling.children[1];
             inputPreview.innerHTML = novoSourceCode;
@@ -1543,16 +1583,16 @@ function mixWrapper() {
     }
 
     function novoColapsavel() {
-        if (collapsablesArray.length === 0) {
+        if (colapList.length === 0) {
             const abrirTodosDiv = '<br><a id="colapse-all-a" style="display: block;text-align: right;" data-toggle="collapse" data-target=".multi-collapse" href="#" role="button" aria-expanded="false"">Abrir Todos</a></p></div>'
             textarea.value = textarea.value + "\n" + abrirTodosDiv + "\n" + '<!-- Início do Colapsável #1 -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #1 -->');
             textarea.value = textarea.value.replaceAll('<div class="collapse', "\n" + "\n" + '<div class="collapse')
-            maindiv.innerHTML = textarea.value;
-            modalColap();
+            hcPreview.innerHTML = textarea.value;
+            appControlsColap();
         } else {
 
             // babyproof, não deixa adicionar colapsável sem gravar alterações
-            for (i = 1; i <= collapsablesArray.length; i++) {
+            for (i = 1; i <= colapList.length; i++) {
                 let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
                 console.log(saveBtn.classList)
                 console.log(saveBtn.classList.contains('no-display'))
@@ -1561,10 +1601,10 @@ function mixWrapper() {
                 }
             }
 
-            textarea.value = textarea.value + "\n" + '<!-- Início do Colapsável #' + (collapsablesArray.length + 1) + ' -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #' + (collapsablesArray.length + 1) + ' -->');
+            textarea.value = textarea.value + "\n" + '<!-- Início do Colapsável #' + (colapList.length + 1) + ' -->' + "\n" + (singleColapsavel().toString() + "\n" + '<!-- Fim do Colapsável #' + (colapList.length + 1) + ' -->');
             textarea.value = textarea.value.replaceAll('><div class="collapse', '>' + "\n" + "\n" + '<div class="collapse ')
-            maindiv.innerHTML = textarea.value;
-            modalColap();
+            hcPreview.innerHTML = textarea.value;
+            appControlsColap();
             window.scrollTo(0, document.body.scrollHeight);
         }
     }
@@ -1686,26 +1726,52 @@ function mixWrapper() {
         };
         xhttp.open("POST", "http://hilite.me/api", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send(`code=${code}&style=monokai&lexer=${codetype}`);
+        xhttp.send(`code=${code}&style=monokai&lexer=${codeType}`);
 
 
     }
 
-    function updateCodeType(e) {
+    function updatecodeType(e) {
         document.querySelector('#ts').checked = false
         document.querySelector('#vbnet').checked = false
+        document.querySelector('#json').checked = false
         e.target.checked = true
-        codetype = e.target.id
+        codeType = e.target.id
+        console.log(codeType)
     }
 
     function updateTableType(e) {
         document.querySelector('#normal-table').checked = false
         document.querySelector('#modern-table').checked = false
+        document.querySelector('#modern-table-blue').checked = false
         e.target.checked = true
-        tipoTabela = e.target.id
+        tableType = e.target.id
     }
+
+    function quickSave() {
+        const textarea2JSON = JSON.stringify(textarea.value);
+        localStorage.setItem('quickSave', textarea2JSON);
+        textarea.value = '';
+        hcPreview.innerHTML = '';
+        appControlsColap();
+    }
+    
+    
+    function quickLoad() {
+        const getTextareaFromJSON = localStorage.getItem('quickSave');
+        textarea.value = JSON.parse(getTextareaFromJSON);
+        autosave2JSON();
+        hcPreview.innerHTML = textarea.value;
+        appControlsColap();
+    }
+
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
 mixWrapper();
+
+
+
+

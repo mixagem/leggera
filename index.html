@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>.:&nbsp;HelpCenter+&nbsp;Superleggera&nbsp;Edition&nbsp;:.&nbsp;</title>
+    <title>.:&nbsp;HelpCenter+&nbsp;Superleggera&nbsp;edition&nbsp;:.&nbsp;</title>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
@@ -18,12 +18,12 @@
 </head>
 
 <body>
+    
 
-    <div class="row">
-        <div id="landing"><span id="loading-span" class="animate__animated animate__fadeIn"></span>
-            <div id="loading" class="animate__animated animate__fadeIn animate__delay-1s" >SUPERLEGGERA</div>
+        <div id="loading-wrapper">
+            <span id="loading-gif" class="animate__animated animate__fadeIn"></span>
+            <div id="loading-title" class="animate__animated animate__fadeIn animate__delay-1s">SUPERLEGGERA</div>
         </div>
-    </div>
     <section class="header sticky-top no-display">
         <div class="container-fluid">
             <div class="row">
@@ -38,31 +38,38 @@
                             Botões & Etiquetas</button>
                         <button type="button" class="btn btn-light" id="listas-tabelas-btn"><i class="lni lni-grid"></i>
                             Listas & Tabelas</button>
-                        <button type="button" class="btn btn-light" id="titulos-ligacoes-btn"><i class="lni lni-link"></i>
+                        <button type="button" class="btn btn-light" id="titulos-ligacoes-btn"><i
+                                class="lni lni-link"></i>
                             Títulos & Ligações</button>
                     </div>
                     <textarea id="textarea"></textarea>
-                    <div class="col-md-12 headControls headControls2">
+                    <div class="col-md-6 headControls headControls2 text-left">
                         <button type="button" class="btn btn-info" id="ancora-btn"><i class="lni lni-anchor"></i>
                             Âncorar editor</button>
                         <button type="button" class="btn btn-light" id="colap-btn"><i class="lni lni-layers"></i> Vista
                             Colapsáveis</button>
                     </div>
+                    <div class="col-md-6 headControls headControls2 text-right">
+                        <button type="button" class="btn btn-warning" id="quicksave-btn"><i class="lni lni-save"></i>
+                            QuickSave</button>
+                        <button type="button" class="btn btn-warning" id="quickload-btn"><i class="lni lni-upload"></i>
+                            QuickLoad</button>
+                    </div>
                 </div>
 
                 <div class="col-md-7">
-                    <div id="modal"></div>
+                    <div id="app-controls-wrapper"></div>
                 </div>
-                
+
             </div>
         </div>
     </section>
 
     <section class="display-preview no-display">
-        <div class="container-fluid" style="overflow-x: clip;">
+        <div class="container-fluid">
             <div class="row">
 
-                <div id="colapsables-modal" class="col-md-12 no-display"></div>
+                <div id="colapsables-wrapper" class="col-md-12 no-display"></div>
 
                 <div class="col-md-12 hc-preview">
 
@@ -80,7 +87,7 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-1"></div>
-                                <div id="main-div" class="col-md-10"></div>
+                                <div id="helpcenter-preview" class="col-md-10"></div>
                                 <div class="col-md-1"></div>
                             </div>
                         </div>

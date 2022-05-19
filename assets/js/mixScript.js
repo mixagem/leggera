@@ -10,9 +10,9 @@ function mixWrapper() {
     const colapBtn = document.querySelector('#colap-btn');
     const colapModal = document.querySelector('#colapsables-modal');
     const hcPreview = document.querySelector('.hc-preview');
-    const numeroImagens = 40;
+    const numeroImagens = 36;
     const numeroTextBoxes = 4;
-    const numeroButoes = 8;
+    const numeroButoes = 12;
     const iconsFromJSON = [];
     const textBoxesFromJSON = [];
     const buttonsFromJSON = [];
@@ -79,7 +79,7 @@ function mixWrapper() {
 
     function newMediumItem(i) {                                 // Função geradora <div col> para PHC Buttons
         const newMediumItem = document.createElement('div');
-        newMediumItem.classList.add('col-md-4');
+        newMediumItem.classList.add('col-md-3');
         newMediumItem.classList.add(`item-${i}`);
         newMediumItem.innerHTML = `${i}`;
         return newMediumItem
@@ -129,7 +129,7 @@ function mixWrapper() {
         let pag = 1;
         modaldiv.appendChild(newRow(pag));
         for (i = 1; i <= numeroImagens; i++) {
-            if ((i % 24) === 0) {
+            if ((i % 36) === 0) {
                 let modaldivLastrow = modaldiv.lastChild;
                 modaldivLastrow.appendChild(newMiniItem(i));
                 pag++;
@@ -200,7 +200,7 @@ function mixWrapper() {
 
         function appendData(data) {
             for (let i = 0; i < data.length; i++) {
-                buttonsFromJSON[i] = document.querySelector(`.col-md-4` + `.item-${i + 1}`);
+                buttonsFromJSON[i] = document.querySelector(`.col-md-3` + `.item-${i + 1}`);
                 buttonsFromJSON[i].innerHTML = data[i].code;
             }
         }
@@ -211,9 +211,17 @@ function mixWrapper() {
         modaldiv.innerHTML = '';
         let pag = 1;
         modaldiv.appendChild(newRow(pag));
+        let rowPagi = modaldiv.lastChild;
+        rowPagi.appendChild(newButtonRow());
+        let modaldivLastRow = rowPagi.lastChild;
         for (i = 1; i <= numeroButoes; i++) {
-            let modaldivLastrow = modaldiv.lastChild;
-            modaldivLastrow.appendChild(newMediumItem(i));
+            if (i % 4 === 0) {
+                modaldivLastRow.appendChild(newMediumItem(i));
+                rowPagi.appendChild(newButtonRow());
+                modaldivLastRow = rowPagi.lastChild;                   
+            } else {
+                modaldivLastRow.appendChild(newMediumItem(i));
+            }     
         }
         // modaldiv.appendChild(newPagiRow());
         // let pagiRow = document.querySelector('.pagi');
@@ -221,6 +229,13 @@ function mixWrapper() {
         //     pagiRow.appendChild(newPagiItem(pagi));
         // }
         grabJSONButtons();
+    }
+
+    function newButtonRow () {
+        const newButtonRow = document.createElement('div');
+        newButtonRow.classList.add('row');
+        newButtonRow.classList.add('phc-buttons');
+        return newButtonRow;
     }
 
     // function newPagiRow() {
@@ -295,7 +310,7 @@ function mixWrapper() {
         (function () {
             let eventArray = [];
             for (i = 1; i <= numeroButoes; i++) {
-                eventArray[i] = document.querySelector('.col-md-4' + `.item-${i}`);
+                eventArray[i] = document.querySelector('.col-md-3' + `.item-${i}`);
                 eventArray[i].addEventListener('click', (e) => {
                     eTarget = e.target;
                     eTargetLenght = eTarget.classList.length;
@@ -321,6 +336,23 @@ function mixWrapper() {
         getCollapsables();
     }
 
+    function oldColapsContent2JSON() {
+        // let tarefas = tarefasList.querySelectorAll('li');                     // Estamos a obter um array com os textos dos vários <li>
+        // let arrayTarefas = [];
+        let collapsablesArray = document.querySelectorAll('.row .seccao-phcgo');
+        let tempArray = [[],[],[]];
+
+        for (i = 1; i <= collapsablesArray.length; i++) {
+            tempArray[0][i-1] = document.querySelector(`.colap-input-id-${i}`).value ;
+            tempArray[1][i-1] = document.querySelector(`.colap-input-h2-${i}`).value ;
+            tempArray[2][i-1] = document.querySelector(`.colap-input-body-${i}`).value ;
+        }
+
+        console.log(tempArray);
+        let colap2JSON = JSON.stringify(tempArray);
+        console.log(colap2JSON);
+        localStorage.setItem('old-text',colap2JSON);
+    };
 
     function getCollapsables() {
         let collapsablesArray = document.querySelectorAll('.row .seccao-phcgo');

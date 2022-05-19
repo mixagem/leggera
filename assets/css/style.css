@@ -26,12 +26,19 @@ body {
 /** Cabeçalho live editor **/ 
 
 .header {
-    padding-top:30px;
-    min-height: 22vh;
+    min-height: 25vh;
     background:#333;
     background-image: url('../img/header-bg.png');;
     background-size: 3%;
 
+}
+
+.header > div {
+    padding-top:10px;
+}
+
+.header .novoalerta {
+    margin-top:60px;
 }
 
 .sticky-top {
@@ -41,9 +48,13 @@ body {
     z-index: 1;
 }
 
+.header > div > div > .col-md-5 {
+    padding-top:20px;
+}
+
 textarea {
     width:100%;
-    min-height:100px;
+    min-height:175px;
 }
 
 .mini-item {
@@ -402,18 +413,18 @@ h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
 #colapsables-modal{
     padding-top:20px;
 }
+
 #modal > .row > .col-md-3 {
     margin-top:-45px;
 }
 
-#modal > .row > .col-md-4 {
-	padding-top:15px;
-    text-align: center;
-    width: 25%; /* idk, rebentei com a flexbox do bootstrap. */
+#modal > div > .phc-buttons > div {
+    text-align:center;
+    padding-top:25px;
 }
 
 .header > div > div > div > button {
-	margin-bottom: 5px;
+	margin-top: 5px;
 }
 
 #colapsables-modal > div > div > div > input {
@@ -449,3 +460,29 @@ h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
     margin:0;
     padding:10px 0px 10px 30px;
     text-align:left;}
+  
+.phc-go-chip {
+    display: inline-flex;
+    padding: 7px 12px;
+    border-radius: 16px;
+    align-items: center;
+    cursor: default;
+    min-height: 32px;
+    height: 1px;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    letter-spacing: normal;
+    color:#fff;
+    font-family: 'HK Grotesk';
+}
+
+.green-chip {background-color: #139b25 !important;}
+.gray-chip {background-color: #707070  !important;}
+.orange-chip {background-color: #ff8f00  !important;}
+.red-chip {background-color: #b70505 !important;}

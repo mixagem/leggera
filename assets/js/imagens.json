@@ -48,6 +48,38 @@
         "code": " <i class='fa fa-star' aria-hidden='true'></i> "
     },
     {
+        "desc" : "Ordena Cima",
+        "code" : " <i class='fa fa-sort-asc' aria-hidden='true'></i> "
+    },
+    {
+        "desc" : "Ordena Baixo",
+        "code" : " <i class='fa fa-sort-desc' aria-hidden='true'></i> "
+    },
+    {
+        "desc" : "Chevron Right",
+        "code" : " <i class='fa fa-chevron-right aria-hidden='true'></i> "
+    },
+    {
+        "desc" : "Chevron Left",
+        "code" : " <i class='fa fa-chevron-left' aria-hidden='true'></i> "
+    },
+    {
+        "desc" : "Chevron Up",
+        "code" : " <i class='fa fa-chevron-up' aria-hidden='true'></i> "
+    },
+    {
+        "desc" : "Chevron Down",
+        "code" : " <i class='fa fa-chevron-down' aria-hidden='true'></i> "
+    },
+    {
+        "desc" : "list",
+        "code" : " <i class='fa fa-list' aria-hidden='true'></i> "
+    },
+    {
+        "desc" : "tag",
+        "code" : " <i class='fa fa-tag' aria-hidden='true'></i> "
+    },
+    {
         "desc": "Balde do lixo",
         "code": " <img alt='' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAgCAYAAACYTcH3AAAACXBIWXMAAAsTAAALEwEAmpwYAAAF0WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDUgNzkuMTYzNDk5LCAyMDE4LzA4LzEzLTE2OjQwOjIyICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOSAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDIwLTA5LTE4VDExOjU4OjI1KzAxOjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDIwLTA5LTE4VDExOjU4OjI1KzAxOjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMC0wOS0xOFQxMTo1ODoyNSswMTowMCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpjYTM5ODhjZi1lMTAzLWI0NGEtYWMwMS1kZmY1MWQwNTQ5MTEiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpiZDk0NzIwZS0xZWEwLWJhNDktODY3MC1lYTVkMzg0ZWVlYWQiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo4N2QyODVhOS0zZWY3LWIyNDktYTAzMy1iZDNiM2E2MTYyNzAiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDo4N2QyODVhOS0zZWY3LWIyNDktYTAzMy1iZDNiM2E2MTYyNzAiIHN0RXZ0OndoZW49IjIwMjAtMDktMThUMTE6NTg6MjUrMDE6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE5IChXaW5kb3dzKSIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6Y2EzOTg4Y2YtZTEwMy1iNDRhLWFjMDEtZGZmNTFkMDU0OTExIiBzdEV2dDp3aGVuPSIyMDIwLTA5LTE4VDExOjU4OjI1KzAxOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOSAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPC9yZGY6U2VxPiA8L3htcE1NOkhpc3Rvcnk+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+fRvzmgAAAmNJREFUWIXtl7FPU1EUh3/nvHdtawshz8Q0ESHBaEICnYwTYDf/A4fuQmVxIEyEpIOrumHApAMDg5sbRhkEXFhp0sENMOlg2miMlL73znEAsWDvg6IJNemXvOXdc8/73sm9N+eSqqJT4MsWaMa1DVQ3NlCamsL3chlsDDQIYDwPY9vb2F1aevypUHjIrisg+l1aVZIg4NuFwuubk5MvN0dH4VerINeF+D5Sw8MYWVyENz7engwOq3YVgAGgAEDG4Mvq6thesfiUmD0QnZxBBGLGXrGYSQwM7JIxm82jAHwAPwBIuzJjAF4BSAMQcl0EtRpK+XyvNhpMxrScRI6D+s6OV8rn3xDRN3KPP8EAKgAeAVhvV6YPwJ3mFyoCFYFN5FjIGGgYMpj7Tg31HuVtSZRMTXy/HAJpbior8fnW/Om4EGDx/QqAWtsyKvIxMTh4N9HfH1TX1xvEjD/WyHlQhYrgejZ7BY7jqkjd+gO2c+agUoGTSODzysq90vT0A+dw51xIJgwCHllYeHsjl9sK9/cRS6dbhlorQ8bASSYh9XoOwJP2LU4i9fo1J5nckiCwxtgXgCo0DAGg8bciRzQ0DIGIE7+jTuCujI2ujI2ujI2ujI2ujI2ujI3/TuYCHdXF8thliA4fkX9z5fyVJ6JbtMq4qRTYGPRkMu8JgEZ0aFFoEIAB9GQy7zgWg5tKtS+jIpCDA3gTE2tDMzPPKR6P7NJaJ1FQPI6h2dlnXja7pr4fGW6/qqhCVUHGhLfm5wt+rfZ1b3n5PokAzGdbiZASoT+X+zA0N/eCmOWs6lpvB5dBR23tn1g/3CYorb1tAAAAAElFTkSuQmCC' style='width:auto;height:25px;margin:0;border:0;'/> "
     },

@@ -1,0 +1,30 @@
+[
+    {
+        "desc": "Botão Mainform Principal",
+        "code": "<button style='background-color:#ff8f00;color:#fff;box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);box-sizing:border-box;cursor:default;outline:0;border:none;display:inline-block;text-align:center;margin:0;min-width:64px;line-height:36px;padding:0 16px;border-radius:4px;font-family:HK Grotesk;font-size:14px;font-weight:400'>Introduza</button>"
+    },
+    {
+        "desc" : "Botão Mainform Secundário",
+        "code" : "<button style='background-color:#fff;color:#000;box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);box-sizing:border-box;cursor:default;outline:0;border:none;display:inline-block;text-align:center;margin:0;min-width:64px;line-height:36px;padding:0 16px;border-radius:4px;font-family:HK Grotesk;font-size:14px;font-weight:400'>Introduza</button>"
+    },
+    {
+        "desc" : "Botão ações principal",
+        "code" : "<button style='box-shadow:0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);color:#1a237e;border:1px solid rgba(0,0,0,.12);box-sizing:border-box;cursor:default;outline:0;display:inline-block;text-align:center;margin:0;min-width:64px;padding:0 16px;border-radius:4px;overflow:visible;background:0 0;font-family:HK Grotesk;font-size:14px;font-weight:400;line-height:34px'>Ações</button>"
+    },
+    {
+        "desc" : "Botão ações danger",
+        "code" : "<button style='box-shadow:0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);color:#b70505;border:1px solid rgba(0,0,0,.12);box-sizing:border-box;cursor:default;outline:0;display:inline-block;text-align:center;margin:0;min-width:64px;padding:0 16px;border-radius:4px;overflow:visible;background:0 0;font-family:HK Grotesk;font-size:14px;font-weight:400;line-height:34px'>Ações</button>"
+    },
+    {
+        "desc" : "Botão ações inativo",
+        "code" : "<button style='box-shadow:0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);color:rgba(0,0,0,.26);border:1px solid currentColor;box-sizing:border-box;cursor:default;outline:0;display:inline-block;text-align:center;margin:0;min-width:64px;padding:0 16px;border-radius:4px;overflow:visible;background:0 0;font-family:HK Grotesk;font-size:14px;font-weight:400;line-height:34px'>Ações</button>"
+    },
+    {
+        "desc" : "Botão processamentos principal",
+        "code" : "<button style='box-shadow:0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);border:0;color:#fff;box-sizing:border-box;cursor:default;outline:0;display:inline-block;text-align:center;margin:0;min-width:64px;padding:0 16px;border-radius:4px;overflow:visible;background:#1976d2;font-family:HK Grotesk;font-size:14px;font-weight:400;line-height:34px'>Processar</button>"
+    },
+    {
+        "desc" : "Botão processamentos secundário",
+        "code" : "<button style='box-shadow:0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);color:#1976d2;border:1px solid rgba(0,0,0,.12);box-sizing:border-box;cursor:default;outline:0;display:inline-block;text-align:center;margin:0;min-width:64px;padding:0 16px;border-radius:4px;overflow:visible;background:0 0;font-family:HK Grotesk;font-size:14px;font-weight:400;line-height:34px'>Processar</button>"
+    }
+]

@@ -1,19 +1,19 @@
 [
     {
         "desc": "Textbox Notas",
-        "code": " <br><div class='novoalerta alerta-notas'><div class='novoalerta-titulo'><i class='fa fa-sticky-note-o'></i>Notas</div><br><div class='novoalerta-contido'>Texto para dicas</div></div> "
+        "code": " <br><div class='novoalerta alerta-notas'><div class='novoalerta-titulo'><i class='fa fa-sticky-note-o'></i>Notas</div><br><div class='novoalerta-contido'>Texto para notas.</div></div> "
     },
     {
         "desc": "Textbox Dicas",
-        "code": " <br><div class='novoalerta alerta-dicas'><div class='novoalerta-titulo'><i class='fa fa-bullhorn'></i>Dicas</div><br><div class='novoalerta-contido'>Texto para dicas</div></div> "
+        "code": " <br><div class='novoalerta alerta-dicas'><div class='novoalerta-titulo'><i class='fa fa-bullhorn'></i>Dicas</div><br><div class='novoalerta-contido'>Texto para dicas.</div></div> "
     },
     {
         "desc": "Textbox Info",
-        "code": " <br><div class='novoalerta alerta-info'><div class='novoalerta-titulo'><i class='fa fa-info-circle'></i>Info</div><br><div class='novoalerta-contido'>Texto para dicas</div></div> "
+        "code": " <br><div class='novoalerta alerta-info'><div class='novoalerta-titulo'><i class='fa fa-info-circle'></i>Info</div><br><div class='novoalerta-contido'>Texto para informações.</div></div> "
     },
     {
         "desc": "Textbox Boas Práticas",
-        "code": " <br><div class='novoalerta boas-praticas'><div class='novoalerta-titulo'><i class='fa fa-thumbs-o-up'></i>Boas práticas</div><br><div class='novoalerta-contido'>Texto para dicas</div></div> "
+        "code": " <br><div class='novoalerta boas-praticas'><div class='novoalerta-titulo'><i class='fa fa-thumbs-o-up'></i>Boas práticas</div><br><div class='novoalerta-contido'>Texto para boas práticas.</div></div> "
     }
 
 ]

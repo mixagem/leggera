@@ -1,12 +1,3 @@
-/* @font-face {
-    font-family: 'Neutrif Pro Med';
-    src: local('Neutrif Pro Medium'), local('Neutrif-Pro-Medium'),
-        url('/assets/fonts/NeutrifPro-Medium.woff2') format('woff2'),
-        url('/assets/fonts/NeutrifPro-Medium.woff') format('woff'),
-        url('/assets/fonts/NeutrifPro-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-} */
 
 @font-face {
     font-family: 'Neutrif Pro';
@@ -24,13 +15,26 @@ body {
     background:#111;
     color: #000;
     line-height:1.42857143;
-    overflow:auto;
+    overflow-x: clip;   
 }
+
+.no-display {
+    display:none!important;
+}
+
+
+/** Cabeçalho live editor **/ 
 
 .header {
     padding-top:30px;
-    height: 20vh;
-    background:#111;
+    min-height: 22vh;
+    background:#333;
+    background-image: url('/assets/img/header-bg.png');
+    background-size: 3%;
+
+}
+
+.sticky-top {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
@@ -38,172 +42,81 @@ body {
 }
 
 textarea {
-    width:800px;
-    height:100px;
+    width:100%;
+    min-height:100px;
 }
+
+.mini-item {
+    font-size:35px;
+    color:#fff;
+    text-align: center;
+    padding: 10px 5px;
+}
+
+/** Live preview **/
 
 .display-preview {
     height:80vh;
 }
 
-
-.header-hc {
-    padding-top:20px;
-    background-color:#EB8475;
-    height:90px;
-}
-
-.header-hc img {
-    padding-left:16px;
-    margin-top:-2px;
-}
-
-.head-slogan {
-    font-size:13px;
-    color:#fff;
-    text-align: right;
-    padding-right:20px!important;
-    padding-top:30px;
-    letter-spacing: 0px;
-}
-
-.head-slogan span {
-    color:#F4CC91;
-}
-
-.text-body-hc {
-    min-height:80vh;
-}
-
-/* .text-body-hc > .container > .row > div:first-child,
-.text-body-hc > .container > .row > div:last-child {
-    background-color:red;
-} */
-
-.footer-hc {
-    background-color:#C3751B;
-    height:94px;
-}
-
-.footer-hc img{
-    padding-left:25px;
-    padding-top:20px;
-}
-
-.hc-preview {
-    background-color:#fff;
-    padding: 0 !important;
-    color:#000!important;
-}
-
-
-#main-div {
-    padding-top:40px;
-    padding-bottom:15px;
-}
-
-
-/** User.css hcenter **/
-
-
-
-.alerta {
-    width: 100%; 
-    background-color: rgb(224, 224, 224); 
-    line-height: 1.5; float: left; 
-    text-align: justify; 
-    border-radius: 5px;
-    margin: 30px 0px;}
-    
-    .alerta-titulo {
-    width: 59%; 
-    margin-left: 50px; 
-    margin-top: 20px; 
-    margin-right: 50px; 
-    font-size: 16px; float: left; 
-    font-style: italic;}
-    
-    .alerta-contido {
-    font-size: 14px; 
-    margin: 20px 50px 20px; 
-    float: left;}
-    
-    
-    .dica {
-    width: 100%; 
-    background-color: rgb(255, 225, 189); 
-    line-height: 1.5; 
-    float: left;  
-    border-radius: 5px;
-    margin: 30px 0px;}
-    
-    .dica-titulo {
-    width: 59%; 
-    margin-left: 50px; 
-    margin-top: 20px; 
-    margin-right: 50px; 
-    font-size: 16px; 
-    float: left; 
-    font-style: italic;}
-    
-    .dica-contido {
-    font-size: 14px; 
-    margin: 20px 50px 20px; 
-    float: left; }
-    
-    
-    a.glink{
-        color:#3934BE!important;
-        font-size:15px!important;
+    /** Cabeçalho HelpCenter **/
+    .header-hc {
+        padding-top:20px;
+        background-color:#EB8475;
+        height:90px;
     }
-    
-    a.manuais {
-        color:#3934BE!important;
-        font-size:15px!important;
+
+    .header-hc img {
+        padding-left:16px;
+        margin-top:-2px;
     }
-    
-    .novoalerta {
-        width: 100%; 
-        line-height: 1.5;
-        float: left;
-        border-radius: 5px;
-        margin: 30px 0px
+
+    .head-slogan {
+        font-size:13px;
+        color:#fff;
+        text-align: right;
+        padding-right:20px!important;
+        padding-top:30px;
+        letter-spacing: 0px;
     }
-    
-    .novoalerta-titulo {
-        margin: 25px 50px 20px 50px;
-        font-size: 18px;
-        float: left;
-        font-weight:bold;
-        width: 100%;
+
+    .head-slogan span {
+        color:#F4CC91;
     }
-    
-    .novoalerta-contido {
-        font-size: 15px;
-        margin: 0px 35px 20px 35px;
-        float: left;
-        }
-    
-    .novoalerta-titulo > i {padding-right:10px;}
-    
-    .alerta-notas {background-color: rgb(255, 225, 189);}
-    .alerta-dicas {background-color: rgb(255, 248, 200);}
-    .alerta-info {background-color: rgb(232, 239, 249);}
-    .boas-praticas {background-color: rgb(210, 251, 200);}
-    .alerta-relaciona {background-color: rgb(245, 245, 245);}
-    
-    .seccao-phcgo {background-color: rgb(245, 245, 245);
-                                    display:flex;
-                                    align-items:center;
-                                    justify-content:center;
-                                    margin-bottom:10px;}
-    
-    
-    h1.manuais {font-size:28px;text-transform:uppercase;font-weight:bold;}
-    h2.manuais {font-size:20px;font-weight: bold;margin:0;padding:10px;}
-    h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
-    
-    
+
+    /** Body HelpCenter **/
+
+    .text-body-hc {
+        min-height:80vh;
+    }
+
+    #main-div {
+        padding-top:40px;
+        padding-bottom:15px;
+    }
+
+    /** Rodapé HelpCenter **/
+
+    .footer-hc {
+        background-color:#C3751B;
+        height:94px;
+    }
+
+    .footer-hc img{
+        padding-left:25px;
+        padding-top:20px;
+    }
+
+    .hc-preview {
+        background-color:#fff;
+        padding: 0 !important;
+        color:#000!important;
+    }
+
+/** Outros estilos **/
+
+    /** Cursor no preview **/
+
     #pulse {
         font-size:30px; 
         color:rgb(255, 145, 0);
@@ -226,34 +139,277 @@ textarea {
         } 
     }
 
-#modal {
-    background-color:rgba(0, 0, 0, 0.685);
-    height:80vh;
-    width:100vw;
+
+/** Estilos HelpCenter  **/
+
+.alerta {
+    width: 100%; 
+    background-color: rgb(224, 224, 224); 
+    line-height: 1.5; float: left; 
+    text-align: justify; 
+    border-radius: 5px;
+    margin: 30px 0px;}
+    
+.alerta-titulo {
+    width: 59%; 
+    margin-left: 50px; 
+    margin-top: 20px; 
+    margin-right: 50px; 
+    font-size: 16px; float: left; 
+    font-style: italic;}
+    
+.alerta-contido {
+    font-size: 14px; 
+    margin: 20px 50px 20px; 
+    float: left;}
+    
+    
+.dica {
+    width: 100%; 
+    background-color: rgb(255, 225, 189); 
+    line-height: 1.5; 
+    float: left;  
+    border-radius: 5px;
+    margin: 30px 0px;}
+    
+.dica-titulo {
+    width: 59%; 
+    margin-left: 50px; 
+    margin-top: 20px; 
+    margin-right: 50px; 
+    font-size: 16px; 
+    float: left; 
+    font-style: italic;}
+    
+.dica-contido {
+    font-size: 14px; 
+    margin: 20px 50px 20px; 
+    float: left; }
+    
+    
+a.glink{
+        color:#3934BE!important;
+        font-size:15px!important;
+    }
+    
+a.manuais {
+    color:#3934BE!important;
+    font-size:15px!important;
 }
 
-.no-display {
-    display:none!important;
+.novoalerta {
+        width: 100%; 
+        line-height: 1.5;
+        float: left;
+        border-radius: 5px;
+        margin: 30px 0px
+    }
+    
+.novoalerta-titulo {
+        margin: 25px 50px 20px 50px;
+        font-size: 18px;
+        float: left;
+        font-weight:bold;
+        width: 100%;
+    }
+    
+.novoalerta-contido {
+        font-size: 15px;
+        margin: 0px 35px 20px 35px;
+        float: left;
+        }
+    
+.novoalerta-titulo > i {padding-right:10px;}
+    
+.alerta-notas {background-color: rgb(255, 225, 189);}
+.alerta-dicas {background-color: rgb(255, 248, 200);}
+.alerta-info {background-color: rgb(232, 239, 249);}
+.boas-praticas {background-color: rgb(210, 251, 200);}
+.alerta-relaciona {background-color: rgb(245, 245, 245);}
+
+.seccao-phcgo {background-color: rgb(245, 245, 245);
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                margin-bottom:10px;}
+    
+    
+h1.manuais {font-size:28px;text-transform:uppercase;font-weight:bold;}
+h2.manuais {font-size:20px;font-weight: bold;margin:0;padding:10px;}
+h3.manuais {font-size:18px;text-transform:none;padding:5px 15px;}
+    
+
+/** Butões PHC GO **/
+
+
+@font-face {
+    font-family: 'HK Grotesk';
+    src: url('/assets/fonts/HKGrotesk-Medium.woff2') format('woff2'),
+        url('/assets/fonts/HKGrotesk-Medium.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
-.mini-item {
-    font-size:40px;
-    color:#fff;
+
+/* 
+.phcgo-mainform-primary-btn {
+    background-color: #ff8f00;
+    color: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
+    box-sizing: border-box;
+    cursor: default;
+    outline: none;
+    border: none;
+    display: inline-block;
     text-align: center;
-    padding: 20px 5px;
+    margin: 0;
+    min-width: 64px;
+    line-height: 36px;
+    padding: 0 16px;
+    border-radius: 4px;
+    font-family: HK Grotesk;
+    font-size: 14px;
+    font-weight: 400;
 }
 
-.go-themes {
-    padding-top:20px;
+.phcgo-mainform-secondary-btn {
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
+    box-sizing: border-box;
+    cursor: default;
+    outline: none;
+    border: none;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    line-height: 36px;
+    padding: 0 16px;
+    border-radius: 4px;
+    font-family: HK Grotesk;
+    font-size: 14px;
+    font-weight: 400;
 }
 
-.go-themes div {
-    color:blue!important;
+.phcgo-action-active-btn {
+    
+    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
+    color: #1a237e ;
+    border: 1px solid rgba(0,0,0,.12);
+    box-sizing: border-box;
+    cursor: default;
+    outline: none;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    padding: 0 16px;
+    border-radius: 4px;
+    overflow: visible;
+    background: transparent;
+    font-family: HK Grotesk;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 34px;
 }
 
-.color-pick,
-.color-pick div:last-child {
-    display: flex;
-    align-items: center;
-    color:#fff;
+.phcgo-action-danger-btn {
+    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
+    color: #b70505 ;
+    border: 1px solid rgba(0,0,0,.12);
+    box-sizing: border-box;
+    cursor: default;
+    outline: none;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    padding: 0 16px;
+    border-radius: 4px;
+    overflow: visible;
+    background: transparent;
+    font-family: HK Grotesk;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 34px;
 }
+
+
+.phcgo-action-inactive-btn {
+    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
+    color: rgba(0,0,0,.26);
+    border: 1px solid currentColor;
+    box-sizing: border-box;
+    cursor: default;
+    outline: none;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    padding: 0 16px;
+    border-radius: 4px;
+    overflow: visible;
+    background: transparent;
+    font-family: HK Grotesk;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 34px;
+}
+
+.phcgo-processing-primary-btn {
+    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
+    border: 0;
+    color: #fff;
+    box-sizing: border-box;
+    cursor: default;
+    outline: none;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    padding: 0 16px;
+    border-radius: 4px;
+    overflow: visible;
+    background: #1976d2;
+    font-family: HK Grotesk;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 34px;
+}
+.phcgo-processing-secondary-btn {
+    box-shadow:  0 0 0 0 rgba(0,0,0,.2),0 0 0 0 rgba(0,0,0,.14),0 0 0 0 rgba(0,0,0,.12);
+    color: #1976d2;
+    border: 1px solid rgba(0,0,0,.12);
+    box-sizing: border-box;
+    cursor: default;
+    outline: none;
+    display: inline-block;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    padding: 0 16px;
+    border-radius: 4px;
+    overflow: visible;
+    background: transparent;
+    font-family: HK Grotesk;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 34px;
+} */
+
+#modal > .row > .col-md-3 {
+    margin-top:-45px;
+}
+
+#modal > .row > .col-md-4 {
+	padding-top:15px;
+    text-align: center;
+    width: 25%; /* idk, rebentei com a flexbox do bootstrap. */
+}
+
+.header > div > div > div > button {
+	margin-bottom: 5px;
+}
+

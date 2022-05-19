@@ -1,17 +1,33 @@
 function mixWrapper() {
-
-    let cursorPosInfo = [];
+    
     const addTextBoxBtn = document.querySelector('#textbox-btn');
     const addIconBtn = document.querySelector('#logos-btn');
+    const addButtonsBtn = document.querySelector('#botoes-btn');
     const textarea = document.querySelector('textarea');
-    const hcPreview = document.querySelector('.hc-preview');
     const modaldiv = document.querySelector('#modal');
     const maindiv = document.querySelector('#main-div');
-
-    const numeroImagens = 16;
+    const ancoraBtn = document.querySelector('#ancora-btn');
+    const numeroImagens = 40;
     const numeroTextBoxes = 4;
+    const numeroButoes = 8;
     const iconsFromJSON = [];
     const textBoxesFromJSON = [];
+    const buttonsFromJSON = [];
+    let cursorPosInfo = [];
+
+    ancoraBtn.addEventListener('click', stickyTop);
+    textarea.addEventListener('click', updateCursorPos);
+
+    function stickyTop() {
+        const header = document.querySelector('.header');
+        if (header.classList.length === 1) {
+            header.classList.add('sticky-top');
+            ancoraBtn.classList.replace('btn-light','btn-success');
+        } else {
+            header.classList.remove('sticky-top');
+            ancoraBtn.classList.replace('btn-success','btn-light');
+        }
+    }
 
     function grabJSONIcons() {
 
@@ -57,6 +73,28 @@ function mixWrapper() {
 
     }
 
+    function grabJSONButtons() {
+
+        fetch('assets/js/buttons.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                appendData(data);
+            })
+            .catch(function (err) {
+                // console.log('error: ' + err);
+            });
+
+        function appendData(data) {
+            for (let i = 0; i < data.length; i++) {
+                buttonsFromJSON[i] = document.querySelector(`.col-md-4` + `.item-${i + 1}`);
+                buttonsFromJSON[i].innerHTML = data[i].code;
+            }
+        }
+
+    }
+
     function iconTopicRelacionado(fixedText) {
         let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"'); // o texto corrigido
         maindiv.innerHTML = fixedText2; // publicar o texto
@@ -80,12 +118,14 @@ function mixWrapper() {
     }
 
     function selectIcon(eTarget) {
+        console.log(eTarget);
         let fixedText = `${cursorPosInfo[1]}${eTarget.outerHTML}${cursorPosInfo[2]}`;
-        maindiv.innerHTML = fixedText;
         textarea.value = fixedText;
-    }
+        let fixedText2 = fixedText.replace('src="../pimages/go/artigo.svg"', 'src="/assets/img/artigo.svg"'); // o texto corrigido
+        maindiv.innerHTML = fixedText2;
 
-    textarea.addEventListener('click', updateCursorPos);
+        
+    }
 
     function newRow(pag) {
         const newRow = document.createElement('div');
@@ -110,6 +150,14 @@ function mixWrapper() {
         return newItem
     }
 
+    function newMediumItem(i) {
+        const newMediumItem = document.createElement('div');
+        newMediumItem.classList.add('col-md-4');
+        newMediumItem.classList.add(`item-${i}`);
+        newMediumItem.innerHTML = `${i}`;
+        return newMediumItem
+    }
+
     function newMiniItem(i) {
         const newItem = document.createElement('div');
         newItem.classList.add('col-md-1');
@@ -119,27 +167,27 @@ function mixWrapper() {
         return newItem
     }
 
-    function newPagiRow() {
-        const newPagiRow = document.createElement('div');
-        newPagiRow.classList.add('row');
-        newPagiRow.classList.add('pagi');
-        return newPagiRow
-    }
+    // function newPagiRow() {
+    //     const newPagiRow = document.createElement('div');
+    //     newPagiRow.classList.add('row');
+    //     newPagiRow.classList.add('pagi');
+    //     return newPagiRow
+    // }
 
-    function newPagiItem(pagi) {
-        const newPagiItem = document.createElement('div');
-        newPagiItem.classList.add('col');
-        newPagiItem.classList.add(`pagi-${pagi}`);
-        newPagiItem.innerHTML = `${pagi}`
-        return newPagiItem
-    }
+    // function newPagiItem(pagi) {
+    //     const newPagiItem = document.createElement('div');
+    //     newPagiItem.classList.add('col');
+    //     newPagiItem.classList.add(`pagi-${pagi}`);
+    //     newPagiItem.innerHTML = `${pagi}`
+    //     return newPagiItem
+    // }
 
     function getIcons() {
         modaldiv.innerHTML = '';
         let pag = 1;
         modaldiv.appendChild(newRow(pag));
         for (i = 1; i <= numeroImagens; i++) {
-            if ((i % 36) === 0) {
+            if ((i % 24) === 0) {
                 let modaldivLastrow = modaldiv.lastChild;
                 modaldivLastrow.appendChild(newMiniItem(i));
                 pag++;
@@ -149,11 +197,11 @@ function mixWrapper() {
                 modaldivLastrow.appendChild(newMiniItem(i));
             }
         }
-        modaldiv.appendChild(newPagiRow());
-        let pagiRow = document.querySelector('.pagi');
-        for (let pagi = 1; pagi <= pag; pagi++) {
-            pagiRow.appendChild(newPagiItem(pagi));
-        }
+        // modaldiv.appendChild(newPagiRow());
+        // let pagiRow = document.querySelector('.pagi');
+        // for (let pagi = 1; pagi <= pag; pagi++) {
+        //     pagiRow.appendChild(newPagiItem(pagi));
+        // }
         grabJSONIcons();
     }
 
@@ -165,17 +213,31 @@ function mixWrapper() {
             let modaldivLastrow = modaldiv.lastChild;
             modaldivLastrow.appendChild(newItem(i));
         }
-        modaldiv.appendChild(newPagiRow());
-        let pagiRow = document.querySelector('.pagi');
-        for (let pagi = 1; pagi <= pag; pagi++) {
-            pagiRow.appendChild(newPagiItem(pagi));
-        }
+        // modaldiv.appendChild(newPagiRow());
+        // let pagiRow = document.querySelector('.pagi');
+        // for (let pagi = 1; pagi <= pag; pagi++) {
+        //     pagiRow.appendChild(newPagiItem(pagi));
+        // }
         grabJSONTextBoxes();
     }
 
+    function getButtons() {
+        modaldiv.innerHTML = '';
+        let pag = 1;
+        modaldiv.appendChild(newRow(pag));
+        for (i = 1; i <= numeroButoes; i++) {
+            let modaldivLastrow = modaldiv.lastChild;
+            modaldivLastrow.appendChild(newMediumItem(i));
+        }
+        // modaldiv.appendChild(newPagiRow());
+        // let pagiRow = document.querySelector('.pagi');
+        // for (let pagi = 1; pagi <= pag; pagi++) {
+        //     pagiRow.appendChild(newPagiItem(pagi));
+        // }
+        grabJSONButtons();
+    }
+
     addIconBtn.addEventListener('click', () => {
-        hcPreview.classList.add('no-display');
-        modaldiv.classList.remove('no-display');
         getIcons();
 
         (function () {
@@ -183,15 +245,21 @@ function mixWrapper() {
             for (i = 1; i <= numeroImagens; i++) {
                 eventArray[i] = document.querySelector('.col-md-1' + `.mini-item-${i}` + '.mini-item');
                 eventArray[i].addEventListener('click', (e) => {
-                    hcPreview.classList.remove('no-display');
-                    modaldiv.classList.add('no-display');
+                    console.log(e);
                     eTarget = e.target;
+                    console.log(eTarget);
                     eTargetLenght = eTarget.classList.length;
+                    console.log(eTargetLenght);
                     eTargetChild = eTarget.children[0];
-                    if (eTargetLenght !== 2) {
-                        selectIcon(eTargetChild);
+                    // if (eTargetLenght !== 2) {
+                    //     selectIcon(eTargetChild);
+                    // } else {
+                    //     selectIcon(eTarget);
+                    // }
+                    if (eTargetLenght === 2 || eTargetLenght === 0) {
+                        selectIcon(eTarget)
                     } else {
-                        selectIcon(eTarget);
+                        selectIcon(eTargetChild)
                     }
                 });
             }
@@ -199,8 +267,6 @@ function mixWrapper() {
     });
 
     addTextBoxBtn.addEventListener('click', () => {
-        hcPreview.classList.add('no-display');
-        modaldiv.classList.remove('no-display');
         getTextBoxes();
 
         (function () {
@@ -208,8 +274,6 @@ function mixWrapper() {
             for (i = 1; i <= numeroTextBoxes; i++) {
                 eventArray[i] = document.querySelector('.col-md-3' + `.item-${i}`);
                 eventArray[i].addEventListener('click', (e) => {
-                    hcPreview.classList.remove('no-display');
-                    modaldiv.classList.add('no-display');
                     eTarget = e.target;
                     eTargetLenght = eTarget.classList.length;
                     eTargetParent = eTarget.parentElement;
@@ -221,7 +285,30 @@ function mixWrapper() {
                     } else {
                         selectIcon(eTarget);
                     }
+                });
+            }
+        })();
+    });
 
+    addButtonsBtn.addEventListener('click', () => {
+        getButtons();
+
+        (function () {
+            let eventArray = [];
+            for (i = 1; i <= numeroButoes; i++) {
+                eventArray[i] = document.querySelector('.col-md-4' + `.item-${i}`);
+                eventArray[i].addEventListener('click', (e) => {
+                    eTarget = e.target;
+                    eTargetLenght = eTarget.classList.length;
+                    eTargetParent = eTarget.parentElement;
+                    eTargetParentLenght = eTargetParent.classList.length;
+                    // if (eTargetLenght !== 2) {
+                    //     selectIcon(eTargetParent);
+                    // } else if (eTargetParentLenght !== 2) {
+                    //     selectIcon(eTargetParent.parentElement);
+                    // } else {
+                        selectIcon(eTarget);
+                    // }
                 });
             }
         })();

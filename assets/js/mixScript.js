@@ -22,20 +22,73 @@ function leggeraLoading() {
             for (i = 0; i < landingLogos.length; i++) {
                 let tempPos = landingLogos[i].style.marginLeft.search('%');
                 marginSize = landingLogos[i].style.marginLeft.slice(0, tempPos)
-                let newMarginSize = Number(marginSize) - 8;
+                let newMarginSize = Number(marginSize) - 3;
                 landingLogos[i].style.marginLeft = `${newMarginSize}%`
             }
-            console.log(marginSize)
             if (Number(marginSize) <= '-150') {
                 clearInterval(animationToTheLeft);
+                cookieLogin();
                 document.querySelector('#login-wrapper').classList = ('animate__fadeInUp animate__animated');
             }
-        }, 10)
+        }, 5)
 
-    }, 1250)
+    }, 1400)
 }
 
-// ############ LOGIN SUBMIT ############
+// ############ COOKIE LOGIN ############
+
+
+// Vai buscar a cookie à cache (caso exista)
+function cookieLogin() {
+
+    const bolachinha = localStorage.getItem('bolachinha');
+    if (bolachinha == null) { return }
+    else {
+
+        $.ajax({    //create an ajax request to display.php
+            type: "POST",
+            url: "assets/php/cookie.php",
+            dataType: "text",
+            data: { cookie: bolachinha },
+            success: function (response) {
+                // se vier login-failed, a cookie não é valida, por isso
+                // 1. devemos apagar a cookie da cache
+                // 2. mostrar uma mensagem a dizer que foi encontrada uma cookie inválida,
+                // por isso é que foi feito login
+                //
+                //se vier o nome de alguem, é porque correu bem, por isso
+                // é executar o resto do login de igual maneira
+                if (response.startsWith('login-failed')) {
+                    localStorage.removeItem('bolachinha');
+                    console.log('Token expirado')
+                } else {
+                    leggeraLoginSucess(response);
+                }
+            }
+
+        });
+
+    }
+
+}
+
+// ############ SUBMIT LOGIN ############
+
+const wantCookieCheckbox = document.querySelector('#cookie-checkbox')
+wantCookieCheckbox.addEventListener('click', cookieCheckbox);
+
+let wantCookie = 0
+function cookieCheckbox() {
+    if (wantCookie === 0) {
+        wantCookie = 1;
+        wantCookieCheckbox.innerText = 'check_box';
+        wantCookieCheckbox.style.color = 'gold'
+    } else {
+        wantCookie = 0
+        wantCookieCheckbox.innerText = 'check_box_outline_blank';
+        wantCookieCheckbox.style.color = 'white'
+    }
+}
 
 function leggeraLogin() {
     $.ajax({    //create an ajax request to display.php
@@ -66,7 +119,7 @@ function leggeraLoginFail() {
     newTitle.classList = 'animate__animated animate__fadeIn animate__delay-1s alert-label';
     newTitle.id = 'loading-title';
     newTitle.innerText = String('Credenciais inválidas').toLocaleUpperCase();
-    newTitle.style.marginLeft = '-160%'
+    newTitle.style.marginLeft = '-150%'
 
     document.querySelector('#loading-title').replaceWith(newTitle);
 
@@ -78,7 +131,7 @@ function leggeraLoginFail() {
         revertedTitle.classList = 'animate__animated animate__fadeIn animate__delay-1s';
         revertedTitle.id = 'loading-title';
         revertedTitle.innerText = String('Superleggera').toLocaleUpperCase();
-        revertedTitle.style.marginLeft = '-160%'
+        revertedTitle.style.marginLeft = '-150%'
 
 
         // serve para dar fix no desync entre uma tentativa errada e certa
@@ -89,6 +142,31 @@ function leggeraLoginFail() {
 }
 
 function leggeraLoginSucess(rsp) {
+
+    if (wantCookie === 1) {
+        const fornoBolachinha = Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16) + Math.random().toString(36).slice(2, 16);
+        const novaBolachinha = JSON.stringify(fornoBolachinha);
+        $.ajax({    //create an ajax request to display.php
+            type: "POST",
+            url: "assets/php/savecookie.php",
+            dataType: "text",
+            data: {
+                username: document.querySelector('#username').value,
+                cookie: novaBolachinha
+            },
+            success: function (response) {
+                console.log(response);
+                if (response.startsWith('cookie-login-sucessfull')) {
+                    console.log('token gerado com sucesso')
+                    localStorage.setItem('bolachinha', novaBolachinha)
+                } else {
+                    console.log('Problema ao gerar um novo token de acesso direto')
+                }
+            }
+
+        });
+
+    }
 
 
     const landingLogos = document.querySelectorAll('#loading-wrapper .animate__animated')
@@ -111,14 +189,14 @@ function leggeraLoginSucess(rsp) {
             for (i = 0; i < landingLogosArray.length; i++) {
                 let tempPos = landingLogosArray[i].style.marginLeft.search('%');
                 marginSize = landingLogosArray[i].style.marginLeft.slice(0, tempPos)
-                newMarginSize = Number(marginSize) + 8;
+                newMarginSize = Number(marginSize) + 3;
                 landingLogosArray[i].style.marginLeft = `${newMarginSize}%`;
             }
 
             if (Number(newMarginSize) >= '0') {
                 clearInterval(animationToTheRight);
             }
-        }, 10)
+        }, 5)
 
     }, 800)
 
@@ -318,9 +396,21 @@ function leggeraLoginSucess(rsp) {
 
             // função para atualizar o preview com o cursor laranja
             function updatePreviews(e) {
+
+
+                colapList = document.querySelectorAll('.row .seccao-phcgo');
+
+                    for (i = 1; i <= colapList.length; i++) {
+                        let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
+                        if (saveBtn.classList.contains('no-display') == false) {
+                            alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
+                        }
+                    } 
+
+
+
                 activeTextarea = e.target;
                 let inputText = textarea.value;
-                console.log(inputText.length)
                 if (inputText.length <= 100000) {
                     document.querySelector('#preview-btn').classList.add('no-display')
                     limitExceded = 0;
@@ -533,11 +623,11 @@ function leggeraLoginSucess(rsp) {
 
             // Debug Tools
 
-            // Mostra target na consola
-            // document.addEventListener("click", function (e) {
-            //     console.log(e.target);
-            // // console.log('cursorpos: '+e.target.selectionStart)
-            // });
+
+            document.addEventListener("click", function (e) {
+                console.log(e.target);
+            // console.log('cursorpos: '+e.target.selectionStart)
+            });
 
 
             // ############ HILITE.ME API ############
@@ -605,8 +695,6 @@ function leggeraLoginSucess(rsp) {
 
                 // Função a ser executada RNG milisegundos depois de ter sido carregada a página
                 const landingTimer = setTimeout(function () {
-
-
 
                     // Mostra a aplicação
                     const allSections = [];
@@ -1620,6 +1708,17 @@ function leggeraLoginSucess(rsp) {
                     helpcenterPreviewWrapper.classList.add('no-display');
                     appControlsColap();
                 } else {
+
+                    colapList = document.querySelectorAll('.row .seccao-phcgo');
+
+                    for (i = 1; i <= colapList.length; i++) {
+                        let saveBtn = document.querySelector(`#colap-save-btn-${i}`);
+                        if (saveBtn.classList.contains('no-display') == false) {
+                            alert(`Não é possível adicionar um novo colapsável, enquanto existirem alterações pendentes.`); return
+                        }
+                    }
+
+
                     botaoVistaColap.classList.replace('btn-info', 'btn-light');        // a ordem invertida do getcollaps é importante, não sei porque nao me lembra
                     appControlsColap();
                     colaphcPreview.classList.add('no-display');
@@ -1853,6 +1952,7 @@ function leggeraLoginSucess(rsp) {
                     let h2Link = newCollapColTitulo.appendChild(elementGenerator('a'));
                     h2Link.setAttribute('href', `#${newCollapseArray[0][i - 1]}`)
                     h2Link.setAttribute('data-toggle', 'collapse');
+                    h2Link.style.fontWeight = 'normal';
 
                     //h2
                     let newtituloH2 = h2Link.appendChild(elementGenerator('h2', '', 'manuais', newCollapseArray[1][i - 1]))

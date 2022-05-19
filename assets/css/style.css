@@ -76,7 +76,7 @@ a:hover {
 
 #loading-wrapper {
     height: 100vh;
-    margin-top:-20px;
+    margin-top: -20px;
     display: grid;
     justify-content: center;
     align-content: center;
@@ -97,8 +97,12 @@ a:hover {
     color: var(--success-title-color);
 }
 
-.margin-animation-complete{
-  margin-left:-160%;
+/** hotfix para a troca dos gifs. 
+não foi muito inteligente,
+devia ter feito tudo via js. teve que martelar mais
+á frente no js cript para compensar. oh well**/
+.margin-animation-complete {
+    margin-left: -160%;
 }
 
 #loading-gif,
@@ -134,11 +138,11 @@ a:hover {
 }
 
 #login-wrapper>input,
-#login-wrapper>span,
-#login-wrapper>button {
+#login-wrapper>span {
     width: 100%;
 }
 
+/* labels */
 #login-wrapper>span {
     color: var(--text-color-clear);
     font-size: 40px;
@@ -146,15 +150,48 @@ a:hover {
     padding-bottom: 5px;
 }
 
+/* inputs */
 #login-wrapper>input {
     margin-bottom: 20px;
 }
 
+/*submit*/
 #login-btn {
     /* bootstrap overide */
+    width: 100%;
     background-color: var(--primary-title-color) !important;
-    margin-top:10px;
+    margin-top: 10px;
 }
+
+/* cookie */
+#cookie {
+    width: 100%;
+    text-align: center;
+    color: var(--text-color-clear);
+    padding-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#cookie>span {
+    padding-right: 5%;
+}
+
+#cookie>div {
+    display: inline-block;
+}
+
+#cookie-checkbox{
+    font-size: 22px;
+    vertical-align: sub;
+}
+
+#cookie-checkbox:hover {
+    cursor: pointer;
+}
+
 
 /*######################################*/
 /*###########     Editor     ###########*/

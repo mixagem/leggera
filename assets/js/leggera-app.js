@@ -655,7 +655,7 @@ function mixWrapper() {
                 if (i % 2 === 0) { modalRow.classList.add('manual-impar') } else { modalRow.classList.add('manual-par') }
                 // nome do manual
                 modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = rsp[i].title))
-                modalRow.lastChild.addEventListener('click', function (e) { leggeraManuais.getManualCode(e, rsp); });
+                modalRow.lastChild.addEventListener('click', function (e) { leggeraManuais.cautionModal('load','',e, rsp); });
                 // timestamp
                 let data = new Date(Number(rsp[i].timestamp));
                 modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = `${data.toLocaleDateString('pt-PT', { dateStyle: 'short' })} @ ${data.toLocaleTimeString('pt-PT', { timeStyle: 'short' })}`))
@@ -669,67 +669,104 @@ function mixWrapper() {
         },
         // Vai buscar o código HTML do manual selecionado
         getManualCode: function (e, rsp) {
-            const promptValue = window.prompt('Tens a certeza que queres carregar este tópico? O tópico presente no editor será discartado e não poderá ser recuperado.\n\nCarrega OK para continuar, ou Cancelar para abortar a operação. ');
-            if (promptValue !== null) {
-                const manualID = e.target.parentElement.id;
-                // mostra a app
-                document.querySelector('.app-grid').classList.remove('no-display');
-                document.querySelector('#manuals-modal').remove();                                                                                                              // 01234567    
-                leggeraVariables.textarea.value = rsp[Number(manualID.slice(7, manualID.length)) - 1].code;// este 7 serve para selecionar o inicio da string que vem do manualID (manual-1)
-                // Atualiza o preview
-                leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
-                leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
-                leggeraCollapsables.appControlsColap();
-                // Guarda as alterações em cache
-                leggeraMethods.autosave2JSON();
-            }
+
+            const manualID = e.target.parentElement.id;
+            // mostra a app
+            document.querySelector('.app-grid').classList.remove('no-display');
+            document.querySelector('#manuals-modal').remove();                                                                                                              // 01234567    
+            leggeraVariables.textarea.value = rsp[Number(manualID.slice(7, manualID.length)) - 1].code;// este 7 serve para selecionar o inicio da string que vem do manualID (manual-1)
+            // Atualiza o preview
+            leggeraVariables.hcPreview.innerHTML = leggeraVariables.textarea.value;
+            leggeraVariables.hcPreview.innerHTML = leggeraPreviewAdjustments.execute(leggeraVariables.textarea.value);
+            leggeraCollapsables.appControlsColap();
+            // Guarda as alterações em cache
+            leggeraMethods.autosave2JSON();
+
         },
-        promptValue:null,
+        manual2DB: function (action, manualName) {
+            switch (action) {
+                case 'new':
+                    // babyproof para guardar em BD em problemas
+                    let manualText = document.querySelector('#textarea').value;
+                    manualText = manualText.replaceAll("'", '&apos;')
+                    manualText = manualText.replaceAll("“", '"')
+                    manualText = manualText.replaceAll("”", '"')
+                    $.ajax({
+                        type: "POST",
+                        url: "assets/php/manualsupdate.php",
+                        dataType: "text",
+                        data: {
+                            username: loggedinUser,
+                            manual: manualName,
+                            timestamp: Date.now(),
+                            action: 'save',
+                            code: manualText
+                        },
+                        success: function (rsp) {
+                            if (rsp.startsWith('Err')) { console.log('fudeu') }
+                            else if (rsp.includes('atual')) {
+                                alert('tópico atualizado com sucesso');
+                                // mostra a app
+                                document.querySelector('.app-grid').classList.remove('no-display');
+                                document.querySelector('#manuals-modal').remove();
+                            } else {
+                                alert('tópico criado com sucesso');
+                                // mostra a app
+                                document.querySelector('.app-grid').classList.remove('no-display');
+                                document.querySelector('#manuals-modal').remove();
+                            }
+                        }
+                    })
+                    break;
+                case 'delete':
+                    $.ajax({
+                        type: "POST",
+                        url: "assets/php/manualsupdate.php",
+                        dataType: "text",
+                        data: {
+                            username: loggedinUser,
+                            manual: manualName,
+                            timestamp: Date.now(),
+                            action: 'delete'
+                        },
+                        success: function (rsp) {
+                            if (rsp.startsWith('Err')) { console.log('fudeu') }
+                            else {
+                                alert('tópico removido com sucesso');
+                                document.querySelector('.app-grid').classList.remove('no-display');
+                                document.querySelector('#manuals-modal').remove();
+                            }
+                        }
+                    })
+                    break;
+
+            }
+
+        },
         // cria/atualiza o manual
         saveManual: function (e) {
-            // caso novo manual, vai buscar o nome do input da searchbox
+            // debugger;
+            // por defeito, o nome do manual vai ser o que está na searchbox
             let manualName = document.querySelector('#save-manual-input').value;
+            let action = 'new';
+            // misclick corection para o warpper de save
+            if (e.target.tagName === "TD") {
+                manualName = e.target.parentElement.firstChild.innerText;
+                action = 'update';
+            };
 
-            // caso a função seja invocada através do botão save, o nome é o que está exibido na linha 
-            if (e.target.tagName === "TD" || e.target.tagName === "I") {
-                if (e.target.tagName === "TD") { manualName = e.target.parentElement.firstChild.innerText }; // misclick corection
-                if (e.target.tagName === "I") { manualName = e.target.parentElement.parentElement.firstChild.innerText }; // misclick corection
-                leggeraManuais.promptValue = window.prompt(`Tens a certeza que queres atualizar o tópico "${manualName}"?\n\nCarrega OK para continuar, ou Cancelar para abortar a operação. `);
-            } else { leggeraManuais.promptValue = ""; }
+            // misclick corection para o icon de save
+            if (e.target.tagName === "I") {
+                manualName = e.target.parentElement.parentElement.firstChild.innerText; action = 'update';
+            };
 
-            if (leggeraManuais.promptValue !== null) {
-                // babyproof para guardar em BD em problemas
-                let manualText = document.querySelector('#textarea').value;
-                manualText = manualText.replaceAll("'", '&apos;')
-                manualText = manualText.replaceAll("“", '"')
-                manualText = manualText.replaceAll("”", '"')
-                $.ajax({
-                    type: "POST",
-                    url: "assets/php/manualsupdate.php",
-                    dataType: "text",
-                    data: {
-                        username: loggedinUser,
-                        manual: manualName,
-                        timestamp: Date.now(),
-                        action: 'save',
-                        code: manualText
-                    },
-                    success: function (rsp) {
-                        if (rsp.startsWith('Err')) { console.log('fudeu') }
-                        else if (rsp.includes('atual')) {
-                            alert('tópico atualizado com sucesso');
-                            // mostra a app
-                            document.querySelector('.app-grid').classList.remove('no-display');
-                            document.querySelector('#manuals-modal').remove();
-                        } else {
-                            alert('tópico criado com sucesso');
-                            // mostra a app
-                            document.querySelector('.app-grid').classList.remove('no-display');
-                            document.querySelector('#manuals-modal').remove();
-                        }
-                    }
-                })
-            }
+            // misclick corection para quando carregamos no icon do guardar manual 
+            if (e.target.tagName === "I" && e.target.parentElement.tagName === "BUTTON") {
+                manualName = document.querySelector('#save-manual-input').value;
+                action = 'new';
+            };
+
+            leggeraManuais.cautionModal(action, manualName);
         },
         // volta para o editor
         backHome: function () {
@@ -747,28 +784,60 @@ function mixWrapper() {
             let eTarget = e.target;
             // babyproof para misclicks
             if (e.target.tagName === "I") { eTarget = e.target.parentElement; }
-            const wantToDelete = prompt(`Para excluír o tópico ${eTarget.parentElement.firstChild.innerText}, escreve "apagar":`);
-            if (wantToDelete === 'apagar') {
-                $.ajax({
-                    type: "POST",
-                    url: "assets/php/manualsupdate.php",
-                    dataType: "text",
-                    data: {
-                        username: loggedinUser,
-                        manual: eTarget.parentElement.firstChild.innerText,
-                        timestamp: Date.now(),
-                        action: 'delete'
-                    },
-                    success: function (rsp) {
-                        if (rsp.startsWith('Err')) { console.log('fudeu') }
-                        else {
-                            alert('tópico removido com sucesso');
-                            document.querySelector('.app-grid').classList.remove('no-display');
-                            document.querySelector('#manuals-modal').remove();
-                        }
-                    }
-                })
+            let manualName = eTarget.parentElement.firstChild.innerText
+            leggeraManuais.cautionModal('delete', manualName);
+        },
+        cautionModal: function (action, manualname, myE, myRsp) {
+            const manualsModal = document.querySelector('#manuals-modal');
+            const cautionModalWrapper = leggeraMethods.mambo('div', 'caution-modal-wrapper', 'row');
+            const cautionModalRow = cautionModalWrapper.appendChild(leggeraMethods.mambo('div', 'caution-modal-row', 'col-md-12 animate__animated animate__fadeIn'));
+            const cautionModalPopup = cautionModalRow.appendChild(leggeraMethods.mambo('div', 'caution-modal-popup'));
+
+            switch (action) {
+                case 'update':
+                    cautionModalPopup.appendChild(leggeraMethods.mambo('h1', '', '', `Tens a certeza que queres atualizar o manual ${manualname}`));
+                    cautionModalPopup.appendChild(leggeraMethods.mambo('p', '', '', `O manual selecionado será atualizado com o conteúdo atualmente presente no leggera. Esta operação é irreversível. ${manualname}`));
+                    break;
+                case 'delete':
+                    cautionModalPopup.appendChild(leggeraMethods.mambo('h1', '', '', `Tens a certeza que queres apagar o manual ${manualname}?`));
+                    cautionModalPopup.appendChild(leggeraMethods.mambo('p', '', '', `O manual selecionado será removido da base de dados do leggera. Esta operação é irreversível. ${manualname}`));
+                    break;
+                case 'load':
+                    cautionModalPopup.appendChild(leggeraMethods.mambo('h1', '', '', `Tens a certeza que queres carregar o manual selecionado?`));
+                    cautionModalPopup.appendChild(leggeraMethods.mambo('p', '', '', `O manual atualmente presente no leggera será substituído pelo manual selecionado. Esta operação é irreversível. ${manualname}`));
+                    break;
+                case 'new':
+                    leggeraManuais.manual2DB('new', manualname);
+                    return;
             }
+
+            const modalActions = cautionModalPopup.appendChild(leggeraMethods.mambo('div','modal-actions'));
+
+
+            const okBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'afirmative-prompt', 'btn btn-success', 'leeegoooo'));
+            const nOkBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'negative-prompt', 'btn btn-danger', 'leeegoooo'));
+            document.querySelector('body').insertBefore(cautionModalWrapper,manualsModal);
+
+            if (action === 'delete') {
+                okBtn.addEventListener('click', function () {
+                    leggeraManuais.manual2DB('delete', manualname);
+                    cautionModalWrapper.remove();
+                });
+            } else if (action === 'load') {
+                okBtn.addEventListener('click', function () {
+                    leggeraManuais.getManualCode(myE, myRsp);
+                    cautionModalWrapper.remove();
+                });
+            } else {
+                okBtn.addEventListener('click', function () {
+                    leggeraManuais.manual2DB('new', manualname);
+                    cautionModalWrapper.remove();
+                });
+            }
+            nOkBtn.addEventListener('click', function () {
+                window.alert('aborted');
+                cautionModalWrapper.remove();
+            })
         }
     }
     // ################ go assets 

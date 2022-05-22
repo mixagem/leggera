@@ -134,3 +134,42 @@ pre {
     color: var(--text-color-dark);
     padding-top: 10px;
 }
+
+#caution-modal-row {
+    padding: 300px;
+}
+
+#caution-modal-wrapper{
+    background: rgba(255,255,255,.5);
+    color: var(--text-color-light);
+    height: 100vh;
+    position: absolute;
+    width: 100vw;
+    z-index: 1;
+}
+
+#caution-modal-popup{
+    background-color: rgb(255, 255, 255);
+    color:var(--text-color-dark);
+    border-radius: 15px;
+    border: 2px solid black;
+    min-height: 400px;
+}
+
+#caution-modal-popup>h1{
+    padding-left:25px;
+}
+
+#caution-modal-popup>p{
+    padding-left:10px;
+}
+
+#modal-actions {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+#modal-actions > button {
+    padding: 0px 10px;
+}

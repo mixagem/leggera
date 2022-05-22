@@ -684,17 +684,18 @@ function mixWrapper() {
                 leggeraMethods.autosave2JSON();
             }
         },
+        promptValue:null,
         // cria/atualiza o manual
         saveManual: function (e) {
             // caso novo manual, vai buscar o nome do input da searchbox
             let manualName = document.querySelector('#save-manual-input').value;
 
-            // caso a função seja invocada através do botão save, o nome é o que está exibido na linha (bom misclick correction)
+            // caso a função seja invocada através do botão save, o nome é o que está exibido na linha 
             if (e.target.tagName === "TD" || e.target.tagName === "I") {
-                if (e.target.tagName === "TD") { manualName = e.target.parentElement.firstChild.innerText };
-                if (e.target.tagName === "I") { manualName = e.target.parentElement.parentElement.firstChild.innerText };
-                let promptValue = window.prompt(`Tens a certeza que queres atualizar o tópico "${manualName}"?\n\nCarrega OK para continuar, ou Cancelar para abortar a operação. `);
-            } else { let promptValue = ""; }
+                if (e.target.tagName === "TD") { manualName = e.target.parentElement.firstChild.innerText }; // misclick corection
+                if (e.target.tagName === "I") { manualName = e.target.parentElement.parentElement.firstChild.innerText }; // misclick corection
+                leggeraManuais.promptValue = window.prompt(`Tens a certeza que queres atualizar o tópico "${manualName}"?\n\nCarrega OK para continuar, ou Cancelar para abortar a operação. `);
+            } else { leggeraManuais.promptValue = ""; }
 
             if (leggeraManuais.promptValue !== null) {
                 // babyproof para guardar em BD em problemas

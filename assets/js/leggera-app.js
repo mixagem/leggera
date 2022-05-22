@@ -655,7 +655,7 @@ function mixWrapper() {
                 if (i % 2 === 0) { modalRow.classList.add('manual-impar') } else { modalRow.classList.add('manual-par') }
                 // nome do manual
                 modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = rsp[i].title))
-                modalRow.lastChild.addEventListener('click', function (e) { leggeraManuais.cautionModal('load','',e, rsp); });
+                modalRow.lastChild.addEventListener('click', function (e) { leggeraManuais.cautionModal('load', '', e, rsp); });
                 // timestamp
                 let data = new Date(Number(rsp[i].timestamp));
                 modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = `${data.toLocaleDateString('pt-PT', { dateStyle: 'short' })} @ ${data.toLocaleTimeString('pt-PT', { timeStyle: 'short' })}`))
@@ -811,32 +811,36 @@ function mixWrapper() {
                     return;
             }
 
-            const modalActions = cautionModalPopup.appendChild(leggeraMethods.mambo('div','modal-actions'));
+            const modalActions = cautionModalPopup.appendChild(leggeraMethods.mambo('div', 'modal-actions'));
 
 
-            const okBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'afirmative-prompt', 'btn btn-success', 'leeegoooo'));
-            const nOkBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'negative-prompt', 'btn btn-danger', 'leeegoooo'));
-            document.querySelector('body').insertBefore(cautionModalWrapper,manualsModal);
-
+            const okBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'afirmative-prompt', 'btn btn-success', 'Tenho Sim'));
+            const nOkBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'negative-prompt', 'btn btn-danger', 'Abortar missão'));
+            document.querySelector('body').insertBefore(cautionModalWrapper, manualsModal);
+            document.querySelector('body').classList.add('overflow-trick');
             if (action === 'delete') {
                 okBtn.addEventListener('click', function () {
                     leggeraManuais.manual2DB('delete', manualname);
                     cautionModalWrapper.remove();
+                    document.querySelector('body').classList.remove('overflow-trick');
                 });
             } else if (action === 'load') {
                 okBtn.addEventListener('click', function () {
                     leggeraManuais.getManualCode(myE, myRsp);
                     cautionModalWrapper.remove();
+                    document.querySelector('body').classList.remove('overflow-trick');
                 });
             } else {
                 okBtn.addEventListener('click', function () {
                     leggeraManuais.manual2DB('new', manualname);
                     cautionModalWrapper.remove();
+                    document.querySelector('body').classList.remove('overflow-trick');
                 });
             }
             nOkBtn.addEventListener('click', function () {
                 window.alert('aborted');
                 cautionModalWrapper.remove();
+                document.querySelector('body').classList.remove('overflow-trick');
             })
         }
     }

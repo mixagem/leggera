@@ -1,3 +1,7 @@
+.overflow-trick {
+    overflow-y: clip;
+}
+
 #manuals-modal {
     min-height: 100vh;
     background-color: #eee;
@@ -6,8 +10,8 @@
 }
 
 #my-manuals-wrapper {
-    padding-bottom: 5vh; 
-} 
+    padding-bottom: 5vh;
+}
 
 #modal-container {
     background: var(--primary-title-color);
@@ -136,32 +140,40 @@ pre {
 }
 
 #caution-modal-row {
-    padding: 300px;
+    position: -webkit-sticky;
+    /* Safari */
+    position: sticky;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: clip;
 }
 
-#caution-modal-wrapper{
-    background: rgba(255,255,255,.5);
+#caution-modal-wrapper {
+    background: rgba(255, 255, 255, .5);
     color: var(--text-color-light);
-    height: 100vh;
+    top: 0;
     position: absolute;
-    width: 100vw;
     z-index: 1;
 }
 
-#caution-modal-popup{
+#caution-modal-popup {
     background-color: rgb(255, 255, 255);
-    color:var(--text-color-dark);
+    color: var(--text-color-dark);
     border-radius: 15px;
     border: 2px solid black;
-    min-height: 400px;
+    width: 650px;
+    height: 325px;
 }
 
-#caution-modal-popup>h1{
-    padding-left:25px;
+#caution-modal-popup>h1 {
+    padding-left: 25px;
 }
 
-#caution-modal-popup>p{
-    padding-left:10px;
+#caution-modal-popup>p {
+    padding: 20px 25px;
 }
 
 #modal-actions {
@@ -170,6 +182,6 @@ pre {
     align-content: center;
 }
 
-#modal-actions > button {
-    padding: 0px 10px;
+#modal-actions>button {
+    margin: 0px 10px;
 }

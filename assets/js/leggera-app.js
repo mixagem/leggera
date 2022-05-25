@@ -793,12 +793,12 @@ function mixWrapper() {
 
                 switch (action) {
                     case 'update':
-                        cautionModalPopup.appendChild(leggeraMethods.mambo('h2', '', '', `Tens a certeza que queres atualizar o manual <br><span class="selected-manual">${manualname}</span>`));
-                        cautionModalPopup.appendChild(leggeraMethods.mambo('p', '', '', `O manual selecionado será atualizado com o conteúdo atualmente presente no leggera. Esta operação é irreversível.`));
+                        cautionModalPopup.appendChild(leggeraMethods.mambo('h2', '', '', `Tens a certeza que queres atualizar o manual <br><span class="selected-manual">${manualname}</span>?`));
+                        cautionModalPopup.appendChild(leggeraMethods.mambo('p', '', '', `O manual selecionado será atualizado com o conteúdo atualmente presente no leggera.<br>Esta operação é irreversível.`));
                         break;
                     case 'delete':
                         cautionModalPopup.appendChild(leggeraMethods.mambo('h2', '', '', `Tens a certeza que queres apagar o manual <br><span class="selected-manual">${manualname}</span>?`));
-                        cautionModalPopup.appendChild(leggeraMethods.mambo('p', '', '', `O manual selecionado será removido da base de dados do leggera. Esta operação é irreversível.`));
+                        cautionModalPopup.appendChild(leggeraMethods.mambo('p', '', '', `O manual selecionado será removido da base de dados do leggera.<br>Esta operação é irreversível.`));
                         break;
                     case 'load':
                         cautionModalPopup.appendChild(leggeraMethods.mambo('h2', '', '', `Tens a certeza que queres carregar o manual <span class="selected-manual">${manualname}</span>?`));
@@ -812,7 +812,7 @@ function mixWrapper() {
                 const modalActions = cautionModalPopup.appendChild(leggeraMethods.mambo('div', 'modal-actions'));
 
 
-                const okBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'afirmative-prompt', 'btn btn-success', 'Tenho Sim'));
+                const okBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'afirmative-prompt', 'btn btn-success', 'Tenho sim'));
                 const nOkBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'negative-prompt', 'btn btn-danger', 'Abortar missão'));
                 document.querySelector('body').insertBefore(cautionModalWrapper, manualsModal);
                 document.querySelector('body').classList.add('overflow-trick');

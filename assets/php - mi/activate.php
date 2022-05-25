@@ -4,7 +4,7 @@ $un = trim($_GET['u']);
 $token = trim($_GET['t']);
 $nome = trim($_GET['n']);
 $con = mysqli_connect('localhost', 'mambosin_leggeraroot', '?Rq3~Am}@%mb', 'mambosin_superleggera');
-$leggeraversion = 'v1-28';
+$leggeraversion = 'v1-29';
 // nem sei o que esta merda faz, veio direitinho do stackoverflow nem vou tocar
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 // fodass tava duro, necessário quando o servidor não tem a mesma collation que a bd. 

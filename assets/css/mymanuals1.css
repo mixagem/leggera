@@ -1,3 +1,7 @@
+.overflow-trick {
+    overflow-y: clip;
+}
+
 #manuals-modal {
     min-height: 100vh;
     background-color: #111;
@@ -6,8 +10,8 @@
 }
 
 #my-manuals-wrapper {
-    padding-bottom: 5vh; 
-} 
+    padding-bottom: 5vh;
+}
 
 #modal-container {
     background: var(--primary-title-color);
@@ -23,7 +27,6 @@
     height: 50px;
     border-bottom: 2px solid var(--text-color-dark);
 }
-
 
 #modal-container>tbody>tr {
     color: var(--text-color-light);
@@ -71,7 +74,6 @@
     cursor: pointer;
 }
 
-
 #modal-container>thead>th:first-child,
 #modal-container>tbody>tr>td:first-child {
     width: 80%;
@@ -91,7 +93,6 @@
     text-align: center;
     padding-left: 10px;
 }
-
 
 #modal-container>thead>th:last-child,
 #modal-container>tbody>tr>td:last-child {
@@ -133,4 +134,56 @@ pre {
     padding-left: 50px;
     color: var(--text-color-light);
     padding-top: 10px;
+}
+
+#caution-modal-row {
+    position: -webkit-sticky;
+    /* Safari */
+    position: sticky;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: clip;
+}
+
+#caution-modal-wrapper {
+    background: rgba(255, 255, 255, .5);
+    color: var(--text-color-light);
+    top: 0;
+    position: absolute;
+    z-index: 1;
+    margin: 0
+}
+
+#caution-modal-popup {
+    background-color: rgb(73, 73, 73);
+    color: var(--text-color-light);
+    border-radius: 15px;
+    border: 5px solid var(--primary-title-color);
+    width: 650px;
+}
+
+#caution-modal-popup>h2 {
+    padding-left: 25px;
+}
+
+#caution-modal-popup>p {
+    padding: 20px 25px;
+}
+
+#modal-actions {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    padding-bottom: 2vh;
+}
+
+#modal-actions>button {
+    margin: 0px 10px;
+}
+
+.selected-manual {
+    color: var(--primary-title-color);
 }

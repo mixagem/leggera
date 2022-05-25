@@ -1,6 +1,6 @@
 <?php
 
-$leggeraversion = 1.28;
+$leggeraversion = 1.29;
 $un = trim($_POST['username']);
 $con = mysqli_connect('localhost', 'mambosin_leggeraroot', '?Rq3~Am}@%mb', 'mambosin_superleggera');
 // guarda a cookie gerada no registo do utilizador

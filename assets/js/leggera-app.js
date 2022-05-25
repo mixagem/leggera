@@ -653,7 +653,8 @@ function mixWrapper() {
                     if (i % 2 === 0) { modalRow.classList.add('manual-impar') } else { modalRow.classList.add('manual-par') }
                     // nome do manual
                     modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = rsp[i].title))
-                    modalRow.lastChild.addEventListener('click', function(e) { leggeraManuais.cautionModal('load', '', e, rsp); });
+                    modalRow.lastChild.addEventListener('click', function(e) { leggeraManuais.cautionModal('load', e.target.innerText, e, rsp); });
+
                     // timestamp
                     let data = new Date(Number(rsp[i].timestamp));
                     modalRow.appendChild(leggeraMethods.mambo('td', id = '', cla = '', inn = `${data.toLocaleDateString('pt-PT', { dateStyle: 'short' })} @ ${data.toLocaleTimeString('pt-PT', { timeStyle: 'short' })}`))
@@ -800,7 +801,7 @@ function mixWrapper() {
                         cautionModalPopup.appendChild(leggeraMethods.mambo('p', '', '', `O manual selecionado será removido da base de dados do leggera. Esta operação é irreversível.`));
                         break;
                     case 'load':
-                        cautionModalPopup.appendChild(leggeraMethods.mambo('h2', '', '', `Tens a certeza que queres carregar o manual selecionado?`));
+                        cautionModalPopup.appendChild(leggeraMethods.mambo('h2', '', '', `Tens a certeza que queres carregar o manual <span class="selected-manual">${manualname}</span>?`));
                         cautionModalPopup.appendChild(leggeraMethods.mambo('p', '', '', `O manual atualmente presente no leggera será substituído pelo manual selecionado.<br>Esta operação é irreversível.`));
                         break;
                     case 'new':

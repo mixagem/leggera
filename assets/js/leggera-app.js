@@ -786,6 +786,8 @@ function mixWrapper() {
                 leggeraManuais.cautionModal('delete', manualName);
             },
             cautionModal: function(action, manualname, myE, myRsp) {
+                // debugger;
+                // console.log(myE);
                 const manualsModal = document.querySelector('#manuals-modal');
                 const cautionModalWrapper = leggeraMethods.mambo('div', 'caution-modal-wrapper', 'row');
                 const cautionModalRow = cautionModalWrapper.appendChild(leggeraMethods.mambo('div', 'caution-modal-row', 'col-md-12 animate__animated animate__fadeIn'));
@@ -816,6 +818,7 @@ function mixWrapper() {
                 const nOkBtn = modalActions.appendChild(leggeraMethods.mambo('button', 'negative-prompt', 'btn btn-danger', 'Abortar missão'));
                 document.querySelector('body').insertBefore(cautionModalWrapper, manualsModal);
                 document.querySelector('body').classList.add('overflow-trick');
+                document.querySelector('#caution-modal-wrapper').style.top = window.scrollY + "px";
                 if (action === 'delete') {
                     okBtn.addEventListener('click', function() {
                         leggeraManuais.manual2DB('delete', manualname);
